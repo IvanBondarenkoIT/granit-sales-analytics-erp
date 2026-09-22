@@ -219,3 +219,27 @@ msgstr "Неверная дата окончания."
 
 msgid "This campaign was recalculated. Other blasts were not changed."
 msgstr "Эта кампания пересчитана. Другие рассылки не менялись."
+
+msgid "What they bought"
+msgstr "Что купили"
+
+msgid "Order items"
+msgstr "Состав заказа"
+
+msgid "No sales in this campaign window."
+msgstr "В окне этой кампании продаж нет."
+
+msgid "Receipt"
+msgstr "Чек"
+
+msgid "Product"
+msgstr "Товар"
+
+msgid "Group"
+msgstr "Группа"
+
+msgid "Qty"
+msgstr "Кол-во"
+
+msgid "Products bought by this campaign list in the analysis window."
+msgstr "Товары, которые купили клиенты этого списка в окне анализа."

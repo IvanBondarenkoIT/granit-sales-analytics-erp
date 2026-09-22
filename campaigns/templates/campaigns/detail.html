@@ -37,6 +37,7 @@
         <a href="?status=all">{% trans "All" %}</a>
         <a href="?status=bought">{% trans "Bought" %}</a>
         <a href="?status=not_bought">{% trans "Did not buy" %}</a>
+        <a href="{% url 'campaign_purchases' campaign.pk %}">{% trans "What they bought" %}</a>
     </p>
     <table>
         <thead>
@@ -45,6 +46,7 @@
                 <th>{% trans "Name" %}</th>
                 <th>{% trans "Bought" %}</th>
                 <th>{% trans "Amount" %}</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -56,6 +58,11 @@
                     {% if row.had_sales %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}
                 </td>
                 <td>{{ row.sales_amount }}</td>
+                <td>
+                    {% if row.had_sales %}
+                    <a href="{% url 'campaign_client_purchases' campaign.pk row.pk %}">{% trans "Order items" %}</a>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>

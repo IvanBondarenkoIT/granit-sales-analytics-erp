@@ -219,3 +219,27 @@ msgstr "Invalid end date."
 
 msgid "This campaign was recalculated. Other blasts were not changed."
 msgstr "This campaign was recalculated. Other blasts were not changed."
+
+msgid "What they bought"
+msgstr "What they bought"
+
+msgid "Order items"
+msgstr "Order items"
+
+msgid "No sales in this campaign window."
+msgstr "No sales in this campaign window."
+
+msgid "Receipt"
+msgstr "Receipt"
+
+msgid "Product"
+msgstr "Product"
+
+msgid "Group"
+msgstr "Group"
+
+msgid "Qty"
+msgstr "Qty"
+
+msgid "Products bought by this campaign list in the analysis window."
+msgstr "Products bought by this campaign list in the analysis window."

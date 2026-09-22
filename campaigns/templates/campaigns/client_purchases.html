@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Order items" %} — {{ row.client.name|default:row.granit_client_id }}{% endblock %}
+
+{% block extra_css %}
+        table { width: 100%; border-collapse: collapse; background: #fff; margin: 0.5rem 0 1.5rem; }
+        th, td { text-align: left; padding: 0.55rem; border-bottom: 1px solid #eee; }
+        .order { background: #fff; padding: 1rem 1rem 0.25rem; margin-bottom: 1rem; }
+        .order h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .empty { background: #fff; padding: 1.5rem; color: #666; }
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p><a href="{% url 'campaign_detail' campaign.pk %}">← {{ campaign.name }}</a></p>
+    <h1>{% trans "Order items" %}</h1>
+    <p>
+        {% trans "Client ID" %}: {{ row.granit_client_id }}
+        · {{ row.client.name|default:"—" }}
+        · {% trans "Period" %}: {{ campaign.analysis_period_start }} — {{ campaign.analysis_period_end }}
+    </p>
+    {% if not orders %}
+    <p class="empty">{% trans "No sales in this campaign window." %}</p>
+    {% endif %}
+    {% for order in orders %}
+    <section class="order">
+        <h2>
+            {% trans "Receipt" %} #{{ order.sale_id }}
+            · {{ order.sale_date }}
+            · {{ order.store }}
+            · {% trans "Amount" %}: {{ order.amount }}
+        </h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>{% trans "Product" %}</th>
+                    <th>{% trans "Group" %}</th>
+                    <th>{% trans "Qty" %}</th>
+                    <th>{% trans "Amount" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in order.lines %}
+                <tr>
+                    <td>{{ line.product.name }}</td>
+                    <td>{{ line.product.group.name|default:"—" }}</td>
+                    <td>{{ line.quantity }}</td>
+                    <td>{{ line.amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% endfor %}
+</div>
+{% endblock %}
