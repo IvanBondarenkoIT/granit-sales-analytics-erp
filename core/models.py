@@ -62,12 +62,39 @@ class ProductParameter(models.Model):
         return f"{self.name} (ID: {self.granit_id})"
 
 
+class ProductParameterValue(models.Model):
+    """Value of a product parameter (e.g. a «продукция» label)."""
+    granit_id = models.IntegerField(unique=True, help_text="GDSPARAMVAL.ID from Granit ERP")
+    parameter = models.ForeignKey(
+        ProductParameter, on_delete=models.CASCADE, related_name='values'
+    )
+    label = models.CharField(max_length=200, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'dim_product_parameter_value'
+        ordering = ['label']
+
+    def __str__(self):
+        return f"{self.label} (ID: {self.granit_id})"
+
+
 class Product(models.Model):
     """Product dimension - Granit SKU."""
     granit_id = models.IntegerField(unique=True, help_text="Product/SKU ID from Granit ERP")
     name = models.CharField(max_length=500)
     group = models.ForeignKey(ProductGroup, on_delete=models.SET_NULL, null=True, related_name='products')
-    parameter = models.ForeignKey(ProductParameter, on_delete=models.SET_NULL, null=True, related_name='products')
+    parameter = models.ForeignKey(
+        ProductParameter, on_delete=models.SET_NULL, null=True, related_name='products'
+    )
+    parameter_value = models.ForeignKey(
+        ProductParameterValue,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='products',
+    )
     is_active = models.BooleanField(default=True, help_text="Active SKU with sales or stock")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

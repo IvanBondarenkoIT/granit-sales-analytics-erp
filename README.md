@@ -129,6 +129,14 @@ docker compose logs -f web
 docker compose exec web python manage.py makemigrations
 docker compose exec web python manage.py migrate
 
+# Stage 2 ETL (needs PROXY_API_URL + PROXY_API_TOKEN in .env)
+docker compose exec web python manage.py etl_health
+docker compose exec web python manage.py etl_dims
+docker compose exec web python manage.py etl_sales --from 2026-09-08 --to 2026-09-22
+docker compose exec web python manage.py etl_sales
+docker compose exec web python manage.py etl_stock
+docker compose exec web python manage.py etl_nightly
+
 # Django shell
 docker compose exec web python manage.py shell
 
@@ -164,18 +172,14 @@ GRANT ALL PRIVILEGES ON DATABASE granitanalytics TO django_app;
 
 ### ETL Scripts (alt Debian)
 
-ETL scripts run nightly on alt Debian via cron:
+ETL is Django management commands (same code locally and later on alt). Source is firebird-db-proxy; target is Postgres.
 
 ```bash
-# Example cron entry (runs at 2 AM)
-0 2 * * * /path/to/venv/bin/python /path/to/etl_script.py >> /var/log/granit-etl.log 2>&1
+# Example cron on alt (02:00) — deploy of this repo on alt is a later ops step
+0 2 * * * cd /path/to/granit-sales-analytics-erp && /path/to/venv/bin/python manage.py etl_nightly >> /var/log/granit-etl.log 2>&1
 ```
 
-ETL connects to:
-- **Source:** firebird-db-proxy API on Windows
-- **Target:** Local PostgreSQL on alt
-
-See `etl/` app for ETL tracking models. Full ETL implementation in STAGE 2.
+Set `PROXY_API_URL` and `PROXY_API_TOKEN` only in `.env` (never git). Default sales backfill is 12 months ending yesterday (`etl_sales` without dates).
 
 ### Web UI (Railway)
 

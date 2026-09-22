@@ -12,19 +12,24 @@ class SaleFact(models.Model):
     quantity = models.DecimalField(max_digits=12, decimal_places=3, help_text="Quantity sold")
     amount = models.DecimalField(max_digits=15, decimal_places=2, help_text="Sale amount (money)")
     
-    granit_sale_id = models.IntegerField(help_text="Sale document ID from Granit ERP", null=True)
-    granit_line_id = models.IntegerField(help_text="Sale line ID from Granit ERP", null=True)
+    granit_sale_id = models.IntegerField(help_text="Sale document ID from Granit ERP")
+    granit_line_id = models.IntegerField(help_text="Sale line ID from Granit ERP")
     
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'fact_sale'
         ordering = ['-sale_date', 'store', 'product']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['granit_sale_id', 'granit_line_id'],
+                name='fact_sale_granit_line_uniq',
+            ),
+        ]
         indexes = [
             models.Index(fields=['sale_date', 'store']),
             models.Index(fields=['sale_date', 'product']),
             models.Index(fields=['sale_date', 'client']),
-            models.Index(fields=['granit_sale_id', 'granit_line_id']),
         ]
 
     def __str__(self):
@@ -34,7 +39,12 @@ class SaleFact(models.Model):
 class StockSnapshot(models.Model):
     """Stock snapshot - daily stock levels by SKU and store."""
     snapshot_date = models.DateField(db_index=True, help_text="Date of snapshot (yesterday)")
-    store = models.ForeignKey(Store, on_delete=models.PROTECT, related_name='stock_snapshots')
+    store = models.ForeignKey(
+        Store,
+        on_delete=models.PROTECT,
+        related_name='stock_snapshots',
+        help_text="Company ledger store (granit_id=0) when stock is not per shop",
+    )
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='stock_snapshots')
     
     quantity = models.DecimalField(max_digits=12, decimal_places=3, help_text="Stock quantity")

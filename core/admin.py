@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Store, Client, Product, ProductGroup, ProductParameter
+from .models import Store, Client, Product, ProductGroup, ProductParameter, ProductParameterValue
 
 
 @admin.register(Store)
@@ -30,9 +30,17 @@ class ProductParameterAdmin(admin.ModelAdmin):
     ordering = ['name']
 
 
+@admin.register(ProductParameterValue)
+class ProductParameterValueAdmin(admin.ModelAdmin):
+    list_display = ['granit_id', 'label', 'parameter', 'created_at']
+    list_filter = ['parameter']
+    search_fields = ['label', 'granit_id']
+    ordering = ['label']
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['granit_id', 'name', 'group', 'parameter', 'is_active', 'created_at']
-    list_filter = ['is_active', 'group', 'parameter']
+    list_display = ['granit_id', 'name', 'group', 'parameter', 'parameter_value', 'is_active', 'created_at']
+    list_filter = ['is_active', 'group', 'parameter', 'parameter_value']
     search_fields = ['name', 'granit_id']
     ordering = ['name']

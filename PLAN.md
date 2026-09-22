@@ -1,6 +1,6 @@
 # План и сценарий: granit-sales-analytics-erp
 
-**Статус:** зафиксировано 2026-09-22; обновлено 2026-09-22 (i18n ru/en + этап 1b).  
+**Статус:** зафиксировано 2026-09-22; обновлено 2026-09-22 (этап 2 ETL: 12 мес в локальном Postgres).  
 **Репо:** https://github.com/IvanBondarenkoIT/granit-sales-analytics-erp  
 **Локально:** `D:\CursorProjects\granit-sales-analytics-erp`
 
@@ -95,7 +95,7 @@
 | 0 | Этот план в репо | Документ согласован (готово) |
 | 1 | Skeleton Django+Docker + схема facts/dims + README деплоя alt/Railway | `docker compose` поднимает app локально против Postgres (готово) |
 | 1b | i18n: `ru`/`en`, LocaleMiddleware, переключатель в layout, базовые строки home/admin chrome | Переключение языка сохраняется в сессии; home на обоих языках (готово) |
-| 2 | ETL на alt: proxy → инкремент «вчера» + backfill истории | В БД есть продажи за выбранную глубину |
+| 2 | ETL: proxy → инкремент «вчера» + backfill 12 мес (команды Django; alt cron позже) | В локальном Postgres продажи `2025-09-22`–`2026-09-21` (готово) |
 | 3 | SMS: импорт Excel → отчёт купили / не купили (строки UI через gettext) | Отчёт по тестовому Excel на ru и en |
 | 4 | Sales explorer (HTMX фильтры/группировки), UI двуязычный | Срез за период без боли; фильтры/лейблы ru+en |
 | 5 | Promos + baseline / YoY (+ optional forecast), UI двуязычный | Вердикт по тестовой акции; экран ru+en |
@@ -115,7 +115,7 @@
 ## 8. Открытые мелочи (не блокируют этап 1 / 1b)
 
 - [ ] Точный туннель Railway↔Postgres (Cloudflare Tunnel vs IP allowlist + TLS)
-- [ ] Глубина истории backfill (N лет) после оценки размера
+- [x] Глубина backfill: **12 месяцев** (первый прогон: 365 дней, ~156k строк `fact_sale`)
 - [ ] Нужен ли `uk` (украинский) позже — сейчас только `ru` + `en`
 
 ---

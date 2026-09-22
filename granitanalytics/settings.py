@@ -156,6 +156,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = 'static/'
 
+# firebird-db-proxy (ETL only; not required to start the web process)
+PROXY_API_URL = os.getenv('PROXY_API_URL', '').strip()
+PROXY_API_TOKEN = os.getenv('PROXY_API_TOKEN', '').strip()
+PROXY_API_TIMEOUT = int(os.getenv('PROXY_API_TIMEOUT', '60'))
+ETL_SALES_STORE_FIELD = os.getenv('ETL_SALES_STORE_FIELD', 'STORGRPID').strip() or 'STORGRPID'
+ETL_PRODUCT_PARAM_ID = int(os.getenv('ETL_PRODUCT_PARAM_ID', '2'))
+COMPANY_LEDGER_STORE_ID = 0
+
+
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
