@@ -23,3 +23,8 @@ venv/
 *.pem
 *.key
 credentials.json
+
+# Local data (phones, campaign Excel) — never publish
+data/local/
+*.xlsx
+!docs/**/*.xlsx
