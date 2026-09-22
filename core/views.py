@@ -1,25 +1,26 @@
 from django.shortcuts import render
+from django.utils.translation import gettext as _
 
 
 def home(request):
     """Home page - project overview and navigation."""
     context = {
-        'project_name': 'Granit Sales Analytics ERP',
+        'project_name': _('Granit Sales Analytics ERP'),
         'apps': [
             {
-                'name': 'SMS Campaign Analysis',
-                'description': 'Upload Excel, analyze customer purchase lift',
-                'status': 'Stage 3 - Pending',
+                'name': _('SMS Campaign Analysis'),
+                'description': _('Upload Excel, analyze customer purchase lift'),
+                'status': _('Stage 3 — Pending'),
             },
             {
-                'name': 'Sales Explorer',
-                'description': 'Filter and explore sales by product, client, store, period',
-                'status': 'Stage 4 - Pending',
+                'name': _('Sales Explorer'),
+                'description': _('Filter and explore sales by product, client, store, period'),
+                'status': _('Stage 4 — Pending'),
             },
             {
-                'name': 'Promotion Effectiveness',
-                'description': 'Compare promo results vs baseline and YoY',
-                'status': 'Stage 5 - Pending',
+                'name': _('Promotion Effectiveness'),
+                'description': _('Compare promo results vs baseline and YoY'),
+                'status': _('Stage 5 — Pending'),
             },
         ],
     }

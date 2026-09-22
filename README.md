@@ -106,8 +106,18 @@ docker compose exec web python manage.py createsuperuser
 
 5. **Access the application:**
 
-- Web UI: http://localhost:8000
+- Web UI: http://localhost:8000 (default language: Russian; switcher in the top bar for English)
 - Django Admin: http://localhost:8000/admin
+
+### Translations (i18n)
+
+- Languages: `ru` (default), `en`
+- Catalogs: `locale/ru/LC_MESSAGES/`, `locale/en/LC_MESSAGES/`
+- After editing `.po` files:
+
+```bash
+docker compose exec web python manage.py compilemessages
+```
 
 ### Development Commands
 

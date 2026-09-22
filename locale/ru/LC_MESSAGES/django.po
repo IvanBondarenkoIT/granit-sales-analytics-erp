@@ -1,0 +1,74 @@
+# Granit Sales Analytics ERP — Russian translations
+msgid ""
+msgstr ""
+"Project-Id-Version: granit-sales-analytics-erp\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-22 16:47+0000\n"
+"PO-Revision-Date: 2026-09-22 16:47+0000\n"
+"Last-Translator: \n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "Granit Sales Analytics ERP"
+msgstr "Granit Sales Analytics ERP"
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "Admin Panel"
+msgstr "Админка"
+
+msgid "Decision ERP for Granit: SMS Campaigns, Sales Analytics, Promo Effectiveness"
+msgstr "Decision ERP для Granit: SMS-кампании, аналитика продаж, эффективность акций"
+
+msgid "SMS Campaign Analysis"
+msgstr "Анализ SMS-кампаний"
+
+msgid "Upload Excel, analyze customer purchase lift"
+msgstr "Загрузка Excel и анализ прироста покупок клиентов"
+
+msgid "Stage 3 — Pending"
+msgstr "Этап 3 — ожидает"
+
+msgid "Sales Explorer"
+msgstr "Обзор продаж"
+
+msgid "Filter and explore sales by product, client, store, period"
+msgstr "Фильтры и срезы продаж по товару, клиенту, магазину, периоду"
+
+msgid "Stage 4 — Pending"
+msgstr "Этап 4 — ожидает"
+
+msgid "Promotion Effectiveness"
+msgstr "Эффективность акций"
+
+msgid "Compare promo results vs baseline and YoY"
+msgstr "Сравнение результатов акции с базой и YoY"
+
+msgid "Stage 5 — Pending"
+msgstr "Этап 5 — ожидает"
+
+msgid "Stage 1 complete: Django skeleton"
+msgstr "Этап 1 готов: каркас Django"
+
+msgid "Django project with 5 apps: core, etl, campaigns, sales, promos"
+msgstr "Проект Django с 5 приложениями: core, etl, campaigns, sales, promos"
+
+msgid "PostgreSQL database with fact and dimension models"
+msgstr "База PostgreSQL с моделями фактов и измерений"
+
+msgid "Docker Compose for local development"
+msgstr "Docker Compose для локальной разработки"
+
+msgid "Architecture: alt Debian (Postgres + ETL) + Railway (UI)"
+msgstr "Архитектура: alt Debian (Postgres + ETL) + Railway (UI)"
+
+msgid "UI languages: Russian and English with a language switcher"
+msgstr "Языки UI: русский и английский с переключателем"
+
+msgid "Ready for Stage 2: ETL implementation"
+msgstr "Готово к этапу 2: реализация ETL"
