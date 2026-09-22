@@ -71,13 +71,19 @@ git clone https://github.com/IvanBondarenkoIT/granit-sales-analytics-erp.git
 cd granit-sales-analytics-erp
 ```
 
-2. **Copy environment template:**
+2. **Copy environment template and set secrets:**
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` if needed (defaults work for local development).
+Edit `.env` and replace placeholders with your own values. At minimum set:
+
+- `SECRET_KEY` — generate a Django secret key locally
+- `DB_PASSWORD` — any local-only password
+- `DB_USER` / `DB_NAME` — must match what Compose passes to Postgres
+
+Do not commit `.env`. Compose reads variables from `.env` only (no password fallbacks in `docker-compose.yml`).
 
 3. **Start the application:**
 
