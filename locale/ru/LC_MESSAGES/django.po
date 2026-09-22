@@ -72,3 +72,102 @@ msgstr "Языки UI: русский и английский с переклю�
 
 msgid "Ready for Stage 2: ETL implementation"
 msgstr "Готово к этапу 2: реализация ETL"
+
+msgid "Home"
+msgstr "Главная"
+
+msgid "Open"
+msgstr "Открыть"
+
+msgid "Stage 3 — Ready"
+msgstr "Этап 3 — готов"
+
+msgid "New analysis"
+msgstr "Новый анализ"
+
+msgid "Campaign name"
+msgstr "Название кампании"
+
+msgid "Excel file"
+msgstr "Файл Excel"
+
+msgid "Use saved local SMS list"
+msgstr "Взять сохранённый локальный список SMS"
+
+msgid "Analysis from"
+msgstr "Анализ с"
+
+msgid "Analysis to (exclusive)"
+msgstr "Анализ до (не включая)"
+
+msgid "Notes"
+msgstr "Заметки"
+
+msgid "Analysis end must be after start."
+msgstr "Дата окончания должна быть позже начала."
+
+msgid "Upload an Excel file or use the saved local list."
+msgstr "Загрузите Excel или используйте сохранённый локальный список."
+
+msgid "SMS sent on %(date)s"
+msgstr "SMS отправлены %(date)s"
+
+msgid "Campaign analyzed."
+msgstr "Кампания проанализирована."
+
+msgid "SMS 18 Sep 2026"
+msgstr "SMS 18 сентября 2026"
+
+msgid "Period"
+msgstr "Период"
+
+msgid "Clients"
+msgstr "Клиенты"
+
+msgid "Bought"
+msgstr "Купили"
+
+msgid "Did not buy"
+msgstr "Не купили"
+
+msgid "No campaigns yet."
+msgstr "Кампаний пока нет."
+
+msgid "SMS were sent on 18 September 2026. Default window is from that day until today."
+msgstr "SMS разослали 18 сентября 2026. Окно по умолчанию — с этого дня до сегодня."
+
+msgid "Saved local SMS list is available (not stored in git)."
+msgstr "Локальный список SMS доступен (в git не лежит)."
+
+msgid "Analyze"
+msgstr "Считать"
+
+msgid "All campaigns"
+msgstr "Все кампании"
+
+msgid "SMS sent on 18 September 2026."
+msgstr "SMS разослали 18 сентября 2026."
+
+msgid "Share bought"
+msgstr "Доля купивших"
+
+msgid "Not matched to ERP"
+msgstr "Не сошлись с ERP"
+
+msgid "All"
+msgstr "Все"
+
+msgid "Client ID"
+msgstr "ID клиента"
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Amount"
+msgstr "Сумма"
+
+msgid "Yes"
+msgstr "Да"
+
+msgid "No"
+msgstr "Нет"

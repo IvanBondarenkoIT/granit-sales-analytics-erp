@@ -26,5 +26,6 @@ credentials.json
 
 # Local data (phones, campaign Excel) — never publish
 data/local/
+media/
 *.xlsx
 !docs/**/*.xlsx

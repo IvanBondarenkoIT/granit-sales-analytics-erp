@@ -67,6 +67,7 @@
                 <h2>{{ app.name }}</h2>
                 <p>{{ app.description }}</p>
                 <span class="status">{{ app.status }}</span>
+                {% if app.url %}<p><a href="{% url app.url %}">{% trans "Open" %}</a></p>{% endif %}
             </div>
             {% endfor %}
         </div>

@@ -96,7 +96,7 @@
 | 1 | Skeleton Django+Docker + схема facts/dims + README деплоя alt/Railway | `docker compose` поднимает app локально против Postgres (готово) |
 | 1b | i18n: `ru`/`en`, LocaleMiddleware, переключатель в layout, базовые строки home/admin chrome | Переключение языка сохраняется в сессии; home на обоих языках (готово) |
 | 2 | ETL: proxy → инкремент «вчера» + backfill 12 мес (команды Django; alt cron позже) | В локальном Postgres продажи `2025-09-22`–`2026-09-21` (готово) |
-| 3 | SMS: импорт Excel → отчёт купили / не купили (строки UI через gettext) | Отчёт по тестовому Excel на ru и en |
+| 3 | SMS: импорт Excel → отчёт купили / не купили (строки UI через gettext) | Отчёт по списку от 18.09.2026, окно с даты рассылки (готово) |
 | 4 | Sales explorer (HTMX фильтры/группировки), UI двуязычный | Срез за период без боли; фильтры/лейблы ru+en |
 | 5 | Promos + baseline / YoY (+ optional forecast), UI двуязычный | Вердикт по тестовой акции; экран ru+en |
 | 6 | Опционально: алерты в notify-hub | Не блокирует MVP |

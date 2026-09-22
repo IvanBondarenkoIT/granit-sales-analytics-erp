@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ campaign.name }}{% endblock %}
+
+{% block extra_css %}
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .stat { background: #fff; padding: 1rem; }
+        .stat strong { display: block; font-size: 1.6rem; color: #667eea; }
+        .filters a { margin-right: 0.75rem; }
+        table { width: 100%; border-collapse: collapse; background: #fff; margin-top: 1rem; }
+        th, td { text-align: left; padding: 0.6rem; border-bottom: 1px solid #eee; }
+        .yes { color: #047857; font-weight: 600; }
+        .no { color: #92400e; }
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p><a href="{% url 'campaign_list' %}">{% trans "All campaigns" %}</a></p>
+    <h1>{{ campaign.name }}</h1>
+    <p>{% trans "SMS sent on 18 September 2026." %}
+       {% trans "Period" %}: {{ campaign.analysis_period_start }} — {{ campaign.analysis_period_end }}</p>
+    <div class="stats">
+        <div class="stat"><span>{% trans "Clients" %}</span><strong>{{ campaign.total_clients }}</strong></div>
+        <div class="stat"><span>{% trans "Bought" %}</span><strong>{{ campaign.clients_with_sales }}</strong></div>
+        <div class="stat"><span>{% trans "Did not buy" %}</span><strong>{{ not_bought }}</strong></div>
+        <div class="stat"><span>{% trans "Share bought" %}</span><strong>{{ rate }}%</strong></div>
+        <div class="stat"><span>{% trans "Not matched to ERP" %}</span><strong>{{ unmatched }}</strong></div>
+    </div>
+    <p class="filters">
+        <a href="?status=all">{% trans "All" %}</a>
+        <a href="?status=bought">{% trans "Bought" %}</a>
+        <a href="?status=not_bought">{% trans "Did not buy" %}</a>
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans "Client ID" %}</th>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Bought" %}</th>
+                <th>{% trans "Amount" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in clients %}
+            <tr>
+                <td>{{ row.granit_client_id }}</td>
+                <td>{{ row.client.name|default:"—" }}</td>
+                <td class="{% if row.had_sales %}yes{% else %}no{% endif %}">
+                    {% if row.had_sales %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}
+                </td>
+                <td>{{ row.sales_amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

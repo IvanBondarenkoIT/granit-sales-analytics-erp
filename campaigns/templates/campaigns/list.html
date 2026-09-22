@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "SMS Campaign Analysis" %}{% endblock %}
+
+{% block extra_css %}
+        .page-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; }
+        table { width: 100%; border-collapse: collapse; background: #fff; }
+        th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid #eee; }
+        th { color: #555; font-size: 0.85rem; }
+        .btn { display: inline-block; background: #667eea; color: #fff; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; }
+        .empty { background: #fff; padding: 2rem; color: #666; }
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-head">
+        <h1>{% trans "SMS Campaign Analysis" %}</h1>
+        <a class="btn" href="{% url 'campaign_create' %}">{% trans "New analysis" %}</a>
+    </div>
+    {% if campaigns %}
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Period" %}</th>
+                <th>{% trans "Clients" %}</th>
+                <th>{% trans "Bought" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in campaigns %}
+            <tr>
+                <td><a href="{% url 'campaign_detail' c.pk %}">{{ c.name }}</a></td>
+                <td>{{ c.analysis_period_start }} — {{ c.analysis_period_end }}</td>
+                <td>{{ c.total_clients }}</td>
+                <td>{{ c.clients_with_sales }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty">{% trans "No campaigns yet." %}</p>
+    {% endif %}
+</div>
+{% endblock %}

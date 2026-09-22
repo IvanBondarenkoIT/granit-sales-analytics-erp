@@ -72,3 +72,102 @@ msgstr "UI languages: Russian and English with a language switcher"
 
 msgid "Ready for Stage 2: ETL implementation"
 msgstr "Ready for Stage 2: ETL implementation"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Open"
+msgstr "Open"
+
+msgid "Stage 3 — Ready"
+msgstr "Stage 3 — Ready"
+
+msgid "New analysis"
+msgstr "New analysis"
+
+msgid "Campaign name"
+msgstr "Campaign name"
+
+msgid "Excel file"
+msgstr "Excel file"
+
+msgid "Use saved local SMS list"
+msgstr "Use saved local SMS list"
+
+msgid "Analysis from"
+msgstr "Analysis from"
+
+msgid "Analysis to (exclusive)"
+msgstr "Analysis to (exclusive)"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "Analysis end must be after start."
+msgstr "Analysis end must be after start."
+
+msgid "Upload an Excel file or use the saved local list."
+msgstr "Upload an Excel file or use the saved local list."
+
+msgid "SMS sent on %(date)s"
+msgstr "SMS sent on %(date)s"
+
+msgid "Campaign analyzed."
+msgstr "Campaign analyzed."
+
+msgid "SMS 18 Sep 2026"
+msgstr "SMS 18 Sep 2026"
+
+msgid "Period"
+msgstr "Period"
+
+msgid "Clients"
+msgstr "Clients"
+
+msgid "Bought"
+msgstr "Bought"
+
+msgid "Did not buy"
+msgstr "Did not buy"
+
+msgid "No campaigns yet."
+msgstr "No campaigns yet."
+
+msgid "SMS were sent on 18 September 2026. Default window is from that day until today."
+msgstr "SMS were sent on 18 September 2026. Default window is from that day until today."
+
+msgid "Saved local SMS list is available (not stored in git)."
+msgstr "Saved local SMS list is available (not stored in git)."
+
+msgid "Analyze"
+msgstr "Analyze"
+
+msgid "All campaigns"
+msgstr "All campaigns"
+
+msgid "SMS sent on 18 September 2026."
+msgstr "SMS sent on 18 September 2026."
+
+msgid "Share bought"
+msgstr "Share bought"
+
+msgid "Not matched to ERP"
+msgstr "Not matched to ERP"
+
+msgid "All"
+msgstr "All"
+
+msgid "Client ID"
+msgstr "Client ID"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Amount"
+msgstr "Amount"
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "No"
+msgstr "No"

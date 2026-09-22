@@ -10,7 +10,8 @@ def home(request):
             {
                 'name': _('SMS Campaign Analysis'),
                 'description': _('Upload Excel, analyze customer purchase lift'),
-                'status': _('Stage 3 — Pending'),
+                'status': _('Stage 3 — Ready'),
+                'url': 'campaign_list',
             },
             {
                 'name': _('Sales Explorer'),

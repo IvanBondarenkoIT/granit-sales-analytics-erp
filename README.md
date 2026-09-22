@@ -137,6 +137,9 @@ docker compose exec web python manage.py etl_sales
 docker compose exec web python manage.py etl_stock
 docker compose exec web python manage.py etl_nightly
 
+# Stage 3 SMS (local Excel is gitignored; SMS sent 2026-09-18)
+docker compose exec web python manage.py import_sms_campaign --from 2026-09-18 --to 2026-09-22
+
 # Django shell
 docker compose exec web python manage.py shell
 
