@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ project_name }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+        .card p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #fef3c7;
+            color: #92400e;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .info-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .info-section h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .info-section ul {
+            list-style-position: inside;
+            color: #666;
+        }
+        .info-section li {
+            margin-bottom: 0.5rem;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{{ project_name }}</h1>
+            <p class="subtitle">Decision ERP for Granit: SMS Campaigns, Sales Analytics, Promo Effectiveness</p>
+        </header>
+
+        <div class="cards">
+            {% for app in apps %}
+            <div class="card">
+                <h2>{{ app.name }}</h2>
+                <p>{{ app.description }}</p>
+                <span class="status">{{ app.status }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="info-section">
+            <h2>Stage 1 Complete: Django Skeleton</h2>
+            <ul>
+                <li>Django project with 5 apps: core, etl, campaigns, sales, promos</li>
+                <li>PostgreSQL database with fact and dimension models</li>
+                <li>Docker Compose for local development</li>
+                <li>Architecture: alt Debian (Postgres + ETL) + Railway (UI)</li>
+                <li>Ready for Stage 2: ETL implementation</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>Granit Sales Analytics ERP | <a href="/admin/">Admin Panel</a></p>
+    </footer>
+</body>
+</html>
