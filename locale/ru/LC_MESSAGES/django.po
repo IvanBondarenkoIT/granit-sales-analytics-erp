@@ -171,3 +171,51 @@ msgstr "Да"
 
 msgid "No"
 msgstr "Нет"
+
+msgid "New campaign"
+msgstr "Новая кампания"
+
+msgid "Give each blast its own name so lists stay separate."
+msgstr "У каждой рассылки своё имя, чтобы списки не смешивались."
+
+msgid "SMS sent on"
+msgstr "Дата рассылки SMS"
+
+msgid "Date this mailing went out. Analysis starts on this day."
+msgstr "День отправки этой рассылки. Анализ начинается с этой даты."
+
+msgid "Client list for this blast only (customer_id + phone)."
+msgstr "Список клиентов только этой рассылки (customer_id + phone)."
+
+msgid "Only for the 18 Sep 2026 blast already stored on this machine."
+msgstr "Только для рассылки 18 сентября 2026, уже лежащей на этой машине."
+
+msgid "Analysis end must be after the SMS send date."
+msgstr "Дата окончания должна быть позже даты рассылки."
+
+msgid "New campaign saved separately from previous blasts."
+msgstr "Новая кампания сохранена отдельно от прошлых рассылок."
+
+msgid "SMS %(date)s"
+msgstr "SMS %(date)s"
+
+msgid "Each mailing is a separate campaign. Saving here does not change older blasts."
+msgstr "Каждая рассылка — отдельная кампания. Сохранение не меняет старые."
+
+msgid "A local list for the 18 Sep 2026 blast is on this machine (not in git). Leave the checkbox off for a new list."
+msgstr "Локальный список рассылки 18.09.2026 есть на этой машине (не в git). Для нового списка галочку не ставьте."
+
+msgid "Create campaign"
+msgstr "Создать кампанию"
+
+msgid "Recalculate this campaign until"
+msgstr "Пересчитать эту кампанию до"
+
+msgid "Recalculate"
+msgstr "Пересчитать"
+
+msgid "Invalid end date."
+msgstr "Неверная дата окончания."
+
+msgid "This campaign was recalculated. Other blasts were not changed."
+msgstr "Эта кампания пересчитана. Другие рассылки не менялись."

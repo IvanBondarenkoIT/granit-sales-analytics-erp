@@ -18,8 +18,14 @@
 <div class="container">
     <p><a href="{% url 'campaign_list' %}">{% trans "All campaigns" %}</a></p>
     <h1>{{ campaign.name }}</h1>
-    <p>{% trans "SMS sent on 18 September 2026." %}
-       {% trans "Period" %}: {{ campaign.analysis_period_start }} — {{ campaign.analysis_period_end }}</p>
+    <p>{% trans "SMS sent on" %}: <strong>{{ campaign.sms_sent_on|default:"—" }}</strong>
+       · {% trans "Period" %}: {{ campaign.analysis_period_start }} — {{ campaign.analysis_period_end }}</p>
+    <form method="post" action="{% url 'campaign_reanalyze' campaign.pk %}" style="margin: 1rem 0;">
+        {% csrf_token %}
+        <label for="date_to">{% trans "Recalculate this campaign until" %}</label>
+        <input type="date" id="date_to" name="date_to" value="{{ today|date:'Y-m-d' }}">
+        <button type="submit">{% trans "Recalculate" %}</button>
+    </form>
     <div class="stats">
         <div class="stat"><span>{% trans "Clients" %}</span><strong>{{ campaign.total_clients }}</strong></div>
         <div class="stat"><span>{% trans "Bought" %}</span><strong>{{ campaign.clients_with_sales }}</strong></div>

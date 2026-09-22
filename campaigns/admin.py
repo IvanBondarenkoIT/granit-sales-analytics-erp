@@ -4,9 +4,10 @@ from .models import Campaign, CampaignClient
 
 @admin.register(Campaign)
 class CampaignAdmin(admin.ModelAdmin):
-    list_display = ['name', 'created_at', 'total_clients', 'clients_with_sales', 'analysis_period_start', 'analysis_period_end']
+    list_display = ['name', 'sms_sent_on', 'created_at', 'total_clients', 'clients_with_sales', 'analysis_period_start', 'analysis_period_end']
     search_fields = ['name']
-    date_hierarchy = 'created_at'
+    list_filter = ['sms_sent_on']
+    date_hierarchy = 'sms_sent_on'
     ordering = ['-created_at']
 
 

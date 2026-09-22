@@ -1,14 +1,12 @@
+from datetime import date
+
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
+from django.views.decorators.http import require_POST
 
-from campaigns.analysis import (
-    DEFAULT_SMS_SENT_ON,
-    LOCAL_SMS_XLSX,
-    analyze_rows,
-    import_campaign_from_path,
-)
-from campaigns.excel import parse_campaign_xlsx
+from campaigns.analysis import LOCAL_SMS_XLSX, analyze_rows, import_campaign_from_path
+from campaigns.excel import CampaignRow, parse_campaign_xlsx
 from campaigns.forms import CampaignUploadForm
 from campaigns.models import Campaign, CampaignClient
 
@@ -22,41 +20,40 @@ def campaign_create(request):
     if request.method == "POST":
         form = CampaignUploadForm(request.POST, request.FILES)
         if form.is_valid():
+            sent = form.cleaned_data["sms_sent_on"]
+            date_to = form.cleaned_data["date_to"]
+            notes = form.cleaned_data["notes"]
             try:
                 if form.cleaned_data["use_local_file"] and LOCAL_SMS_XLSX.is_file():
                     campaign = import_campaign_from_path(
                         LOCAL_SMS_XLSX,
                         name=form.cleaned_data["name"],
-                        date_from=form.cleaned_data["date_from"],
-                        date_to=form.cleaned_data["date_to"],
-                        notes=form.cleaned_data["notes"]
-                        or _("SMS sent on %(date)s") % {"date": DEFAULT_SMS_SENT_ON.isoformat()},
+                        date_from=sent,
+                        date_to=date_to,
+                        sms_sent_on=sent,
+                        notes=notes,
                     )
                 else:
                     upload = form.cleaned_data["excel_file"]
                     rows = parse_campaign_xlsx(upload)
                     campaign = Campaign.objects.create(
                         name=form.cleaned_data["name"],
-                        notes=form.cleaned_data["notes"],
+                        sms_sent_on=sent,
+                        notes=notes,
                     )
                     if upload:
                         campaign.uploaded_file.save(upload.name, upload, save=True)
-                    campaign = analyze_rows(
-                        campaign,
-                        rows,
-                        form.cleaned_data["date_from"],
-                        form.cleaned_data["date_to"],
-                    )
+                    campaign = analyze_rows(campaign, rows, sent, date_to)
             except Exception as exc:
                 messages.error(request, str(exc))
             else:
-                messages.success(request, _("Campaign analyzed."))
+                messages.success(request, _("New campaign saved separately from previous blasts."))
                 return redirect("campaign_detail", pk=campaign.pk)
     else:
         form = CampaignUploadForm(
             initial={
-                "name": _("SMS 18 Sep 2026"),
-                "notes": _("SMS sent on %(date)s") % {"date": DEFAULT_SMS_SENT_ON.isoformat()},
+                "name": _("SMS %(date)s") % {"date": date.today().isoformat()},
+                "sms_sent_on": date.today(),
             }
         )
     return render(
@@ -88,5 +85,28 @@ def campaign_detail(request, pk: int):
             "rate": rate,
             "not_bought": campaign.total_clients - campaign.clients_with_sales,
             "unmatched": CampaignClient.objects.filter(campaign=campaign, client__isnull=True).count(),
+            "today": date.today(),
         },
     )
+
+
+@require_POST
+def campaign_reanalyze(request, pk: int):
+    campaign = get_object_or_404(Campaign, pk=pk)
+    raw_to = request.POST.get("date_to")
+    try:
+        date_to = date.fromisoformat(raw_to) if raw_to else date.today()
+    except ValueError:
+        messages.error(request, _("Invalid end date."))
+        return redirect("campaign_detail", pk=campaign.pk)
+    sent = campaign.sms_sent_on or campaign.analysis_period_start
+    if not sent or date_to <= sent:
+        messages.error(request, _("Analysis end must be after the SMS send date."))
+        return redirect("campaign_detail", pk=campaign.pk)
+    typed = [
+        CampaignRow(granit_client_id=item.granit_client_id, phone=item.phone)
+        for item in campaign.campaign_clients.all()
+    ]
+    analyze_rows(campaign, typed, sent, date_to)
+    messages.success(request, _("This campaign was recalculated. Other blasts were not changed."))
+    return redirect("campaign_detail", pk=campaign.pk)

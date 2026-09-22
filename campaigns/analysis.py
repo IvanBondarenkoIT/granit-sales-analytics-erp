@@ -82,6 +82,7 @@ def analyze_rows(
     if to_update:
         CampaignClient.objects.bulk_update(to_update, ["had_sales", "sales_amount"], batch_size=1000)
 
+    campaign.sms_sent_on = campaign.sms_sent_on or date_from
     campaign.analysis_period_start = date_from
     campaign.analysis_period_end = date_to
     campaign.total_clients = len(rows)
@@ -96,14 +97,17 @@ def import_campaign_from_path(
     name: str,
     date_from: date,
     date_to: date,
+    sms_sent_on: date | None = None,
     notes: str = "",
 ) -> Campaign:
     path = Path(path)
     rows = parse_campaign_xlsx(path)
     if not rows:
         raise ValueError(_("Excel has no client rows"))
+    sent = sms_sent_on or date_from
     campaign = Campaign.objects.create(
         name=name,
+        sms_sent_on=sent,
         analysis_period_start=date_from,
         analysis_period_end=date_to,
         notes=notes,

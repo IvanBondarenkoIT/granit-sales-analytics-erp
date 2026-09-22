@@ -3,9 +3,15 @@ from core.models import Client
 
 
 class Campaign(models.Model):
-    """SMS campaign - uploaded Excel with client IDs/phones."""
+    """One SMS blast. Each mailing is its own row — never merge lists."""
     
     name = models.CharField(max_length=200)
+    sms_sent_on = models.DateField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text="Calendar date this blast was sent",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     uploaded_file = models.FileField(upload_to='campaigns/', null=True, blank=True)
     
@@ -19,10 +25,11 @@ class Campaign(models.Model):
 
     class Meta:
         db_table = 'campaign'
-        ordering = ['-created_at']
+        ordering = ['-sms_sent_on', '-created_at']
 
     def __str__(self):
-        return f"{self.name} ({self.created_at.strftime('%Y-%m-%d')})"
+        sent = self.sms_sent_on.isoformat() if self.sms_sent_on else self.created_at.strftime('%Y-%m-%d')
+        return f"{self.name} ({sent})"
 
 
 class CampaignClient(models.Model):

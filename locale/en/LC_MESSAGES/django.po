@@ -171,3 +171,51 @@ msgstr "Yes"
 
 msgid "No"
 msgstr "No"
+
+msgid "New campaign"
+msgstr "New campaign"
+
+msgid "Give each blast its own name so lists stay separate."
+msgstr "Give each blast its own name so lists stay separate."
+
+msgid "SMS sent on"
+msgstr "SMS sent on"
+
+msgid "Date this mailing went out. Analysis starts on this day."
+msgstr "Date this mailing went out. Analysis starts on this day."
+
+msgid "Client list for this blast only (customer_id + phone)."
+msgstr "Client list for this blast only (customer_id + phone)."
+
+msgid "Only for the 18 Sep 2026 blast already stored on this machine."
+msgstr "Only for the 18 Sep 2026 blast already stored on this machine."
+
+msgid "Analysis end must be after the SMS send date."
+msgstr "Analysis end must be after the SMS send date."
+
+msgid "New campaign saved separately from previous blasts."
+msgstr "New campaign saved separately from previous blasts."
+
+msgid "SMS %(date)s"
+msgstr "SMS %(date)s"
+
+msgid "Each mailing is a separate campaign. Saving here does not change older blasts."
+msgstr "Each mailing is a separate campaign. Saving here does not change older blasts."
+
+msgid "A local list for the 18 Sep 2026 blast is on this machine (not in git). Leave the checkbox off for a new list."
+msgstr "A local list for the 18 Sep 2026 blast is on this machine (not in git). Leave the checkbox off for a new list."
+
+msgid "Create campaign"
+msgstr "Create campaign"
+
+msgid "Recalculate this campaign until"
+msgstr "Recalculate this campaign until"
+
+msgid "Recalculate"
+msgstr "Recalculate"
+
+msgid "Invalid end date."
+msgstr "Invalid end date."
+
+msgid "This campaign was recalculated. Other blasts were not changed."
+msgstr "This campaign was recalculated. Other blasts were not changed."

@@ -16,12 +16,13 @@
 <div class="container">
     <div class="page-head">
         <h1>{% trans "SMS Campaign Analysis" %}</h1>
-        <a class="btn" href="{% url 'campaign_create' %}">{% trans "New analysis" %}</a>
+        <a class="btn" href="{% url 'campaign_create' %}">{% trans "New campaign" %}</a>
     </div>
     {% if campaigns %}
     <table>
         <thead>
             <tr>
+                <th>{% trans "SMS sent on" %}</th>
                 <th>{% trans "Name" %}</th>
                 <th>{% trans "Period" %}</th>
                 <th>{% trans "Clients" %}</th>
@@ -31,6 +32,7 @@
         <tbody>
             {% for c in campaigns %}
             <tr>
+                <td>{{ c.sms_sent_on|default:"—" }}</td>
                 <td><a href="{% url 'campaign_detail' c.pk %}">{{ c.name }}</a></td>
                 <td>{{ c.analysis_period_start }} — {{ c.analysis_period_end }}</td>
                 <td>{{ c.total_clients }}</td>
