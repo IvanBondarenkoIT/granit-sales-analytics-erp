@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Log in" %} — {% trans "Granit Sales Analytics ERP" %}{% endblock %}
+
+{% block extra_css %}
+        .login-box {
+            max-width: 400px;
+            margin: 3rem auto;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .login-box h1 { font-size: 1.4rem; margin-bottom: 0.5rem; color: #333; }
+        .login-box .hint { color: #666; font-size: 0.9rem; margin-bottom: 1.25rem; }
+        .login-box label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; }
+        .login-box input[type=text],
+        .login-box input[type=password] {
+            width: 100%;
+            padding: 0.55rem 0.65rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font: inherit;
+        }
+        .login-box .btn {
+            margin-top: 1.25rem;
+            width: 100%;
+            background: #667eea;
+            color: #fff;
+            border: 0;
+            padding: 0.65rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 600;
+        }
+        .login-box .errors { color: #b91c1c; margin: 0.75rem 0; }
+        .topbar .nav { display: none; }
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-box">
+        <h1>{% trans "Log in" %}</h1>
+        <p class="hint">{% trans "Sign in to open SMS, sales, and promo screens." %}</p>
+        {% if form.errors %}
+        <div class="errors">{% trans "Please enter a correct username and password." %}</div>
+        {% endif %}
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            <label for="id_username">{% trans "Username" %}</label>
+            <input type="text" name="username" id="id_username" autocomplete="username" autofocus required>
+            <label for="id_password">{% trans "Password" %}</label>
+            <input type="password" name="password" id="id_password" autocomplete="current-password" required>
+            <button class="btn" type="submit">{% trans "Log in" %}</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

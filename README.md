@@ -100,9 +100,7 @@ This will:
 - Start Django development server on port 8000
 - Apply database migrations automatically
 
-4. **Create superuser (optional, for Django admin):**
-
-In a new terminal:
+4. **Create a user (required — UI is behind login):**
 
 ```bash
 docker compose exec web python manage.py createsuperuser
@@ -110,8 +108,8 @@ docker compose exec web python manage.py createsuperuser
 
 5. **Access the application:**
 
-- Web UI: http://localhost:8000 (default language: Russian; switcher in the top bar for English)
-- Django Admin: http://localhost:8000/admin
+- Web UI: http://localhost:8000 — redirects to `/accounts/login/` until you sign in
+- Django Admin: http://localhost:8000/admin (same user if is_staff)
 
 ### Translations (i18n)
 
@@ -192,6 +190,14 @@ Hub places server `.env` next to prod compose. Required variables (see `.env.exa
 - `IMAGE_TAG=main` (or `sha-xxxxxxx` to pin/rollback)
 
 Container entrypoint runs `migrate` + `compilemessages`, then gunicorn.
+
+After first deploy, create an app user (once):
+
+```bash
+docker exec -it granit-analytics python manage.py createsuperuser
+```
+
+All UI routes require login. `/health` stays public for the hub healthcheck.
 
 ### Nightly ETL (alt cron via hub)
 

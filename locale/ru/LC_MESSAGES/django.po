@@ -465,6 +465,24 @@ msgstr "Чек не найден."
 msgid "Home"
 msgstr "Главная"
 
+msgid "Log in"
+msgstr "Войти"
+
+msgid "Log out"
+msgstr "Выйти"
+
+msgid "Username"
+msgstr "Логин"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Sign in to open SMS, sales, and promo screens."
+msgstr "Войдите, чтобы открыть SMS, обзор продаж и акции."
+
+msgid "Please enter a correct username and password."
+msgstr "Неверный логин или пароль."
+
 msgid "Language"
 msgstr "Язык"
 

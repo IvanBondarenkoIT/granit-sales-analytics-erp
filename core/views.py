@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_not_required
 from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -32,6 +33,7 @@ def home(request):
     return render(request, "core/home.html", context)
 
 
+@login_not_required
 def health(request):
     """Liveness/readiness for Docker and the deploy hub. No auth."""
     try:

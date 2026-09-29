@@ -37,6 +37,21 @@
             font-size: 0.875rem;
             color: #555;
         }
+        .topbar-right {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logout-btn {
+            background: none;
+            border: 0;
+            color: #334;
+            font: inherit;
+            font-size: 0.875rem;
+            cursor: pointer;
+            padding: 0;
+            text-decoration: underline;
+        }
         .lang-switch select {
             padding: 0.35rem 0.5rem;
             border: 1px solid #ccc;
@@ -67,21 +82,29 @@
             <a href="{% url 'sales_explorer' %}"{% if '/sales/' in request.path %} class="active"{% endif %}>{% trans "Sales Explorer" %}</a>
             <a href="{% url 'promo_list' %}"{% if '/promos/' in request.path %} class="active"{% endif %}>{% trans "Promotion Effectiveness" %}</a>
         </nav>
-        <form class="lang-switch" action="{% url 'set_language' %}" method="post">
-            {% csrf_token %}
-            <input name="next" type="hidden" value="{{ request.get_full_path }}">
-            <label for="language">{% trans "Language" %}</label>
-            <select name="language" id="language" onchange="this.form.next.value=location.pathname+location.search; this.form.submit()">
-                {% get_current_language as CURRENT_LANGUAGE %}
-                {% get_available_languages as AVAILABLE_LANGUAGES %}
-                {% get_language_info_list for AVAILABLE_LANGUAGES as languages %}
-                {% for language in languages %}
-                    <option value="{{ language.code }}"{% if language.code == CURRENT_LANGUAGE %} selected{% endif %}>
-                        {{ language.name_local }}
-                    </option>
-                {% endfor %}
-            </select>
-        </form>
+        <div class="topbar-right">
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" style="margin:0">
+                {% csrf_token %}
+                <button class="logout-btn" type="submit">{% trans "Log out" %} ({{ user.username }})</button>
+            </form>
+            {% endif %}
+            <form class="lang-switch" action="{% url 'set_language' %}" method="post">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                <label for="language">{% trans "Language" %}</label>
+                <select name="language" id="language" onchange="this.form.next.value=location.pathname+location.search; this.form.submit()">
+                    {% get_current_language as CURRENT_LANGUAGE %}
+                    {% get_available_languages as AVAILABLE_LANGUAGES %}
+                    {% get_language_info_list for AVAILABLE_LANGUAGES as languages %}
+                    {% for language in languages %}
+                        <option value="{{ language.code }}"{% if language.code == CURRENT_LANGUAGE %} selected{% endif %}>
+                            {{ language.name_local }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
     </div>
 
     {% if messages %}
