@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Promotion Effectiveness" %}{% endblock %}
+
+{% block extra_css %}
+        .page-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; }
+        table { width: 100%; border-collapse: collapse; background: #fff; }
+        th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid #eee; }
+        th { color: #555; font-size: 0.85rem; }
+        .btn { display: inline-block; background: #667eea; color: #fff; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; }
+        .empty { background: #fff; padding: 2rem; color: #666; }
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-head">
+        <h1>{% trans "Promotion Effectiveness" %}</h1>
+        <a class="btn" href="{% url 'promo_create' %}">{% trans "New promo" %}</a>
+    </div>
+    {% if promos %}
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Period" %}</th>
+                <th>{% trans "Baseline days" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for promo in promos %}
+            <tr>
+                <td><a href="{% url 'promo_detail' promo.pk %}">{{ promo.name }}</a></td>
+                <td>{{ promo.start_date }} — {{ promo.end_date }}</td>
+                <td>{{ promo.pre_period_days }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty">{% trans "No promos yet." %}</p>
+    {% endif %}
+</div>
+{% endblock %}

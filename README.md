@@ -10,18 +10,18 @@ This project follows a hybrid deployment architecture (see [PLAN.md](./PLAN.md) 
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
-| **PostgreSQL** (warehouse) | **alt Debian** | Data warehouse (~100 GB available), stores sales facts and dimensions |
-| **Nightly ETL** | **alt Debian** (cron/systemd) | Pulls data from firebird-db-proxy, loads into Postgres |
-| **Django + HTMX UI** | **Railway** | Web application for analytics and reporting |
+| **PostgreSQL `pg-core`** | **alt Debian** (Docker `pgnet`) | Shared DB `granit`; this app uses schema `analytics` |
+| **Nightly ETL** | **alt** (`docker exec … etl_nightly`) | Pulls from firebird-db-proxy into schema `analytics` |
+| **Django + HTMX UI** | **alt** container `granit-analytics` | `analytics.dimkava.ge` via Caddy `edge` |
 | **firebird-db-proxy** | Windows at Granit | Read-only API to Granit ERP (external, not modified) |
 
 ### Technology Stack
 
 - **Backend:** Python + Django 4.2+
 - **Frontend:** HTMX (lightweight, server-rendered)
-- **Database:** PostgreSQL 15+
-- **Deployment:** Docker + Docker Compose (local), Railway (production UI)
-- **ETL:** Python scripts running on alt Debian
+- **Database:** PostgreSQL 16 (`pg-core` in production; Compose Postgres 15 locally)
+- **Deployment:** Docker Compose locally; GHCR image + deploy hub on alt
+- **ETL:** Django management commands in this repo (stage 1)
 
 ### Data Model
 
@@ -47,8 +47,12 @@ Only active SKU with sales or stock are tracked (no dead inventory).
 ├── etl/                   # ETL run tracking and watermarks
 ├── campaigns/             # SMS campaign tracking and analysis
 ├── promos/                # Promotion effectiveness analysis
+├── deploy/                # Production Compose for alt (no local Postgres)
+├── scripts/               # Schema check for pg-core / analytics
+├── .github/workflows/     # CI/CD → GHCR
 ├── docker-compose.yml     # Local development environment
 ├── Dockerfile             # Application container definition
+├── entrypoint.sh          # migrate + compilemessages + gunicorn
 ├── requirements.txt       # Python dependencies
 ├── .env.example           # Environment variable template
 ├── PLAN.md                # Full architecture and implementation plan
@@ -140,6 +144,8 @@ docker compose exec web python manage.py etl_nightly
 # Stage 3 SMS (local Excel is gitignored; SMS sent 2026-09-18)
 docker compose exec web python manage.py import_sms_campaign --name "SMS 18 Sep 2026" --sent-on 2026-09-18 --to 2026-09-22
 
+# Stage 5 promos: example table is written to data/local/promos_example.xlsx and docs/promos_example.xlsx
+
 # Django shell
 docker compose exec web python manage.py shell
 
@@ -152,55 +158,56 @@ docker compose down -v
 
 ## Production Deployment
 
-### Database (alt Debian)
-
-PostgreSQL runs on alt Debian server with ~100 GB available:
+Production runs on the **alt Debian** server (same pattern as `service-center-erp`). Deploy is done by the deploy hub — not from this machine:
 
 ```bash
-# Install PostgreSQL
-sudo apt-get install postgresql-15
-
-# Create database and user
-sudo -u postgres psql
-CREATE DATABASE granitanalytics;
-CREATE USER django_app WITH PASSWORD 'secure-password';
-GRANT ALL PRIVILEGES ON DATABASE granitanalytics TO django_app;
+# in ssh-alternative-server-connection
+python scripts/deploy_app.py granit-analytics
 ```
 
-**Security:**
-- Use non-standard port or tunnel (Cloudflare Tunnel / WireGuard / SSH)
-- Configure `pg_hba.conf` to restrict access
-- Enable `sslmode=require` for connections
-- Never commit credentials to git
+### What this repo provides
 
-### ETL Scripts (alt Debian)
+| Artifact | Path |
+|----------|------|
+| Prod Compose (no local Postgres) | [`deploy/docker-compose.prod.yml`](./deploy/docker-compose.prod.yml) |
+| Image | `ghcr.io/ivanbondarenkoit/granit-sales-analytics-erp:main` |
+| Health | `GET /health` → `{"status":"ok","app":"granit-analytics"}` |
+| Host health port | `127.0.0.1:8091` |
+| Domain | `https://analytics.dimkava.ge` (Caddy `edge`) |
 
-ETL is Django management commands (same code locally and later on alt). Source is firebird-db-proxy; target is Postgres.
+CI (`.github/workflows/ci-cd.yml`): on push to `main` — tests, then build/push GHCR `:main` and `:sha-…`. After the first successful push, set the GHCR package to **Public** so the server can pull without a login.
+
+### Database (shared `pg-core`)
+
+One database `granit`, schema **`analytics`** for this app (role `analytics`, `search_path = analytics, core`). Neighbor: `service-center-erp` uses schema `scerp`. Schema `core` is reserved for a future `granit-data-core` ETL (stage 2) — not used yet.
+
+Hub places server `.env` next to prod compose. Required variables (see `.env.example`):
+
+- `SECRET_KEY`, `DEBUG=False`
+- `ALLOWED_HOSTS=analytics.dimkava.ge`
+- `CSRF_TRUSTED_ORIGINS=https://analytics.dimkava.ge`
+- `SESSION_COOKIE_SECURE=true`, `CSRF_COOKIE_SECURE=true`
+- `DB_HOST=pg-core`, `DB_NAME=granit`, `DB_USER=analytics`, `DB_PASSWORD=…`, `DB_PORT=5432`, `DB_SSLMODE=disable`
+- `PROXY_API_URL`, `PROXY_API_TOKEN` (for nightly ETL)
+- `IMAGE_TAG=main` (or `sha-xxxxxxx` to pin/rollback)
+
+Container entrypoint runs `migrate` + `compilemessages`, then gunicorn.
+
+### Nightly ETL (alt cron via hub)
 
 ```bash
-# Example cron on alt (02:00) — deploy of this repo on alt is a later ops step
-0 2 * * * cd /path/to/granit-sales-analytics-erp && /path/to/venv/bin/python manage.py etl_nightly >> /var/log/granit-etl.log 2>&1
+docker exec granit-analytics python manage.py etl_nightly
 ```
 
-Set `PROXY_API_URL` and `PROXY_API_TOKEN` only in `.env` (never git). Default sales backfill is 12 months ending yesterday (`etl_sales` without dates).
+Suggested: 03:00 Asia/Tbilisi. Command is idempotent and prints a summary to stdout (no secrets).
 
-### Web UI (Railway)
+### Schema check (CI / local)
 
-Django application deploys to Railway:
+```bash
+PG_ADMIN_URL=postgresql://postgres:postgres@localhost:5432/granit python scripts/check_pg_schema.py --reset
+```
 
-1. Connect Railway to this GitHub repository
-2. Set environment variables in Railway dashboard:
-   - `SECRET_KEY` (generate new secure key)
-   - `DEBUG=False`
-   - `ALLOWED_HOSTS=your-app.railway.app`
-   - Database connection (either Railway Postgres or alt Debian via tunnel):
-     - `DB_NAME`
-     - `DB_USER`
-     - `DB_PASSWORD`
-     - `DB_HOST` (alt IP or tunnel endpoint)
-     - `DB_PORT`
-
-Railway will automatically build and deploy on git push.
+Ensures Django tables land in schema `analytics`, not `public`.
 
 ## Three Core Features
 
@@ -208,7 +215,7 @@ Railway will automatically build and deploy on git push.
 
 Upload Excel with client IDs/phones (~1700 records). Analyze: did these clients make purchases during a specified period?
 
-**Status:** Models ready, UI pending (STAGE 3)
+**Status:** Ready (STAGE 3) — Excel import, bought / not bought, catalog filters.
 
 ### 2. Sales Explorer
 
@@ -219,7 +226,7 @@ List, group, sort, and filter sales by:
 
 Built with Django + HTMX for fast, interactive filtering without frontend framework complexity.
 
-**Status:** Models ready, UI pending (STAGE 4)
+**Status:** Ready (STAGE 4) — period slice, HTMX filters, group by product / group / production / store / client / day.
 
 ### 3. Promotion Effectiveness
 
@@ -229,16 +236,17 @@ Enter promotion details (SKU or group, date range). Analysis compares:
 - vs. Year-over-year (YoY) same period
 - Optional: Overlay forecast (from `granit-rests-pre-order` logic)
 
-**Status:** Models ready, analysis logic pending (STAGE 5)
+**Status:** Ready (STAGE 5) — Excel table or manual SKU/group, daily actual vs pre-period median vs YoY vs seasonal forecast.
 
 ## Development Stages
 
 - [x] **STAGE 0:** Architecture plan finalized ([PLAN.md](./PLAN.md))
-- [x] **STAGE 1:** Django skeleton + Docker + stub models + README ← **YOU ARE HERE**
-- [ ] **STAGE 2:** ETL implementation (proxy → incremental + backfill)
-- [ ] **STAGE 3:** SMS campaign upload and analysis UI
-- [ ] **STAGE 4:** Sales explorer with HTMX filters
-- [ ] **STAGE 5:** Promo analysis with baseline/YoY comparison
+- [x] **STAGE 1:** Django skeleton + Docker + stub models + README
+- [x] **STAGE 2:** ETL implementation (proxy → incremental + backfill)
+- [x] **STAGE 3:** SMS campaign upload and analysis UI
+- [x] **STAGE 4:** Sales explorer with HTMX filters
+- [x] **STAGE 5:** Promo analysis with baseline/YoY comparison
+- [ ] **Alt deploy:** prep in repo (Compose/CI/GHCR) — hub deploys when ready
 - [ ] **STAGE 6:** Optional alerts integration (notify-hub)
 
 ## Related Projects (Reference Only)
@@ -252,11 +260,10 @@ These projects provide architectural reference but are **not** dependencies:
 
 ## Security Notes
 
-- **Never commit secrets:** Use `.env` files (gitignored) or Railway environment variables
-- **Production database:** Secure with tunnels, non-standard ports, and TLS
-- **Secret key:** Generate unique key for production, never use default
-- **Proxy credentials:** Stored securely on alt Debian, not in this repo
-
+- **Never commit secrets:** Use `.env` files (gitignored) or hub-managed server `.env`
+- **Production database:** shared `pg-core` on Docker network `pgnet` (not exposed publicly)
+- **Secret key:** unique per environment; placeholders starting with `replace-me` are rejected at startup
+- **Proxy credentials:** only in `.env` on alt, not in git
 ## Contributing
 
 1. Follow architecture in [PLAN.md](./PLAN.md)

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ promo.name }}{% endblock %}
+
+{% block extra_css %}
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .stat { background: #fff; padding: 1rem; }
+        .stat strong { display: block; font-size: 1.4rem; color: #667eea; }
+        .up { color: #047857; font-weight: 600; }
+        .down { color: #92400e; font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; background: #fff; margin-top: 1rem; }
+        th, td { text-align: left; padding: 0.6rem; border-bottom: 1px solid #eee; }
+        td.num, th.num { text-align: right; }
+        tfoot td { font-weight: 600; }
+        .hint { color: #555; margin: 0.75rem 0; }
+        .btn { background: #667eea; color: #fff; border: 0; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+        .targets { background: #fff; padding: 1rem; margin: 1rem 0; }
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p><a href="{% url 'promo_list' %}">{% trans "All promos" %}</a></p>
+    <h1>{{ promo.name }}</h1>
+    <p>
+        {% trans "Period" %}: <strong>{{ promo.start_date }} — {{ promo.end_date }}</strong>
+        · {% trans "Baseline days" %}: {{ promo.pre_period_days }}
+    </p>
+    {% if promo.notes %}<p class="hint">{{ promo.notes }}</p>{% endif %}
+    <div class="targets">
+        <strong>{% trans "Targets" %}</strong>
+        <p>{{ targets|join:", " }}</p>
+        <p><a href="{% url 'sales_explorer' %}?{{ explorer_query }}">{% trans "Open in Sales Explorer" %}</a></p>
+    </div>
+    <form method="post" action="{% url 'promo_reanalyze' promo.pk %}" style="margin: 1rem 0;">
+        {% csrf_token %}
+        <button class="btn" type="submit">{% trans "Recalculate" %}</button>
+    </form>
+    <div class="stats">
+        <div class="stat"><span>{% trans "Actual" %}</span><strong>{{ actual_sum }}</strong></div>
+        <div class="stat"><span>{% trans "Pre-period baseline" %}</span><strong>{% if baseline_sum is not None %}{{ baseline_sum }}{% else %}—{% endif %}</strong></div>
+        <div class="stat"><span>{% trans "YoY baseline" %}</span><strong>{% if yoy_sum is not None %}{{ yoy_sum }}{% else %}—{% endif %}</strong></div>
+        <div class="stat"><span>{% trans "Forecast" %}</span><strong>{% if forecast_sum is not None %}{{ forecast_sum }}{% else %}—{% endif %}</strong></div>
+        <div class="stat">
+            <span>{% trans "vs baseline" %}</span>
+            <strong class="{% if lift_pre is not None and lift_pre >= 0 %}up{% elif lift_pre is not None %}down{% endif %}">
+                {% if lift_pre is not None %}{{ lift_pre|floatformat:1 }}%{% else %}—{% endif %}
+            </strong>
+        </div>
+        <div class="stat">
+            <span>{% trans "vs YoY" %}</span>
+            <strong class="{% if lift_yoy is not None and lift_yoy >= 0 %}up{% elif lift_yoy is not None %}down{% endif %}">
+                {% if lift_yoy is not None %}{{ lift_yoy|floatformat:1 }}%{% else %}—{% endif %}
+            </strong>
+        </div>
+    </div>
+    {% if yoy_missing %}
+    <p class="hint">{% trans "No sales in the warehouse for the same window last year, so YoY is empty." %}</p>
+    {% endif %}
+    {% if days %}
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans "Day" %}</th>
+                <th class="num">{% trans "Actual" %}</th>
+                <th class="num">{% trans "Pre-period baseline" %}</th>
+                <th class="num">{% trans "YoY baseline" %}</th>
+                <th class="num">{% trans "Forecast" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in days %}
+            <tr>
+                <td>{{ row.analysis_date }}</td>
+                <td class="num">{{ row.actual_sales }}</td>
+                <td class="num">{% if row.baseline_pre_period is not None %}{{ row.baseline_pre_period }}{% else %}—{% endif %}</td>
+                <td class="num">{% if row.baseline_yoy is not None %}{{ row.baseline_yoy }}{% else %}—{% endif %}</td>
+                <td class="num">{% if row.forecast_value is not None %}{{ row.forecast_value }}{% else %}—{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>{% trans "Total" %}</td>
+                <td class="num">{{ actual_sum }}</td>
+                <td class="num">{% if baseline_sum is not None %}{{ baseline_sum }}{% else %}—{% endif %}</td>
+                <td class="num">{% if yoy_sum is not None %}{{ yoy_sum }}{% else %}—{% endif %}</td>
+                <td class="num">{% if forecast_sum is not None %}{{ forecast_sum }}{% else %}—{% endif %}</td>
+            </tr>
+        </tfoot>
+    </table>
+    {% else %}
+    <p class="hint">{% trans "No days to analyze for this promo." %}</p>
+    {% endif %}
+</div>
+{% endblock %}

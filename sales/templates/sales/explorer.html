@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Sales Explorer" %}{% endblock %}
+
+{% block extra_css %}
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.75rem 1rem;
+            background: #fff;
+            padding: 1rem;
+            margin: 1rem 0;
+            align-items: end;
+        }
+        .filters label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.9rem; color: #444; }
+        .filters input, .filters select { padding: 0.4rem; font: inherit; }
+        .filters .actions { display: flex; gap: 0.75rem; align-items: center; }
+        .hint { color: #666; margin: 0 0 1rem; }
+        table { width: 100%; border-collapse: collapse; background: #fff; }
+        th, td { text-align: left; padding: 0.6rem; border-bottom: 1px solid #eee; }
+        th { color: #555; font-size: 0.85rem; }
+        td.num, th.num { text-align: right; }
+        tfoot td { font-weight: 600; }
+        .empty { background: #fff; padding: 1.5rem; color: #666; }
+        .stats { display: flex; gap: 1.5rem; margin: 0 0 1rem; color: #444; }
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{% trans "Sales Explorer" %}</h1>
+    <p class="hint">{% trans "Slice sales for a period, then open the receipts and the full order." %}</p>
+    {% include "sales/_explorer.html" %}
+</div>
+{% endblock %}

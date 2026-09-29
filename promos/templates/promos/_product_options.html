@@ -1,0 +1,6 @@
+<select name="products" id="id_products" multiple size="8">
+    {% for product in products %}
+    <option value="{{ product.pk }}">{{ product.name }}</option>
+    {% empty %}
+    {% endfor %}
+</select>

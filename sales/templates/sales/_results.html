@@ -1,0 +1,65 @@
+{% load i18n %}
+<div class="stats">
+    <span>{% trans "Rows" %}: <strong>{{ row_count }}</strong></span>
+    <span>{% trans "Qty" %}: <strong>{{ total_qty }}</strong></span>
+    <span>{% trans "Amount" %}: <strong>{{ total_amount }}</strong></span>
+</div>
+{% if truncated %}
+<p class="hint">{% blocktrans with shown=row_limit total=row_count %}Showing first {{ shown }} of {{ total }} rows.{% endblocktrans %}</p>
+{% endif %}
+{% if rows %}
+<table>
+    <thead>
+        <tr>
+            <th>{{ name_heading }}</th>
+            {% if show_secondary %}<th>{{ secondary_heading }}</th>{% endif %}
+            {% if group_by == "receipt" %}
+            <th>{% trans "Store" %}</th>
+            <th>{% trans "Client" %}</th>
+            {% endif %}
+            <th class="num">{% trans "Qty" %}</th>
+            <th class="num">{% trans "Amount" %}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+        <tr>
+            <td>
+                {% if row.sale_id %}
+                <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}">{% trans "Receipt" %} #{{ row.name }}</a>
+                {% else %}
+                {{ row.name }}
+                {% endif %}
+            </td>
+            {% if show_secondary %}<td>{{ row.secondary }}</td>{% endif %}
+            {% if group_by == "receipt" %}
+            <td>{{ row.store_name }}</td>
+            <td>{% if row.client_granit_id %}{{ row.client_name|default:row.client_granit_id }}{% else %}—{% endif %}</td>
+            {% endif %}
+            <td class="num">{{ row.qty }}</td>
+            <td class="num">{{ row.amount }}</td>
+            <td>
+                {% if row.sale_id %}
+                <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}">{% trans "Order items" %}</a>
+                {% elif row.receipts_query %}
+                <a href="{% url 'sales_explorer' %}?{{ row.receipts_query }}">{% trans "Receipts" %}</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>{% trans "Total" %}</td>
+            {% if show_secondary %}<td></td>{% endif %}
+            {% if group_by == "receipt" %}<td></td><td></td>{% endif %}
+            <td class="num">{{ total_qty }}</td>
+            <td class="num">{{ total_amount }}</td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
+{% else %}
+<p class="empty">{% trans "No matching sales for this filter." %}</p>
+{% endif %}

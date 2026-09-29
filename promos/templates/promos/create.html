@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "New promo" %}{% endblock %}
+
+{% block extra_css %}
+        form { background: #fff; padding: 2rem; max-width: 720px; }
+        label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; }
+        input[type=text], input[type=date], input[type=number], input[type=search], textarea, select { width: 100%; padding: 0.5rem; }
+        select[multiple] { min-height: 10rem; }
+        .hint { color: #666; font-size: 0.9rem; margin-bottom: 1rem; }
+        .help { color: #777; font-size: 0.85rem; margin: 0.2rem 0 0; }
+        .btn { margin-top: 1rem; background: #667eea; color: #fff; border: 0; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; }
+        .errors { color: #b91c1c; }
+        .section { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; }
+        .section h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .download { margin: 0.35rem 0 0.75rem; }
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p><a href="{% url 'promo_list' %}">{% trans "All promos" %}</a></p>
+    <h1>{% trans "New promo" %}</h1>
+    <p class="hint">{% trans "Start with dates and an Excel table. You can also pick groups or products by hand below." %}</p>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="errors">{{ form.non_field_errors }}</div>{% endif %}
+        {% for field in form %}
+            {% if field.name == 'groups' %}
+            <div class="section">
+                <h2>{% trans "Or select groups and products by hand" %}</h2>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <input type="search" class="select-filter" data-select="#{{ field.id_for_label }}" placeholder="{% trans 'Filter groups' %}" autocomplete="off">
+                {{ field }}
+                {% if field.help_text %}<p class="help">{{ field.help_text }}</p>{% endif %}
+                {% if field.errors %}<div class="errors">{{ field.errors }}</div>{% endif %}
+            {% elif field.name == 'products' %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<p class="help">{{ field.help_text }}</p>{% endif %}
+                {% if field.errors %}<div class="errors">{{ field.errors }}</div>{% endif %}
+            </div>
+            {% else %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.name == 'excel_file' %}
+            <p class="download"><a href="{% url 'promo_example_xlsx' %}">{% trans "Download example promo file" %}</a></p>
+            {% endif %}
+            {% if field.help_text %}<p class="help">{{ field.help_text }}</p>{% endif %}
+            {% if field.errors %}<div class="errors">{{ field.errors }}</div>{% endif %}
+            {% endif %}
+        {% endfor %}
+        <button class="btn" type="submit">{% trans "Save and analyze" %}</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% load i18n %}
+<div id="sales-explorer">
+    <form class="filters"
+          method="get"
+          hx-get="{% url 'sales_explorer' %}"
+          hx-target="#sales-explorer"
+          hx-swap="outerHTML"
+          hx-push-url="true"
+          hx-trigger="change delay:200ms from:input:not(.select-filter), change delay:200ms from:select, submit">
+        <label>
+            {% trans "Date from" %}
+            <input type="date" name="date_from" value="{{ date_from|date:'Y-m-d' }}">
+        </label>
+        <label>
+            {% trans "Date to" %}
+            <input type="date" name="date_to" value="{{ date_to|date:'Y-m-d' }}">
+        </label>
+        <label>
+            {% trans "Store" %}
+            <select name="store">
+                <option value="">{% trans "All stores" %}</option>
+                {% for s in stores %}
+                <option value="{{ s.granit_id }}"{% if store_id == s.granit_id %} selected{% endif %}>{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            {% trans "Product group" %}
+            <input type="search" class="select-filter" data-select="select[name=group]" placeholder="{% trans 'Filter groups' %}" autocomplete="off">
+            <select name="group" onchange="this.form.product.value='';">
+                <option value="">{% trans "All groups" %}</option>
+                {% for g in groups %}
+                <option value="{{ g.granit_id }}"{% if group_id == g.granit_id %} selected{% endif %}>{{ g.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            {% trans "Product" %}
+            <input type="search" class="select-filter" data-select="select[name=product]" placeholder="{% trans 'Filter products' %}" autocomplete="off">
+            <select name="product">
+                <option value="">{% trans "All products" %}</option>
+                {% for p in products %}
+                <option value="{{ p.granit_id }}"{% if product_id == p.granit_id %} selected{% endif %}>{{ p.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            {% trans "Production" %}
+            <select name="param">
+                <option value="">{% trans "All production types" %}</option>
+                {% for v in param_values %}
+                <option value="{{ v.granit_id }}"{% if param_id == v.granit_id %} selected{% endif %}>{{ v.label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            {% trans "Client ID" %}
+            <input type="number" name="client" value="{{ client_id }}" placeholder="{% trans 'Granit client id' %}">
+        </label>
+        <label>
+            {% trans "Search" %}
+            <input type="search" name="q" value="{{ q }}" placeholder="{% trans 'Product name' %}">
+        </label>
+        <label>
+            {% trans "Group by" %}
+            <select name="group_by">
+                {% for value, label in group_by_choices %}
+                <option value="{{ value }}"{% if group_by == value %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            {% trans "Sort by" %}
+            <select name="sort">
+                {% for value, label in sort_choices %}
+                <option value="{{ value }}"{% if sort == value %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <div class="actions">
+            <noscript><button type="submit">{% trans "Apply" %}</button></noscript>
+            <a href="{% url 'sales_explorer' %}">{% trans "Reset filters" %}</a>
+        </div>
+    </form>
+    <p class="hint">{% trans "The end date is included in the period." %}</p>
+    {% include "sales/_results.html" %}
+</div>

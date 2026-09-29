@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: granit-sales-analytics-erp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-22 16:47+0000\n"
+"POT-Creation-Date: 2026-09-25 10:26+0000\n"
 "PO-Revision-Date: 2026-09-22 16:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
@@ -11,169 +11,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-msgid "Granit Sales Analytics ERP"
-msgstr "Granit Sales Analytics ERP"
-
-msgid "Language"
-msgstr "Язык"
-
-msgid "Admin Panel"
-msgstr "Админка"
-
-msgid "Decision ERP for Granit: SMS Campaigns, Sales Analytics, Promo Effectiveness"
-msgstr "Decision ERP для Granit: SMS-кампании, аналитика продаж, эффективность акций"
-
-msgid "SMS Campaign Analysis"
-msgstr "Анализ SMS-кампаний"
-
-msgid "Upload Excel, analyze customer purchase lift"
-msgstr "Загрузка Excel и анализ прироста покупок клиентов"
-
-msgid "Stage 3 — Pending"
-msgstr "Этап 3 — ожидает"
-
-msgid "Sales Explorer"
-msgstr "Обзор продаж"
-
-msgid "Filter and explore sales by product, client, store, period"
-msgstr "Фильтры и срезы продаж по товару, клиенту, магазину, периоду"
-
-msgid "Stage 4 — Pending"
-msgstr "Этап 4 — ожидает"
-
-msgid "Promotion Effectiveness"
-msgstr "Эффективность акций"
-
-msgid "Compare promo results vs baseline and YoY"
-msgstr "Сравнение результатов акции с базой и YoY"
-
-msgid "Stage 5 — Pending"
-msgstr "Этап 5 — ожидает"
-
-msgid "Stage 1 complete: Django skeleton"
-msgstr "Этап 1 готов: каркас Django"
-
-msgid "Django project with 5 apps: core, etl, campaigns, sales, promos"
-msgstr "Проект Django с 5 приложениями: core, etl, campaigns, sales, promos"
-
-msgid "PostgreSQL database with fact and dimension models"
-msgstr "База PostgreSQL с моделями фактов и измерений"
-
-msgid "Docker Compose for local development"
-msgstr "Docker Compose для локальной разработки"
-
-msgid "Architecture: alt Debian (Postgres + ETL) + Railway (UI)"
-msgstr "Архитектура: alt Debian (Postgres + ETL) + Railway (UI)"
-
-msgid "UI languages: Russian and English with a language switcher"
-msgstr "Языки UI: русский и английский с переключателем"
-
-msgid "Ready for Stage 2: ETL implementation"
-msgstr "Готово к этапу 2: реализация ETL"
-
-msgid "Home"
-msgstr "Главная"
-
-msgid "Open"
-msgstr "Открыть"
-
-msgid "Stage 3 — Ready"
-msgstr "Этап 3 — готов"
-
-msgid "New analysis"
-msgstr "Новый анализ"
+msgid "Excel has no client rows"
+msgstr ""
 
 msgid "Campaign name"
 msgstr "Название кампании"
-
-msgid "Excel file"
-msgstr "Файл Excel"
-
-msgid "Use saved local SMS list"
-msgstr "Взять сохранённый локальный список SMS"
-
-msgid "Analysis from"
-msgstr "Анализ с"
-
-msgid "Analysis to (exclusive)"
-msgstr "Анализ до (не включая)"
-
-msgid "Notes"
-msgstr "Заметки"
-
-msgid "Analysis end must be after start."
-msgstr "Дата окончания должна быть позже начала."
-
-msgid "Upload an Excel file or use the saved local list."
-msgstr "Загрузите Excel или используйте сохранённый локальный список."
-
-msgid "SMS sent on %(date)s"
-msgstr "SMS отправлены %(date)s"
-
-msgid "Campaign analyzed."
-msgstr "Кампания проанализирована."
-
-msgid "SMS 18 Sep 2026"
-msgstr "SMS 18 сентября 2026"
-
-msgid "Period"
-msgstr "Период"
-
-msgid "Clients"
-msgstr "Клиенты"
-
-msgid "Bought"
-msgstr "Купили"
-
-msgid "Did not buy"
-msgstr "Не купили"
-
-msgid "No campaigns yet."
-msgstr "Кампаний пока нет."
-
-msgid "SMS were sent on 18 September 2026. Default window is from that day until today."
-msgstr "SMS разослали 18 сентября 2026. Окно по умолчанию — с этого дня до сегодня."
-
-msgid "Saved local SMS list is available (not stored in git)."
-msgstr "Локальный список SMS доступен (в git не лежит)."
-
-msgid "Analyze"
-msgstr "Считать"
-
-msgid "All campaigns"
-msgstr "Все кампании"
-
-msgid "SMS sent on 18 September 2026."
-msgstr "SMS разослали 18 сентября 2026."
-
-msgid "Share bought"
-msgstr "Доля купивших"
-
-msgid "Not matched to ERP"
-msgstr "Не сошлись с ERP"
-
-msgid "All"
-msgstr "Все"
-
-msgid "Client ID"
-msgstr "ID клиента"
-
-msgid "Name"
-msgstr "Имя"
-
-msgid "Amount"
-msgstr "Сумма"
-
-msgid "Yes"
-msgstr "Да"
-
-msgid "No"
-msgstr "Нет"
-
-msgid "New campaign"
-msgstr "Новая кампания"
 
 msgid "Give each blast its own name so lists stay separate."
 msgstr "У каждой рассылки своё имя, чтобы списки не смешивались."
@@ -184,47 +29,62 @@ msgstr "Дата рассылки SMS"
 msgid "Date this mailing went out. Analysis starts on this day."
 msgstr "День отправки этой рассылки. Анализ начинается с этой даты."
 
+msgid "Analysis to (exclusive)"
+msgstr "Анализ до (не включая)"
+
+msgid "Excel file"
+msgstr "Файл Excel"
+
 msgid "Client list for this blast only (customer_id + phone)."
 msgstr "Список клиентов только этой рассылки (customer_id + phone)."
+
+msgid "Use saved local SMS list"
+msgstr "Взять сохранённый локальный список SMS"
 
 msgid "Only for the 18 Sep 2026 blast already stored on this machine."
 msgstr "Только для рассылки 18 сентября 2026, уже лежащей на этой машине."
 
+msgid "Notes"
+msgstr "Заметки"
+
 msgid "Analysis end must be after the SMS send date."
 msgstr "Дата окончания должна быть позже даты рассылки."
 
-msgid "New campaign saved separately from previous blasts."
-msgstr "Новая кампания сохранена отдельно от прошлых рассылок."
+msgid "Upload an Excel file or use the saved local list."
+msgstr "Загрузите Excel или используйте сохранённый локальный список."
 
-msgid "SMS %(date)s"
-msgstr "SMS %(date)s"
+msgid "Product group"
+msgstr "Группа товара"
 
-msgid "Each mailing is a separate campaign. Saving here does not change older blasts."
-msgstr "Каждая рассылка — отдельная кампания. Сохранение не меняет старые."
+msgid "All groups"
+msgstr "Все группы"
 
-msgid "A local list for the 18 Sep 2026 blast is on this machine (not in git). Leave the checkbox off for a new list."
-msgstr "Локальный список рассылки 18.09.2026 есть на этой машине (не в git). Для нового списка галочку не ставьте."
+msgid "Product"
+msgstr "Товар"
 
-msgid "Create campaign"
-msgstr "Создать кампанию"
+msgid "All products"
+msgstr "Все товары"
 
-msgid "Recalculate this campaign until"
-msgstr "Пересчитать эту кампанию до"
+msgid "Apply"
+msgstr "Применить"
 
-msgid "Recalculate"
-msgstr "Пересчитать"
+msgid "Reset filters"
+msgstr "Сбросить фильтры"
 
-msgid "Invalid end date."
-msgstr "Неверная дата окончания."
-
-msgid "This campaign was recalculated. Other blasts were not changed."
-msgstr "Эта кампания пересчитана. Другие рассылки не менялись."
-
-msgid "What they bought"
-msgstr "Что купили"
+msgid "Bought and amounts are limited to the selected group or product."
+msgstr "Купили и суммы считаются только по выбранной группе или товару."
 
 msgid "Order items"
 msgstr "Состав заказа"
+
+msgid "Client ID"
+msgstr "ID клиента"
+
+msgid "Period"
+msgstr "Период"
+
+msgid "No matching sales for this filter."
+msgstr "Нет продаж по выбранному фильтру."
 
 msgid "No sales in this campaign window."
 msgstr "В окне этой кампании продаж нет."
@@ -232,8 +92,8 @@ msgstr "В окне этой кампании продаж нет."
 msgid "Receipt"
 msgstr "Чек"
 
-msgid "Product"
-msgstr "Товар"
+msgid "Amount"
+msgstr "Сумма"
 
 msgid "Group"
 msgstr "Группа"
@@ -241,5 +101,450 @@ msgstr "Группа"
 msgid "Qty"
 msgstr "Кол-во"
 
+msgid "New campaign"
+msgstr "Новая кампания"
+
+msgid ""
+"Each mailing is a separate campaign. Saving here does not change older "
+"blasts."
+msgstr "Каждая рассылка — отдельная кампания. Сохранение не меняет старые."
+
+msgid ""
+"A local list for the 18 Sep 2026 blast is on this machine (not in git). "
+"Leave the checkbox off for a new list."
+msgstr ""
+"Локальный список рассылки 18.09.2026 есть на этой машине (не в git). Для "
+"нового списка галочку не ставьте."
+
+msgid "Create campaign"
+msgstr "Создать кампанию"
+
+msgid "All campaigns"
+msgstr "Все кампании"
+
+msgid "Recalculate this campaign until"
+msgstr "Пересчитать эту кампанию до"
+
+msgid "Recalculate"
+msgstr "Пересчитать"
+
+msgid "Clients"
+msgstr "Клиенты"
+
+msgid "Bought"
+msgstr "Купили"
+
+msgid "Did not buy"
+msgstr "Не купили"
+
+msgid "Share bought"
+msgstr "Доля купивших"
+
+msgid "Not matched to ERP"
+msgstr "Не сошлись с ERP"
+
+msgid "All"
+msgstr "Все"
+
+msgid "What they bought"
+msgstr "Что купили"
+
+#, python-format
+msgid "Showing first %(shown)s of %(total)s rows."
+msgstr "Показаны первые %(shown)s из %(total)s строк."
+
+#, python-format
+msgid "Amount of all matching rows: %(amount)s"
+msgstr "Сумма всех подходящих строк: %(amount)s"
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Yes"
+msgstr "Да"
+
+msgid "No"
+msgstr "Нет"
+
+msgid "No clients in this list."
+msgstr "В этом списке нет клиентов."
+
+msgid "SMS Campaign Analysis"
+msgstr "Анализ SMS-кампаний"
+
+msgid "No campaigns yet."
+msgstr "Кампаний пока нет."
+
 msgid "Products bought by this campaign list in the analysis window."
 msgstr "Товары, которые купили клиенты этого списка в окне анализа."
+
+msgid "New campaign saved separately from previous blasts."
+msgstr "Новая кампания сохранена отдельно от прошлых рассылок."
+
+#, python-format
+msgid "SMS %(date)s"
+msgstr "SMS %(date)s"
+
+msgid "Invalid end date."
+msgstr "Неверная дата окончания."
+
+msgid "This campaign was recalculated. Other blasts were not changed."
+msgstr "Эта кампания пересчитана. Другие рассылки не менялись."
+
+msgid ""
+"Decision ERP for Granit: SMS Campaigns, Sales Analytics, Promo Effectiveness"
+msgstr ""
+"Decision ERP для Granit: SMS-кампании, аналитика продаж, эффективность акций"
+
+msgid "Open"
+msgstr "Открыть"
+
+msgid "MVP: SMS, sales explorer, promos"
+msgstr "MVP: SMS, обзор продаж, акции"
+
+msgid "SMS campaign lift: Excel list, bought / not bought, order items"
+msgstr "SMS: Excel-список, купили / не купили, состав заказа"
+
+msgid "Sales explorer: period slice, filters, receipts"
+msgstr "Обзор продаж: срез за период, фильтры, чеки"
+
+msgid "Promos: daily actual vs pre-period, YoY, and seasonal forecast"
+msgstr "Акции: дневной факт против базы до акции, YoY и сезонного прогноза"
+
+msgid "UI languages: Russian and English with a language switcher"
+msgstr "Языки UI: русский и английский с переключателем"
+
+msgid "Architecture: alt Debian (pg-core + UI), analytics.dimkava.ge"
+msgstr "Архитектура: alt Debian (pg-core + UI), analytics.dimkava.ge"
+
+msgid "Granit Sales Analytics ERP"
+msgstr "Granit Sales Analytics ERP"
+
+msgid "Upload Excel, analyze customer purchase lift"
+msgstr "Загрузка Excel и анализ прироста покупок клиентов"
+
+msgid "Stage 3 — Ready"
+msgstr "Этап 3 — готов"
+
+msgid "Sales Explorer"
+msgstr "Обзор продаж"
+
+msgid "Filter and explore sales by product, client, store, period"
+msgstr "Фильтры и срезы продаж по товару, клиенту, магазину, периоду"
+
+msgid "Stage 4 — Ready"
+msgstr "Этап 4 — готов"
+
+msgid "Promotion Effectiveness"
+msgstr "Эффективность акций"
+
+msgid "Compare promo results vs baseline and YoY"
+msgstr "Сравнение результатов акции с базой и YoY"
+
+msgid "Stage 5 — Ready"
+msgstr "Этап 5 — готов"
+
+msgid "Each promo needs a name, start date, and end date."
+msgstr "У каждой акции должны быть название, дата начала и дата окончания."
+
+msgid "Promo end must be on or after the start date."
+msgstr "Дата окончания не раньше даты начала."
+
+#, python-format
+msgid "Unknown product group ID: %(id)s"
+msgstr "Неизвестная группа товара ID: %(id)s"
+
+#, python-format
+msgid "Unknown product ID: %(id)s"
+msgstr "Неизвестный товар ID: %(id)s"
+
+msgid "Each promo row needs group_id or product_id."
+msgstr "В каждой строке акции нужен group_id или product_id."
+
+msgid "Promo name"
+msgstr "Название акции"
+
+msgid "Used when the file has no name column, or for a manual promo."
+msgstr "Нужно, если в файле нет колонки name, или для акции вручную."
+
+msgid "Promo start"
+msgstr "Начало акции"
+
+msgid "Fills empty start_date cells in the file."
+msgstr "Подставляет пустые start_date в файле."
+
+msgid "Promo end"
+msgstr "Конец акции"
+
+msgid "The end date is included. Fills empty end_date cells in the file."
+msgstr "Конечная дата входит в период. Подставляет пустые end_date в файле."
+
+msgid "Baseline days before promo"
+msgstr "Дней базы до акции"
+
+msgid "Median of daily sales in this window is the pre-period baseline."
+msgstr "Медиана дневных продаж в этом окне — база до акции."
+
+msgid "Promo table (Excel)"
+msgstr "Таблица акций (Excel)"
+
+msgid ""
+"Columns: name, start_date, end_date, group_id, product_id. group_id and "
+"product_id are Granit IDs."
+msgstr ""
+"Колонки: name, start_date, end_date, group_id, product_id. group_id и "
+"product_id — ID из Granit."
+
+msgid "Use example promo file"
+msgstr "Взять пример файла акций"
+
+msgid ""
+"Local example with Candies group and Ballerina SKU (not required in git)."
+msgstr ""
+"Локальный пример: группа Candies и товар Ballerina (в git не обязателен)."
+
+msgid "Product groups"
+msgstr "Группы товара"
+
+msgid "Products"
+msgstr "Товары"
+
+msgid "Optional if you upload a file. The list narrows to the selected groups."
+msgstr ""
+"Не обязательно, если загружаете файл. Список сужается по выбранным группам."
+
+msgid "Upload a promo table or select at least one product group or product."
+msgstr "Загрузите таблицу акций или выберите группу либо товар."
+
+msgid "Enter a promo name or upload a table."
+msgstr "Укажите название акции или загрузите таблицу."
+
+msgid "Enter promo dates or upload a table."
+msgstr "Укажите даты акции или загрузите таблицу."
+
+msgid "Example promo file is not on this machine."
+msgstr "Примера файла акций на этой машине нет."
+
+msgid "New promo"
+msgstr "Новая акция"
+
+msgid "All promos"
+msgstr "Все акции"
+
+msgid ""
+"Start with dates and an Excel table. You can also pick groups or products by "
+"hand below."
+msgstr ""
+"Сначала даты и таблица Excel. Группы и товары можно выбрать вручную ниже."
+
+msgid "Or select groups and products by hand"
+msgstr "Или выберите группы и товары вручную"
+
+msgid "Filter groups"
+msgstr "Поиск группы"
+
+msgid "Download example promo file"
+msgstr "Скачать пример файла акций"
+
+msgid "Save and analyze"
+msgstr "Сохранить и посчитать"
+
+msgid "Baseline days"
+msgstr "Дни базы"
+
+msgid "Targets"
+msgstr "Цели"
+
+msgid "Open in Sales Explorer"
+msgstr "Открыть в обзоре продаж"
+
+msgid "Actual"
+msgstr "Факт"
+
+msgid "Pre-period baseline"
+msgstr "База до акции"
+
+msgid "YoY baseline"
+msgstr "База YoY"
+
+msgid "Forecast"
+msgstr "Прогноз"
+
+msgid "vs baseline"
+msgstr "к базе"
+
+msgid "vs YoY"
+msgstr "к YoY"
+
+msgid ""
+"No sales in the warehouse for the same window last year, so YoY is empty."
+msgstr "В складе нет продаж за то же окно год назад, поэтому YoY пустой."
+
+msgid "Day"
+msgstr "День"
+
+msgid "Total"
+msgstr "Итого"
+
+msgid "No days to analyze for this promo."
+msgstr "Нет дней для расчёта этой акции."
+
+msgid "No promos yet."
+msgstr "Акций пока нет."
+
+msgid "Example promo file is not available."
+msgstr "Пример файла акций недоступен."
+
+msgid "Promo saved and calculated."
+msgstr "Акция сохранена и посчитана."
+
+#, python-format
+msgid "Saved %(count)s promos from the table."
+msgstr "Из таблицы сохранено акций: %(count)s."
+
+msgid "The promo table has no group_id or product_id rows."
+msgstr "В таблице акций нет строк с group_id или product_id."
+
+msgid "This promo was recalculated."
+msgstr "Эта акция пересчитана."
+
+msgid "Date from"
+msgstr "Дата с"
+
+msgid "Date to"
+msgstr "Дата по"
+
+msgid "Store"
+msgstr "Магазин"
+
+msgid "All stores"
+msgstr "Все магазины"
+
+msgid "Filter products"
+msgstr "Поиск товара"
+
+msgid "Production"
+msgstr "Продукция"
+
+msgid "All production types"
+msgstr "Все виды продукции"
+
+msgid "Granit client id"
+msgstr "ID клиента в Granit"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "Product name"
+msgstr "Название товара"
+
+msgid "Group by"
+msgstr "Группировка"
+
+msgid "Sort by"
+msgstr "Сортировка"
+
+msgid "The end date is included in the period."
+msgstr "Конечная дата входит в период."
+
+msgid "Rows"
+msgstr "Строки"
+
+msgid "Client"
+msgstr "Клиент"
+
+msgid "Receipts"
+msgstr "Чеки"
+
+msgid "Slice sales for a period, then open the receipts and the full order."
+msgstr "Срез за период, затем переход к чекам и полному составу заказа."
+
+msgid "Receipt not found."
+msgstr "Чек не найден."
+
+msgid "Home"
+msgstr "Главная"
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "Admin Panel"
+msgstr "Админка"
+
+#~ msgid "Stage 3 — Pending"
+#~ msgstr "Этап 3 — ожидает"
+
+#~ msgid "Stage 4 — Pending"
+#~ msgstr "Этап 4 — ожидает"
+
+#~ msgid "Stage 5 — Pending"
+#~ msgstr "Этап 5 — ожидает"
+
+#~ msgid "Stage 1 complete: Django skeleton"
+#~ msgstr "Этап 1 готов: каркас Django"
+
+#~ msgid "Django project with 5 apps: core, etl, campaigns, sales, promos"
+#~ msgstr "Проект Django с 5 приложениями: core, etl, campaigns, sales, promos"
+
+#~ msgid "PostgreSQL database with fact and dimension models"
+#~ msgstr "База PostgreSQL с моделями фактов и измерений"
+
+#~ msgid "Docker Compose for local development"
+#~ msgstr "Docker Compose для локальной разработки"
+
+#~ msgid "Ready for Stage 2: ETL implementation"
+#~ msgstr "Готово к этапу 2: реализация ETL"
+
+#~ msgid "New analysis"
+#~ msgstr "Новый анализ"
+
+#~ msgid "Analysis from"
+#~ msgstr "Анализ с"
+
+#~ msgid "Analysis end must be after start."
+#~ msgstr "Дата окончания должна быть позже начала."
+
+#~ msgid "SMS sent on %(date)s"
+#~ msgstr "SMS отправлены %(date)s"
+
+#~ msgid "Campaign analyzed."
+#~ msgstr "Кампания проанализирована."
+
+#~ msgid "SMS 18 Sep 2026"
+#~ msgstr "SMS 18 сентября 2026"
+
+#~ msgid ""
+#~ "SMS were sent on 18 September 2026. Default window is from that day until "
+#~ "today."
+#~ msgstr ""
+#~ "SMS разослали 18 сентября 2026. Окно по умолчанию — с этого дня до "
+#~ "сегодня."
+
+#~ msgid "Saved local SMS list is available (not stored in git)."
+#~ msgstr "Локальный список SMS доступен (в git не лежит)."
+
+#~ msgid "Analyze"
+#~ msgstr "Считать"
+
+#~ msgid "SMS sent on 18 September 2026."
+#~ msgstr "SMS разослали 18 сентября 2026."
+
+#~ msgid ""
+#~ "Slice sales for a period by product, group, production type, store, "
+#~ "client, or day."
+#~ msgstr ""
+#~ "Срез продаж за период: товар, группа, продукция, магазин, клиент или день."
+
+#~ msgid ""
+#~ "Compare daily sales in the promo window with the pre-period median, last "
+#~ "year, and a seasonal forecast."
+#~ msgstr ""
+#~ "Сравнение дневных продаж в окне акции с медианой до акции, прошлым годом "
+#~ "и сезонным прогнозом."
+
+#~ msgid ""
+#~ "An example promo table is on this machine (Candies group + Ballerina "
+#~ "SKU). You can tick the checkbox instead of uploading."
+#~ msgstr ""
+#~ "Пример таблицы акций есть на этой машине (группа Candies и товар "
+#~ "Ballerina). Можно поставить галочку вместо загрузки."

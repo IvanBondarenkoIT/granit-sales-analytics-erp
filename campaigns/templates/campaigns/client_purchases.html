@@ -9,19 +9,23 @@
         .order { background: #fff; padding: 1rem 1rem 0.25rem; margin-bottom: 1rem; }
         .order h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
         .empty { background: #fff; padding: 1.5rem; color: #666; }
+        .catalog-filter { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; background: #fff; padding: 1rem; margin: 1rem 0; }
+        .catalog-filter select { min-width: 220px; padding: 0.35rem; }
+        .filter-hint { color: #555; margin: 0 0 1rem; }
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'campaign_detail' campaign.pk %}">← {{ campaign.name }}</a></p>
+    <p><a href="{% url 'campaign_detail' campaign.pk %}{% if filter_query %}?{{ filter_query|slice:'1:' }}{% endif %}">← {{ campaign.name }}</a></p>
     <h1>{% trans "Order items" %}</h1>
     <p>
         {% trans "Client ID" %}: {{ row.granit_client_id }}
         · {{ row.client.name|default:"—" }}
         · {% trans "Period" %}: {{ campaign.analysis_period_start }} — {{ campaign.analysis_period_end }}
     </p>
+    {% include "campaigns/_catalog_filter.html" %}
     {% if not orders %}
-    <p class="empty">{% trans "No sales in this campaign window." %}</p>
+    <p class="empty">{% if filter_active %}{% trans "No matching sales for this filter." %}{% else %}{% trans "No sales in this campaign window." %}{% endif %}</p>
     {% endif %}
     {% for order in orders %}
     <section class="order">

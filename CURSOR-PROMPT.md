@@ -11,8 +11,8 @@
 ## Стек и размещение
 
 - Python + Django + HTMX + Docker + PostgreSQL.
-- Postgres + nightly ETL: **alt Debian**.
-- Django UI: **Railway**.
+- **Прод:** всё на альт-сервере — UI-контейнер `granit-analytics` + общий `pg-core` (БД `granit`, схема `analytics`), Caddy `edge` → `analytics.dimkava.ge`.
+- Образ: `ghcr.io/ivanbondarenkoit/granit-sales-analytics-erp:main`. Выкладка: deploy hub (`deploy_app.py granit-analytics`), не вручную.
 - Источник данных: **firebird-db-proxy** на Windows у Granit (только клиент, proxy не менять).
 - Не зеркалить весь GDB — только факты продаж/остатков и нужные измерения; живые SKU.
 - **i18n:** UI на `ru` и `en` с переключателем (Django gettext + LocaleMiddleware). Дефолт `ru`. Строки UI только через `{% trans %}` / `gettext_lazy`; данные ERP не переводить. См. этап **1b** в `PLAN.md`.
@@ -22,15 +22,17 @@
 - `D:\CursorProjects\granit-clients-based-segmentation` — proxy ETL, SMS/campaigns, `campaign_attribution.py`.
 - `D:\CursorProjects\monthly-sales-report` — срезы продаж.
 - `D:\CursorProjects\granit-rests-pre-order` — `src/analysis/forecast.py`.
+- `D:\CursorProjects\service-center-erp` — инфраструктура альта (compose/CI), не FastAPI-код.
 
 ## Ближайшая задача
 
-Этапы 1, **1b**, **2 (ETL)** и **3 (SMS)** — **готово**. Дальше по `PLAN.md`:
+Этапы 1–5 (MVP) — **готово**. Подготовка к альту (Dockerfile, prod-compose, CI→GHCR, `/health`, схема `analytics`) — в репо.
 
-- **Не начинать этап 4 (sales explorer)** без явной команды.
-- Не деплоить на alt/Railway без явной команды.
+- **Не деплоить** на альт/Railway и не трогать сервер без явной команды (деплой — через хаб).
+- **Не начинать этап 6 (алерты)** без явной команды.
+- Этап 2 данных (`granit-data-core`, dim/fact в `core`) — не делать без команды.
 
-Не делать пока: деплой на Railway/alt, изменения в других репо — без явной команды.
+Не делать пока: изменения в других репо — без явной команды.
 
 ## Критерий готовности этапа 1 (архив)
 
@@ -43,6 +45,19 @@
 - `etl_health` ходит в firebird-db-proxy.
 - `etl_dims` / `etl_sales` / `etl_stock` / `etl_nightly` есть; секреты только в `.env`.
 - В Postgres есть продажи за 12 месяцев.
+
+## Критерий готовности этапа 4 (архив)
+
+- `/sales/` режет `SaleFact` за период (дата по включительно).
+- Фильтры: магазин, группа, товар, продукция, клиент, поиск по названию.
+- Группировка: товар / группа / продукция / магазин / клиент / день; сортировка сумма / кол-во / имя.
+- HTMX обновляет таблицу без перезагрузки; лейблы ru+en.
+
+## Критерий готовности этапа 5 (архив)
+
+- `/promos/` заводит акцию из Excel (group_id / product_id) или вручную.
+- Дневной факт vs медиана pre-period vs медиана YoY vs сезонный прогноз (без pandas).
+- Карточка ru+en с вердиктом % к базе и YoY.
 
 ## Критерий готовности этапа 1b (архив)
 

@@ -8,10 +8,17 @@
         .stat { background: #fff; padding: 1rem; }
         .stat strong { display: block; font-size: 1.6rem; color: #667eea; }
         .filters a { margin-right: 0.75rem; }
+        .catalog-filter { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; background: #fff; padding: 1rem; margin: 1rem 0; }
+        .catalog-filter select { min-width: 220px; padding: 0.35rem; }
+        .filter-hint { color: #555; margin: 0 0 1rem; }
         table { width: 100%; border-collapse: collapse; background: #fff; margin-top: 1rem; }
         th, td { text-align: left; padding: 0.6rem; border-bottom: 1px solid #eee; }
+        td.num, th.num { text-align: right; }
+        tfoot td { font-weight: 600; }
         .yes { color: #047857; font-weight: 600; }
         .no { color: #92400e; }
+        .empty { background: #fff; padding: 1.5rem; color: #666; }
+        .hint { color: #555; margin: 0.75rem 0; }
 {% endblock %}
 
 {% block content %}
@@ -28,24 +35,30 @@
     </form>
     <div class="stats">
         <div class="stat"><span>{% trans "Clients" %}</span><strong>{{ campaign.total_clients }}</strong></div>
-        <div class="stat"><span>{% trans "Bought" %}</span><strong>{{ campaign.clients_with_sales }}</strong></div>
+        <div class="stat"><span>{% trans "Bought" %}</span><strong>{{ bought_count }}</strong></div>
         <div class="stat"><span>{% trans "Did not buy" %}</span><strong>{{ not_bought }}</strong></div>
         <div class="stat"><span>{% trans "Share bought" %}</span><strong>{{ rate }}%</strong></div>
         <div class="stat"><span>{% trans "Not matched to ERP" %}</span><strong>{{ unmatched }}</strong></div>
     </div>
+    {% include "campaigns/_catalog_filter.html" %}
     <p class="filters">
-        <a href="?status=all">{% trans "All" %}</a>
-        <a href="?status=bought">{% trans "Bought" %}</a>
-        <a href="?status=not_bought">{% trans "Did not buy" %}</a>
-        <a href="{% url 'campaign_purchases' campaign.pk %}">{% trans "What they bought" %}</a>
+        <a href="?status=all{{ filter_query }}">{% trans "All" %}</a>
+        <a href="?status=bought{{ filter_query }}">{% trans "Bought" %}</a>
+        <a href="?status=not_bought{{ filter_query }}">{% trans "Did not buy" %}</a>
+        <a href="{% url 'campaign_purchases' campaign.pk %}?{{ filter_query|slice:'1:' }}">{% trans "What they bought" %}</a>
     </p>
+    {% if truncated %}
+    <p class="hint">{% blocktrans with shown=row_limit total=row_count %}Showing first {{ shown }} of {{ total }} rows.{% endblocktrans %}
+       {% blocktrans with amount=matching_amount %}Amount of all matching rows: {{ amount }}{% endblocktrans %}</p>
+    {% endif %}
+    {% if clients %}
     <table>
         <thead>
             <tr>
                 <th>{% trans "Client ID" %}</th>
                 <th>{% trans "Name" %}</th>
                 <th>{% trans "Bought" %}</th>
-                <th>{% trans "Amount" %}</th>
+                <th class="num">{% trans "Amount" %}</th>
                 <th></th>
             </tr>
         </thead>
@@ -54,18 +67,28 @@
             <tr>
                 <td>{{ row.granit_client_id }}</td>
                 <td>{{ row.client.name|default:"—" }}</td>
-                <td class="{% if row.had_sales %}yes{% else %}no{% endif %}">
-                    {% if row.had_sales %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}
+                <td class="{% if row.view_bought %}yes{% else %}no{% endif %}">
+                    {% if row.view_bought %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}
                 </td>
-                <td>{{ row.sales_amount }}</td>
+                <td class="num">{{ row.view_amount }}</td>
                 <td>
-                    {% if row.had_sales %}
-                    <a href="{% url 'campaign_client_purchases' campaign.pk row.pk %}">{% trans "Order items" %}</a>
+                    {% if row.view_bought %}
+                    <a href="{% url 'campaign_client_purchases' campaign.pk row.pk %}?{{ filter_query|slice:'1:' }}">{% trans "Order items" %}</a>
                     {% endif %}
                 </td>
             </tr>
             {% endfor %}
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">{% trans "Total" %}</td>
+                <td class="num">{{ shown_amount }}</td>
+                <td></td>
+            </tr>
+        </tfoot>
     </table>
+    {% else %}
+    <p class="empty">{% if filter_active %}{% trans "No matching sales for this filter." %}{% else %}{% trans "No clients in this list." %}{% endif %}</p>
+    {% endif %}
 </div>
 {% endblock %}

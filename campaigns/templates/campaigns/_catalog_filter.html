@@ -1,0 +1,29 @@
+{% load i18n %}
+<form method="get" class="catalog-filter"{% if filter_action == "campaign_detail" %} action="{% url 'campaign_detail' campaign.pk %}"{% elif filter_action == "campaign_purchases" %} action="{% url 'campaign_purchases' campaign.pk %}"{% elif filter_action == "campaign_client_purchases" %} action="{% url 'campaign_client_purchases' campaign.pk filter_row_pk %}"{% endif %}>
+    {% if status %}<input type="hidden" name="status" value="{{ status }}">{% endif %}
+    <label>
+        {% trans "Product group" %}
+        <select name="group" onchange="this.form.product.value=''; this.form.submit()">
+            <option value="">{% trans "All groups" %}</option>
+            {% for g in filter_groups %}
+            <option value="{{ g.granit_id }}"{% if filter_group_id == g.granit_id %} selected{% endif %}>{{ g.name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        {% trans "Product" %}
+        <select name="product" onchange="this.form.submit()">
+            <option value="">{% trans "All products" %}</option>
+            {% for p in filter_products %}
+            <option value="{{ p.granit_id }}"{% if filter_product_id == p.granit_id %} selected{% endif %}>{{ p.name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <noscript><button type="submit">{% trans "Apply" %}</button></noscript>
+    {% if filter_active %}
+    <a href="?{% if status %}status={{ status }}{% endif %}">{% trans "Reset filters" %}</a>
+    {% endif %}
+</form>
+{% if filter_active %}
+<p class="filter-hint">{% trans "Bought and amounts are limited to the selected group or product." %}</p>
+{% endif %}

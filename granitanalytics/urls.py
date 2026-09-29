@@ -19,13 +19,16 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from core.views import home
+from core.views import health, home
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('campaigns/', include('campaigns.urls')),
-    path('admin/', admin.site.urls),
-    path('i18n/', include('django.conf.urls.i18n')),
+    path("", home, name="home"),
+    path("health", health, name="health"),
+    path("campaigns/", include("campaigns.urls")),
+    path("sales/", include("sales.urls")),
+    path("promos/", include("promos.urls")),
+    path("admin/", admin.site.urls),
+    path("i18n/", include("django.conf.urls.i18n")),
 ]
 
 if settings.DEBUG:

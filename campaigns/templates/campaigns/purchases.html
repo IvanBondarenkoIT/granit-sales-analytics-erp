@@ -6,13 +6,17 @@
 {% block extra_css %}
         table { width: 100%; border-collapse: collapse; background: #fff; margin-top: 1rem; }
         th, td { text-align: left; padding: 0.6rem; border-bottom: 1px solid #eee; }
+        .catalog-filter { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; background: #fff; padding: 1rem; margin: 1rem 0; }
+        .catalog-filter select { min-width: 220px; padding: 0.35rem; }
+        .filter-hint { color: #555; margin: 0 0 1rem; }
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'campaign_detail' campaign.pk %}">← {{ campaign.name }}</a></p>
+    <p><a href="{% url 'campaign_detail' campaign.pk %}{% if filter_query %}?{{ filter_query|slice:'1:' }}{% endif %}">← {{ campaign.name }}</a></p>
     <h1>{% trans "What they bought" %}</h1>
     <p>{% trans "Products bought by this campaign list in the analysis window." %}</p>
+    {% include "campaigns/_catalog_filter.html" %}
     <table>
         <thead>
             <tr>
@@ -31,7 +35,7 @@
                 <td>{{ row.amount }}</td>
             </tr>
             {% empty %}
-            <tr><td colspan="4">{% trans "No sales in this campaign window." %}</td></tr>
+            <tr><td colspan="4">{% if filter_active %}{% trans "No matching sales for this filter." %}{% else %}{% trans "No sales in this campaign window." %}{% endif %}</td></tr>
             {% endfor %}
         </tbody>
     </table>

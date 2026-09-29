@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: granit-sales-analytics-erp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-22 16:47+0000\n"
+"POT-Creation-Date: 2026-09-25 10:26+0000\n"
 "PO-Revision-Date: 2026-09-22 16:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: English\n"
@@ -13,167 +13,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Granit Sales Analytics ERP"
-msgstr "Granit Sales Analytics ERP"
-
-msgid "Language"
-msgstr "Language"
-
-msgid "Admin Panel"
-msgstr "Admin Panel"
-
-msgid "Decision ERP for Granit: SMS Campaigns, Sales Analytics, Promo Effectiveness"
-msgstr "Decision ERP for Granit: SMS Campaigns, Sales Analytics, Promo Effectiveness"
-
-msgid "SMS Campaign Analysis"
-msgstr "SMS Campaign Analysis"
-
-msgid "Upload Excel, analyze customer purchase lift"
-msgstr "Upload Excel, analyze customer purchase lift"
-
-msgid "Stage 3 — Pending"
-msgstr "Stage 3 — Pending"
-
-msgid "Sales Explorer"
-msgstr "Sales Explorer"
-
-msgid "Filter and explore sales by product, client, store, period"
-msgstr "Filter and explore sales by product, client, store, period"
-
-msgid "Stage 4 — Pending"
-msgstr "Stage 4 — Pending"
-
-msgid "Promotion Effectiveness"
-msgstr "Promotion Effectiveness"
-
-msgid "Compare promo results vs baseline and YoY"
-msgstr "Compare promo results vs baseline and YoY"
-
-msgid "Stage 5 — Pending"
-msgstr "Stage 5 — Pending"
-
-msgid "Stage 1 complete: Django skeleton"
-msgstr "Stage 1 complete: Django skeleton"
-
-msgid "Django project with 5 apps: core, etl, campaigns, sales, promos"
-msgstr "Django project with 5 apps: core, etl, campaigns, sales, promos"
-
-msgid "PostgreSQL database with fact and dimension models"
-msgstr "PostgreSQL database with fact and dimension models"
-
-msgid "Docker Compose for local development"
-msgstr "Docker Compose for local development"
-
-msgid "Architecture: alt Debian (Postgres + ETL) + Railway (UI)"
-msgstr "Architecture: alt Debian (Postgres + ETL) + Railway (UI)"
-
-msgid "UI languages: Russian and English with a language switcher"
-msgstr "UI languages: Russian and English with a language switcher"
-
-msgid "Ready for Stage 2: ETL implementation"
-msgstr "Ready for Stage 2: ETL implementation"
-
-msgid "Home"
-msgstr "Home"
-
-msgid "Open"
-msgstr "Open"
-
-msgid "Stage 3 — Ready"
-msgstr "Stage 3 — Ready"
-
-msgid "New analysis"
-msgstr "New analysis"
+msgid "Excel has no client rows"
+msgstr ""
 
 msgid "Campaign name"
 msgstr "Campaign name"
-
-msgid "Excel file"
-msgstr "Excel file"
-
-msgid "Use saved local SMS list"
-msgstr "Use saved local SMS list"
-
-msgid "Analysis from"
-msgstr "Analysis from"
-
-msgid "Analysis to (exclusive)"
-msgstr "Analysis to (exclusive)"
-
-msgid "Notes"
-msgstr "Notes"
-
-msgid "Analysis end must be after start."
-msgstr "Analysis end must be after start."
-
-msgid "Upload an Excel file or use the saved local list."
-msgstr "Upload an Excel file or use the saved local list."
-
-msgid "SMS sent on %(date)s"
-msgstr "SMS sent on %(date)s"
-
-msgid "Campaign analyzed."
-msgstr "Campaign analyzed."
-
-msgid "SMS 18 Sep 2026"
-msgstr "SMS 18 Sep 2026"
-
-msgid "Period"
-msgstr "Period"
-
-msgid "Clients"
-msgstr "Clients"
-
-msgid "Bought"
-msgstr "Bought"
-
-msgid "Did not buy"
-msgstr "Did not buy"
-
-msgid "No campaigns yet."
-msgstr "No campaigns yet."
-
-msgid "SMS were sent on 18 September 2026. Default window is from that day until today."
-msgstr "SMS were sent on 18 September 2026. Default window is from that day until today."
-
-msgid "Saved local SMS list is available (not stored in git)."
-msgstr "Saved local SMS list is available (not stored in git)."
-
-msgid "Analyze"
-msgstr "Analyze"
-
-msgid "All campaigns"
-msgstr "All campaigns"
-
-msgid "SMS sent on 18 September 2026."
-msgstr "SMS sent on 18 September 2026."
-
-msgid "Share bought"
-msgstr "Share bought"
-
-msgid "Not matched to ERP"
-msgstr "Not matched to ERP"
-
-msgid "All"
-msgstr "All"
-
-msgid "Client ID"
-msgstr "Client ID"
-
-msgid "Name"
-msgstr "Name"
-
-msgid "Amount"
-msgstr "Amount"
-
-msgid "Yes"
-msgstr "Yes"
-
-msgid "No"
-msgstr "No"
-
-msgid "New campaign"
-msgstr "New campaign"
 
 msgid "Give each blast its own name so lists stay separate."
 msgstr "Give each blast its own name so lists stay separate."
@@ -184,47 +28,62 @@ msgstr "SMS sent on"
 msgid "Date this mailing went out. Analysis starts on this day."
 msgstr "Date this mailing went out. Analysis starts on this day."
 
+msgid "Analysis to (exclusive)"
+msgstr "Analysis to (exclusive)"
+
+msgid "Excel file"
+msgstr "Excel file"
+
 msgid "Client list for this blast only (customer_id + phone)."
 msgstr "Client list for this blast only (customer_id + phone)."
+
+msgid "Use saved local SMS list"
+msgstr "Use saved local SMS list"
 
 msgid "Only for the 18 Sep 2026 blast already stored on this machine."
 msgstr "Only for the 18 Sep 2026 blast already stored on this machine."
 
+msgid "Notes"
+msgstr "Notes"
+
 msgid "Analysis end must be after the SMS send date."
 msgstr "Analysis end must be after the SMS send date."
 
-msgid "New campaign saved separately from previous blasts."
-msgstr "New campaign saved separately from previous blasts."
+msgid "Upload an Excel file or use the saved local list."
+msgstr "Upload an Excel file or use the saved local list."
 
-msgid "SMS %(date)s"
-msgstr "SMS %(date)s"
+msgid "Product group"
+msgstr "Product group"
 
-msgid "Each mailing is a separate campaign. Saving here does not change older blasts."
-msgstr "Each mailing is a separate campaign. Saving here does not change older blasts."
+msgid "All groups"
+msgstr "All groups"
 
-msgid "A local list for the 18 Sep 2026 blast is on this machine (not in git). Leave the checkbox off for a new list."
-msgstr "A local list for the 18 Sep 2026 blast is on this machine (not in git). Leave the checkbox off for a new list."
+msgid "Product"
+msgstr "Product"
 
-msgid "Create campaign"
-msgstr "Create campaign"
+msgid "All products"
+msgstr "All products"
 
-msgid "Recalculate this campaign until"
-msgstr "Recalculate this campaign until"
+msgid "Apply"
+msgstr "Apply"
 
-msgid "Recalculate"
-msgstr "Recalculate"
+msgid "Reset filters"
+msgstr "Reset filters"
 
-msgid "Invalid end date."
-msgstr "Invalid end date."
-
-msgid "This campaign was recalculated. Other blasts were not changed."
-msgstr "This campaign was recalculated. Other blasts were not changed."
-
-msgid "What they bought"
-msgstr "What they bought"
+msgid "Bought and amounts are limited to the selected group or product."
+msgstr "Bought and amounts are limited to the selected group or product."
 
 msgid "Order items"
 msgstr "Order items"
+
+msgid "Client ID"
+msgstr "Client ID"
+
+msgid "Period"
+msgstr "Period"
+
+msgid "No matching sales for this filter."
+msgstr "No matching sales for this filter."
 
 msgid "No sales in this campaign window."
 msgstr "No sales in this campaign window."
@@ -232,8 +91,8 @@ msgstr "No sales in this campaign window."
 msgid "Receipt"
 msgstr "Receipt"
 
-msgid "Product"
-msgstr "Product"
+msgid "Amount"
+msgstr "Amount"
 
 msgid "Group"
 msgstr "Group"
@@ -241,5 +100,457 @@ msgstr "Group"
 msgid "Qty"
 msgstr "Qty"
 
+msgid "New campaign"
+msgstr "New campaign"
+
+msgid ""
+"Each mailing is a separate campaign. Saving here does not change older "
+"blasts."
+msgstr ""
+"Each mailing is a separate campaign. Saving here does not change older "
+"blasts."
+
+msgid ""
+"A local list for the 18 Sep 2026 blast is on this machine (not in git). "
+"Leave the checkbox off for a new list."
+msgstr ""
+"A local list for the 18 Sep 2026 blast is on this machine (not in git). "
+"Leave the checkbox off for a new list."
+
+msgid "Create campaign"
+msgstr "Create campaign"
+
+msgid "All campaigns"
+msgstr "All campaigns"
+
+msgid "Recalculate this campaign until"
+msgstr "Recalculate this campaign until"
+
+msgid "Recalculate"
+msgstr "Recalculate"
+
+msgid "Clients"
+msgstr "Clients"
+
+msgid "Bought"
+msgstr "Bought"
+
+msgid "Did not buy"
+msgstr "Did not buy"
+
+msgid "Share bought"
+msgstr "Share bought"
+
+msgid "Not matched to ERP"
+msgstr "Not matched to ERP"
+
+msgid "All"
+msgstr "All"
+
+msgid "What they bought"
+msgstr "What they bought"
+
+#, python-format
+msgid "Showing first %(shown)s of %(total)s rows."
+msgstr "Showing first %(shown)s of %(total)s rows."
+
+#, python-format
+msgid "Amount of all matching rows: %(amount)s"
+msgstr "Amount of all matching rows: %(amount)s"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "No"
+msgstr "No"
+
+msgid "No clients in this list."
+msgstr "No clients in this list."
+
+msgid "SMS Campaign Analysis"
+msgstr "SMS Campaign Analysis"
+
+msgid "No campaigns yet."
+msgstr "No campaigns yet."
+
 msgid "Products bought by this campaign list in the analysis window."
 msgstr "Products bought by this campaign list in the analysis window."
+
+msgid "New campaign saved separately from previous blasts."
+msgstr "New campaign saved separately from previous blasts."
+
+#, python-format
+msgid "SMS %(date)s"
+msgstr "SMS %(date)s"
+
+msgid "Invalid end date."
+msgstr "Invalid end date."
+
+msgid "This campaign was recalculated. Other blasts were not changed."
+msgstr "This campaign was recalculated. Other blasts were not changed."
+
+msgid ""
+"Decision ERP for Granit: SMS Campaigns, Sales Analytics, Promo Effectiveness"
+msgstr ""
+"Decision ERP for Granit: SMS Campaigns, Sales Analytics, Promo Effectiveness"
+
+msgid "Open"
+msgstr "Open"
+
+msgid "MVP: SMS, sales explorer, promos"
+msgstr "MVP: SMS, sales explorer, promos"
+
+msgid "SMS campaign lift: Excel list, bought / not bought, order items"
+msgstr "SMS campaign lift: Excel list, bought / not bought, order items"
+
+msgid "Sales explorer: period slice, filters, receipts"
+msgstr "Sales explorer: period slice, filters, receipts"
+
+msgid "Promos: daily actual vs pre-period, YoY, and seasonal forecast"
+msgstr "Promos: daily actual vs pre-period, YoY, and seasonal forecast"
+
+msgid "UI languages: Russian and English with a language switcher"
+msgstr "UI languages: Russian and English with a language switcher"
+
+msgid "Architecture: alt Debian (pg-core + UI), analytics.dimkava.ge"
+msgstr "Architecture: alt Debian (pg-core + UI), analytics.dimkava.ge"
+
+msgid "Granit Sales Analytics ERP"
+msgstr "Granit Sales Analytics ERP"
+
+msgid "Upload Excel, analyze customer purchase lift"
+msgstr "Upload Excel, analyze customer purchase lift"
+
+msgid "Stage 3 — Ready"
+msgstr "Stage 3 — Ready"
+
+msgid "Sales Explorer"
+msgstr "Sales Explorer"
+
+msgid "Filter and explore sales by product, client, store, period"
+msgstr "Filter and explore sales by product, client, store, period"
+
+msgid "Stage 4 — Ready"
+msgstr "Stage 4 — Ready"
+
+msgid "Promotion Effectiveness"
+msgstr "Promotion Effectiveness"
+
+msgid "Compare promo results vs baseline and YoY"
+msgstr "Compare promo results vs baseline and YoY"
+
+msgid "Stage 5 — Ready"
+msgstr "Stage 5 — Ready"
+
+msgid "Each promo needs a name, start date, and end date."
+msgstr "Each promo needs a name, start date, and end date."
+
+msgid "Promo end must be on or after the start date."
+msgstr "Promo end must be on or after the start date."
+
+#, python-format
+msgid "Unknown product group ID: %(id)s"
+msgstr "Unknown product group ID: %(id)s"
+
+#, python-format
+msgid "Unknown product ID: %(id)s"
+msgstr "Unknown product ID: %(id)s"
+
+msgid "Each promo row needs group_id or product_id."
+msgstr "Each promo row needs group_id or product_id."
+
+msgid "Promo name"
+msgstr "Promo name"
+
+msgid "Used when the file has no name column, or for a manual promo."
+msgstr "Used when the file has no name column, or for a manual promo."
+
+msgid "Promo start"
+msgstr "Promo start"
+
+msgid "Fills empty start_date cells in the file."
+msgstr "Fills empty start_date cells in the file."
+
+msgid "Promo end"
+msgstr "Promo end"
+
+msgid "The end date is included. Fills empty end_date cells in the file."
+msgstr "The end date is included. Fills empty end_date cells in the file."
+
+msgid "Baseline days before promo"
+msgstr "Baseline days before promo"
+
+msgid "Median of daily sales in this window is the pre-period baseline."
+msgstr "Median of daily sales in this window is the pre-period baseline."
+
+msgid "Promo table (Excel)"
+msgstr "Promo table (Excel)"
+
+msgid ""
+"Columns: name, start_date, end_date, group_id, product_id. group_id and "
+"product_id are Granit IDs."
+msgstr ""
+"Columns: name, start_date, end_date, group_id, product_id. group_id and "
+"product_id are Granit IDs."
+
+msgid "Use example promo file"
+msgstr "Use example promo file"
+
+msgid ""
+"Local example with Candies group and Ballerina SKU (not required in git)."
+msgstr ""
+"Local example with Candies group and Ballerina SKU (not required in git)."
+
+msgid "Product groups"
+msgstr "Product groups"
+
+#, fuzzy
+#| msgid "Product"
+msgid "Products"
+msgstr "Product"
+
+msgid "Optional if you upload a file. The list narrows to the selected groups."
+msgstr ""
+"Optional if you upload a file. The list narrows to the selected groups."
+
+msgid "Upload a promo table or select at least one product group or product."
+msgstr "Upload a promo table or select at least one product group or product."
+
+msgid "Enter a promo name or upload a table."
+msgstr "Enter a promo name or upload a table."
+
+msgid "Enter promo dates or upload a table."
+msgstr "Enter promo dates or upload a table."
+
+msgid "Example promo file is not on this machine."
+msgstr "Example promo file is not on this machine."
+
+msgid "New promo"
+msgstr "New promo"
+
+msgid "All promos"
+msgstr "All promos"
+
+msgid ""
+"Start with dates and an Excel table. You can also pick groups or products by "
+"hand below."
+msgstr ""
+"Start with dates and an Excel table. You can also pick groups or products by "
+"hand below."
+
+msgid "Or select groups and products by hand"
+msgstr "Or select groups and products by hand"
+
+msgid "Filter groups"
+msgstr "Filter groups"
+
+msgid "Download example promo file"
+msgstr "Download example promo file"
+
+msgid "Save and analyze"
+msgstr "Save and analyze"
+
+msgid "Baseline days"
+msgstr "Baseline days"
+
+msgid "Targets"
+msgstr "Targets"
+
+msgid "Open in Sales Explorer"
+msgstr "Open in Sales Explorer"
+
+msgid "Actual"
+msgstr "Actual"
+
+msgid "Pre-period baseline"
+msgstr "Pre-period baseline"
+
+msgid "YoY baseline"
+msgstr "YoY baseline"
+
+msgid "Forecast"
+msgstr "Forecast"
+
+msgid "vs baseline"
+msgstr "vs baseline"
+
+msgid "vs YoY"
+msgstr "vs YoY"
+
+msgid ""
+"No sales in the warehouse for the same window last year, so YoY is empty."
+msgstr ""
+"No sales in the warehouse for the same window last year, so YoY is empty."
+
+msgid "Day"
+msgstr "Day"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "No days to analyze for this promo."
+msgstr "No days to analyze for this promo."
+
+msgid "No promos yet."
+msgstr "No promos yet."
+
+msgid "Example promo file is not available."
+msgstr "Example promo file is not available."
+
+msgid "Promo saved and calculated."
+msgstr "Promo saved and calculated."
+
+#, python-format
+msgid "Saved %(count)s promos from the table."
+msgstr "Saved %(count)s promos from the table."
+
+msgid "The promo table has no group_id or product_id rows."
+msgstr "The promo table has no group_id or product_id rows."
+
+msgid "This promo was recalculated."
+msgstr "This promo was recalculated."
+
+msgid "Date from"
+msgstr "Date from"
+
+msgid "Date to"
+msgstr "Date to"
+
+msgid "Store"
+msgstr "Store"
+
+msgid "All stores"
+msgstr "All stores"
+
+msgid "Filter products"
+msgstr "Filter products"
+
+msgid "Production"
+msgstr "Production"
+
+msgid "All production types"
+msgstr "All production types"
+
+msgid "Granit client id"
+msgstr "Granit client id"
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Product name"
+msgstr "Product name"
+
+msgid "Group by"
+msgstr "Group by"
+
+msgid "Sort by"
+msgstr "Sort by"
+
+msgid "The end date is included in the period."
+msgstr "The end date is included in the period."
+
+msgid "Rows"
+msgstr "Rows"
+
+msgid "Client"
+msgstr "Client"
+
+msgid "Receipts"
+msgstr "Receipts"
+
+msgid "Slice sales for a period, then open the receipts and the full order."
+msgstr "Slice sales for a period, then open the receipts and the full order."
+
+msgid "Receipt not found."
+msgstr "Receipt not found."
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Language"
+msgstr "Language"
+
+msgid "Admin Panel"
+msgstr "Admin Panel"
+
+#~ msgid "Stage 3 — Pending"
+#~ msgstr "Stage 3 — Pending"
+
+#~ msgid "Stage 4 — Pending"
+#~ msgstr "Stage 4 — Pending"
+
+#~ msgid "Stage 5 — Pending"
+#~ msgstr "Stage 5 — Pending"
+
+#~ msgid "Stage 1 complete: Django skeleton"
+#~ msgstr "Stage 1 complete: Django skeleton"
+
+#~ msgid "Django project with 5 apps: core, etl, campaigns, sales, promos"
+#~ msgstr "Django project with 5 apps: core, etl, campaigns, sales, promos"
+
+#~ msgid "PostgreSQL database with fact and dimension models"
+#~ msgstr "PostgreSQL database with fact and dimension models"
+
+#~ msgid "Docker Compose for local development"
+#~ msgstr "Docker Compose for local development"
+
+#~ msgid "Ready for Stage 2: ETL implementation"
+#~ msgstr "Ready for Stage 2: ETL implementation"
+
+#~ msgid "New analysis"
+#~ msgstr "New analysis"
+
+#~ msgid "Analysis from"
+#~ msgstr "Analysis from"
+
+#~ msgid "Analysis end must be after start."
+#~ msgstr "Analysis end must be after start."
+
+#~ msgid "SMS sent on %(date)s"
+#~ msgstr "SMS sent on %(date)s"
+
+#~ msgid "Campaign analyzed."
+#~ msgstr "Campaign analyzed."
+
+#~ msgid "SMS 18 Sep 2026"
+#~ msgstr "SMS 18 Sep 2026"
+
+#~ msgid ""
+#~ "SMS were sent on 18 September 2026. Default window is from that day until "
+#~ "today."
+#~ msgstr ""
+#~ "SMS were sent on 18 September 2026. Default window is from that day until "
+#~ "today."
+
+#~ msgid "Saved local SMS list is available (not stored in git)."
+#~ msgstr "Saved local SMS list is available (not stored in git)."
+
+#~ msgid "Analyze"
+#~ msgstr "Analyze"
+
+#~ msgid "SMS sent on 18 September 2026."
+#~ msgstr "SMS sent on 18 September 2026."
+
+#~ msgid ""
+#~ "Slice sales for a period by product, group, production type, store, "
+#~ "client, or day."
+#~ msgstr ""
+#~ "Slice sales for a period by product, group, production type, store, "
+#~ "client, or day."
+
+#~ msgid ""
+#~ "Compare daily sales in the promo window with the pre-period median, last "
+#~ "year, and a seasonal forecast."
+#~ msgstr ""
+#~ "Compare daily sales in the promo window with the pre-period median, last "
+#~ "year, and a seasonal forecast."
+
+#~ msgid ""
+#~ "An example promo table is on this machine (Candies group + Ballerina "
+#~ "SKU). You can tick the checkbox instead of uploading."
+#~ msgstr ""
+#~ "An example promo table is on this machine (Candies group + Ballerina "
+#~ "SKU). You can tick the checkbox instead of uploading."

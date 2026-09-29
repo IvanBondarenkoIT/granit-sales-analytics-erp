@@ -1,0 +1,29 @@
+name: granit-analytics
+
+services:
+  web:
+    image: ghcr.io/ivanbondarenkoit/granit-sales-analytics-erp:${IMAGE_TAG:-main}
+    container_name: granit-analytics
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PORT: "8000"
+      TZ: Asia/Tbilisi
+    ports:
+      - "127.0.0.1:8091:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - pgnet
+      - edge
+
+networks:
+  pgnet:
+    external: true
+  edge:
+    external: true

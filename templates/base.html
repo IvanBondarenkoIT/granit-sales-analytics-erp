@@ -24,6 +24,12 @@
         }
         .nav { display: flex; gap: 1rem; font-size: 0.95rem; }
         .nav a { color: #334; text-decoration: none; }
+        .nav a.active { color: #4c51bf; font-weight: 600; border-bottom: 2px solid #667eea; }
+        .flash { max-width: 1200px; margin: 0.75rem auto 0; padding: 0 2rem; }
+        .flash-item { background: #fff; padding: 0.65rem 1rem; margin-bottom: 0.4rem; border-left: 4px solid #667eea; }
+        .flash-item.success { border-color: #047857; color: #047857; }
+        .flash-item.error { border-color: #b91c1c; color: #b91c1c; }
+        .select-filter { width: 100%; padding: 0.35rem; margin: 0 0 0.35rem; font: inherit; }
         .lang-switch {
             display: inline-flex;
             align-items: center;
@@ -56,14 +62,16 @@
 <body>
     <div class="topbar">
         <nav class="nav">
-            <a href="{% url 'home' %}">{% trans "Home" %}</a>
-            <a href="{% url 'campaign_list' %}">{% trans "SMS Campaign Analysis" %}</a>
+            <a href="{% url 'home' %}"{% if request.path == '/' %} class="active"{% endif %}>{% trans "Home" %}</a>
+            <a href="{% url 'campaign_list' %}"{% if '/campaigns/' in request.path %} class="active"{% endif %}>{% trans "SMS Campaign Analysis" %}</a>
+            <a href="{% url 'sales_explorer' %}"{% if '/sales/' in request.path %} class="active"{% endif %}>{% trans "Sales Explorer" %}</a>
+            <a href="{% url 'promo_list' %}"{% if '/promos/' in request.path %} class="active"{% endif %}>{% trans "Promotion Effectiveness" %}</a>
         </nav>
         <form class="lang-switch" action="{% url 'set_language' %}" method="post">
             {% csrf_token %}
             <input name="next" type="hidden" value="{{ request.get_full_path }}">
             <label for="language">{% trans "Language" %}</label>
-            <select name="language" id="language" onchange="this.form.submit()">
+            <select name="language" id="language" onchange="this.form.next.value=location.pathname+location.search; this.form.submit()">
                 {% get_current_language as CURRENT_LANGUAGE %}
                 {% get_available_languages as AVAILABLE_LANGUAGES %}
                 {% get_language_info_list for AVAILABLE_LANGUAGES as languages %}
@@ -76,7 +84,37 @@
         </form>
     </div>
 
+    {% if messages %}
+    <div class="flash">
+        {% for message in messages %}
+        <div class="flash-item {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     {% block content %}{% endblock %}
+    {% block extra_js %}{% endblock %}
+    <script>
+    document.addEventListener('input', function (event) {
+        var input = event.target;
+        if (!input.classList.contains('select-filter')) {
+            return;
+        }
+        var root = input.form || input.closest('form') || document;
+        var select = root.querySelector(input.getAttribute('data-select'));
+        if (!select) {
+            return;
+        }
+        var query = input.value.trim().toLowerCase();
+        Array.prototype.forEach.call(select.options, function (option) {
+            if (!option.value) {
+                option.hidden = false;
+                return;
+            }
+            option.hidden = Boolean(query && option.text.toLowerCase().indexOf(query) === -1);
+        });
+    });
+    </script>
 
     <footer>
         <p>
