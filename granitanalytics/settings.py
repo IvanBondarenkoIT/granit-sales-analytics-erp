@@ -92,6 +92,7 @@ TEMPLATES = [
                 "django.template.context_processors.i18n",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.auth_flags",
             ],
         },
     },
@@ -126,6 +127,8 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "login"
+# Open for now; set ALLOW_REGISTRATION=false on the server to close sign-ups.
+ALLOW_REGISTRATION = _env_bool("ALLOW_REGISTRATION", default=True)
 
 LANGUAGE_CODE = "ru"
 

@@ -1,0 +1,35 @@
+{% extends "registration/auth_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Create an account" %} — {% trans "Granit Sales Analytics ERP" %}{% endblock %}
+
+{% block auth_content %}
+<h1>{% trans "Create an account" %}</h1>
+<p class="lead">{% trans "Register to use SMS campaigns, sales explorer, and promos." %}</p>
+{% if form.non_field_errors %}
+<div class="errors">{{ form.non_field_errors }}</div>
+{% endif %}
+<form method="post" action="{% url 'register' %}">
+    {% csrf_token %}
+    <label for="id_username">{{ form.username.label }}</label>
+    {{ form.username }}
+    {% if form.username.help_text %}<p class="help">{{ form.username.help_text }}</p>{% endif %}
+    {% if form.username.errors %}<ul class="errorlist">{{ form.username.errors }}</ul>{% endif %}
+
+    <label for="id_password1">{{ form.password1.label }}</label>
+    {{ form.password1 }}
+    {% if form.password1.help_text %}<p class="help">{{ form.password1.help_text }}</p>{% endif %}
+    {% if form.password1.errors %}<ul class="errorlist">{{ form.password1.errors }}</ul>{% endif %}
+
+    <label for="id_password2">{{ form.password2.label }}</label>
+    {{ form.password2 }}
+    {% if form.password2.help_text %}<p class="help">{{ form.password2.help_text }}</p>{% endif %}
+    {% if form.password2.errors %}<ul class="errorlist">{{ form.password2.errors }}</ul>{% endif %}
+
+    <button class="btn" type="submit">{% trans "Create an account" %}</button>
+</form>
+<p class="auth-footer">
+    {% trans "Already have an account?" %}
+    <a href="{% url 'login' %}">{% trans "Log in" %}</a>
+</p>
+{% endblock %}

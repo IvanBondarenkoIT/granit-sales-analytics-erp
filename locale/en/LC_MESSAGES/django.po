@@ -488,6 +488,51 @@ msgstr "Sign in to open SMS, sales, and promo screens."
 msgid "Please enter a correct username and password."
 msgstr "Please enter a correct username and password."
 
+msgid "Your username"
+msgstr "Your username"
+
+msgid "Your password"
+msgstr "Your password"
+
+msgid "Choose a username"
+msgstr "Choose a username"
+
+msgid "At least 8 characters"
+msgstr "At least 8 characters"
+
+msgid "Repeat password"
+msgstr "Repeat password"
+
+msgid "Confirm password"
+msgstr "Confirm password"
+
+msgid "Letters, digits and @/./+/-/_ only."
+msgstr "Letters, digits and @/./+/-/_ only."
+
+msgid "At least 8 characters. Avoid common passwords."
+msgstr "At least 8 characters. Avoid common passwords."
+
+msgid "Enter the same password again."
+msgstr "Enter the same password again."
+
+msgid "No account yet?"
+msgstr "No account yet?"
+
+msgid "Create an account"
+msgstr "Create an account"
+
+msgid "Already have an account?"
+msgstr "Already have an account?"
+
+msgid "Register to use SMS campaigns, sales explorer, and promos."
+msgstr "Register to use SMS campaigns, sales explorer, and promos."
+
+msgid "Account created. Welcome!"
+msgstr "Account created. Welcome!"
+
+msgid "Registration is closed."
+msgstr "Registration is closed."
+
 msgid "Language"
 msgstr "Language"
 

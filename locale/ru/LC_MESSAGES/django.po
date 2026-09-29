@@ -483,6 +483,51 @@ msgstr "Войдите, чтобы открыть SMS, обзор продаж �
 msgid "Please enter a correct username and password."
 msgstr "Неверный логин или пароль."
 
+msgid "Your username"
+msgstr "Ваш логин"
+
+msgid "Your password"
+msgstr "Ваш пароль"
+
+msgid "Choose a username"
+msgstr "Придумайте логин"
+
+msgid "At least 8 characters"
+msgstr "Не меньше 8 символов"
+
+msgid "Repeat password"
+msgstr "Повторите пароль"
+
+msgid "Confirm password"
+msgstr "Подтвердите пароль"
+
+msgid "Letters, digits and @/./+/-/_ only."
+msgstr "Буквы, цифры и символы @/./+/-/_."
+
+msgid "At least 8 characters. Avoid common passwords."
+msgstr "Не меньше 8 символов. Не используйте простые пароли."
+
+msgid "Enter the same password again."
+msgstr "Введите тот же пароль ещё раз."
+
+msgid "No account yet?"
+msgstr "Ещё нет аккаунта?"
+
+msgid "Create an account"
+msgstr "Создать аккаунт"
+
+msgid "Already have an account?"
+msgstr "Уже есть аккаунт?"
+
+msgid "Register to use SMS campaigns, sales explorer, and promos."
+msgstr "Регистрация для SMS, обзора продаж и акций."
+
+msgid "Account created. Welcome!"
+msgstr "Аккаунт создан. Добро пожаловать!"
+
+msgid "Registration is closed."
+msgstr "Регистрация закрыта."
+
 msgid "Language"
 msgstr "Язык"
 

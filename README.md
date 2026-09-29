@@ -109,7 +109,8 @@ docker compose exec web python manage.py createsuperuser
 5. **Access the application:**
 
 - Web UI: http://localhost:8000 — redirects to `/accounts/login/` until you sign in
-- Django Admin: http://localhost:8000/admin (same user if is_staff)
+- Register: http://localhost:8000/accounts/register/ (controlled by `ALLOW_REGISTRATION`, default on)
+- Django Admin: http://localhost:8000/admin (staff/superuser)
 
 ### Translations (i18n)
 
@@ -188,6 +189,7 @@ Hub places server `.env` next to prod compose. Required variables (see `.env.exa
 - `DB_HOST=pg-core`, `DB_NAME=granit`, `DB_USER=analytics`, `DB_PASSWORD=…`, `DB_PORT=5432`, `DB_SSLMODE=disable`
 - `PROXY_API_URL`, `PROXY_API_TOKEN` (for nightly ETL)
 - `IMAGE_TAG=main` (or `sha-xxxxxxx` to pin/rollback)
+- `ALLOW_REGISTRATION=true` for now; set `false` later to close public sign-up
 
 Container entrypoint runs `migrate` + `compilemessages`, then gunicorn.
 
