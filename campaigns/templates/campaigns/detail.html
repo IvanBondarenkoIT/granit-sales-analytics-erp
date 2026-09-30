@@ -25,7 +25,8 @@
 <div class="container">
     <p><a href="{% url 'campaign_list' %}">{% trans "All campaigns" %}</a></p>
     <h1>{{ campaign.name }}</h1>
-    <p>{% trans "SMS sent on" %}: <strong>{{ campaign.sms_sent_on|default:"—" }}</strong>
+    <p>{% if campaign.channel == "telegram" %}{% trans "Telegram bot" %}{% else %}{% trans "SMS" %}{% endif %}
+       · {% trans "Sent on" %}: <strong>{{ campaign.sms_sent_on|default:"—" }}</strong>
        · {% trans "Period" %}: {{ campaign.analysis_period_start }} — {{ campaign.analysis_period_end }}</p>
     <form method="post" action="{% url 'campaign_reanalyze' campaign.pk %}" style="margin: 1rem 0;">
         {% csrf_token %}
@@ -56,6 +57,7 @@
         <thead>
             <tr>
                 <th>{% trans "Client ID" %}</th>
+                {% if show_cards %}<th>{% trans "Card" %}</th>{% endif %}
                 <th>{% trans "Name" %}</th>
                 <th>{% trans "Bought" %}</th>
                 <th class="num">{% trans "Amount" %}</th>
@@ -65,7 +67,8 @@
         <tbody>
             {% for row in clients %}
             <tr>
-                <td>{{ row.granit_client_id }}</td>
+                <td>{{ row.granit_client_id|default:"—" }}</td>
+                {% if show_cards %}<td>{{ row.card_number|default:"—" }}</td>{% endif %}
                 <td>{{ row.client.name|default:"—" }}</td>
                 <td class="{% if row.view_bought %}yes{% else %}no{% endif %}">
                     {% if row.view_bought %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}
@@ -81,7 +84,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3">{% trans "Total" %}</td>
+                <td colspan="{% if show_cards %}4{% else %}3{% endif %}">{% trans "Total" %}</td>
                 <td class="num">{{ shown_amount }}</td>
                 <td></td>
             </tr>

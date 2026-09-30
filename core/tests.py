@@ -28,7 +28,7 @@ class AuthGateTests(TestCase):
     def test_login_page_public(self):
         response = self.client.get(reverse("login"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Create an account")
+        self.assertContains(response, reverse("register"))
 
     def test_register_creates_user_and_logs_in(self):
         response = self.client.post(

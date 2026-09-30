@@ -3,9 +3,17 @@ from core.models import Client
 
 
 class Campaign(models.Model):
-    """One SMS blast. Each mailing is its own row — never merge lists."""
-    
+    """One blast (SMS or Telegram bot). Each mailing is its own row — never merge lists."""
+
+    CHANNEL_SMS = "sms"
+    CHANNEL_TELEGRAM = "telegram"
+    CHANNEL_CHOICES = [
+        (CHANNEL_SMS, "SMS"),
+        (CHANNEL_TELEGRAM, "Telegram bot"),
+    ]
+
     name = models.CharField(max_length=200)
+    channel = models.CharField(max_length=16, choices=CHANNEL_CHOICES, default=CHANNEL_SMS, db_index=True)
     sms_sent_on = models.DateField(
         null=True,
         blank=True,
@@ -38,7 +46,10 @@ class CampaignClient(models.Model):
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, related_name='campaign_clients')
     client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name='campaigns', null=True, blank=True)
     
-    granit_client_id = models.IntegerField(help_text="Client ID from uploaded Excel")
+    granit_client_id = models.IntegerField(
+        null=True, blank=True, help_text="Granit client ID (from file or matched by card)"
+    )
+    card_number = models.CharField(max_length=32, blank=True)
     phone = models.CharField(max_length=50, blank=True)
     
     had_sales = models.BooleanField(default=False)
@@ -50,4 +61,4 @@ class CampaignClient(models.Model):
         unique_together = [['campaign', 'granit_client_id']]
 
     def __str__(self):
-        return f"{self.campaign.name} - Client {self.granit_client_id}"
+        return f"{self.campaign.name} - Client {self.granit_client_id or self.card_number}"

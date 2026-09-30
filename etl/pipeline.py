@@ -1,6 +1,7 @@
 """Load Granit dims/facts from firebird-db-proxy into Postgres."""
 from __future__ import annotations
 
+import re
 from datetime import date, datetime, timedelta
 from decimal import Decimal, InvalidOperation
 from typing import Any, Iterable
@@ -22,6 +23,7 @@ from etl.proxy import query_rows
 from etl.queries import (
     STOCK_CHUNK,
     sql_clients,
+    sql_clients_by_cards,
     sql_clients_by_ids,
     sql_product_groups,
     sql_product_parameters,
@@ -31,6 +33,8 @@ from etl.queries import (
     sql_stores,
 )
 from sales.models import SaleFact, StockSnapshot
+
+CARD_NUMBER_RE = re.compile(r"^\d{13}$")
 
 
 def _as_int(value: Any) -> int | None:
@@ -206,6 +210,11 @@ def upsert_parameters(rows: Iterable[dict[str, Any]]) -> tuple[int, int]:
     return inserted, updated
 
 
+def card_number_from(raw: Any) -> str:
+    text = _as_str(raw, 64)
+    return text if CARD_NUMBER_RE.match(text) else ""
+
+
 def upsert_clients(rows: Iterable[dict[str, Any]]) -> tuple[int, int]:
     inserted = updated = 0
     for row in rows:
@@ -217,6 +226,7 @@ def upsert_clients(rows: Iterable[dict[str, Any]]) -> tuple[int, int]:
             defaults={
                 "name": _as_str(row.get("CLIENT_NAME") or row.get("NAME"), 200),
                 "phone": _as_str(row.get("PHONE"), 50),
+                "card_number": card_number_from(row.get("CARD_RAW")),
             },
         )
         if created:
@@ -271,6 +281,21 @@ def load_dims() -> dict[str, int]:
         "clients_inserted": clients_i,
         "clients_updated": clients_u,
     }
+
+
+def backfill_clients_by_cards(cards: Iterable[str]) -> int:
+    """Load clients whose card is missing locally. Returns rows fetched."""
+    wanted = {c for c in cards if CARD_NUMBER_RE.match(c or "")}
+    missing = sorted(
+        wanted - set(Client.objects.filter(card_number__in=wanted).values_list("card_number", flat=True))
+    )
+    fetched = 0
+    for i in range(0, len(missing), 200):
+        sql, params = sql_clients_by_cards(missing[i : i + 200])
+        rows = query_rows(sql, params)
+        fetched += len(rows)
+        upsert_clients(rows)
+    return fetched
 
 
 def _backfill_missing_clients(client_ids: set[int]) -> None:

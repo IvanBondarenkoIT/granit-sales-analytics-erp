@@ -19,7 +19,8 @@
     <p><a href="{% url 'campaign_detail' campaign.pk %}{% if filter_query %}?{{ filter_query|slice:'1:' }}{% endif %}">← {{ campaign.name }}</a></p>
     <h1>{% trans "Order items" %}</h1>
     <p>
-        {% trans "Client ID" %}: {{ row.granit_client_id }}
+        {% trans "Client ID" %}: {{ row.granit_client_id|default:"—" }}
+        {% if row.card_number %}· {% trans "Card" %}: {{ row.card_number }}{% endif %}
         · {{ row.client.name|default:"—" }}
         · {% trans "Period" %}: {{ campaign.analysis_period_start }} — {{ campaign.analysis_period_end }}
     </p>

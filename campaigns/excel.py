@@ -12,8 +12,9 @@ PHONE_SHEET_NAMES = ("Телефоны", "Phones", "phones")
 
 @dataclass(frozen=True)
 class CampaignRow:
-    granit_client_id: int
+    granit_client_id: int | None
     phone: str
+    card_number: str = ""
 
 
 def normalize_phone(raw: object) -> str:

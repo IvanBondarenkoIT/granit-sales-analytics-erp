@@ -21,6 +21,9 @@ class Client(models.Model):
     granit_id = models.IntegerField(unique=True, help_text="Client ID from Granit ERP")
     name = models.CharField(max_length=200, blank=True)
     phone = models.CharField(max_length=50, blank=True)
+    card_number = models.CharField(
+        max_length=32, blank=True, db_index=True, help_text="Loyalty card from ORGN.NAME"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

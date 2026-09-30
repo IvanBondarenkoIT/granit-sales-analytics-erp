@@ -8,10 +8,16 @@ from django.views.decorators.http import require_POST
 
 from django.db.models import Sum
 
-from campaigns.analysis import LOCAL_SMS_XLSX, analyze_rows, import_campaign_from_path
+from campaigns.analysis import (
+    LOCAL_SMS_XLSX,
+    analyze_rows,
+    import_campaign_from_path,
+    prefetch_card_clients,
+)
 from campaigns.excel import CampaignRow, parse_campaign_xlsx
 from campaigns.forms import CampaignUploadForm
 from campaigns.models import Campaign, CampaignClient
+from campaigns.tg_csv import parse_tg_users_csv
 from core.models import Product, ProductGroup
 from sales.models import SaleFact
 
@@ -94,10 +100,19 @@ def campaign_create(request):
                         notes=notes,
                     )
                 else:
+                    channel = form.cleaned_data["channel"]
                     upload = form.cleaned_data["excel_file"]
-                    rows = parse_campaign_xlsx(upload)
+                    if channel == Campaign.CHANNEL_TELEGRAM:
+                        rows = parse_tg_users_csv(upload)
+                        if not rows:
+                            raise ValueError(_("CSV has no card rows"))
+                        prefetch_card_clients(rows)
+                        upload.seek(0)
+                    else:
+                        rows = parse_campaign_xlsx(upload)
                     campaign = Campaign.objects.create(
                         name=form.cleaned_data["name"],
+                        channel=channel,
                         sms_sent_on=sent,
                         notes=notes,
                     )
@@ -163,7 +178,9 @@ def campaign_detail(request, pk: int):
         item.view_bought = hit
         item.view_amount = amount
         rows.append(item)
-    rows.sort(key=lambda r: (-bool(r.view_bought), -float(r.view_amount or 0), r.granit_client_id))
+    rows.sort(
+        key=lambda r: (-bool(r.view_bought), -float(r.view_amount or 0), r.granit_client_id or 0, r.card_number)
+    )
     row_count = len(rows)
     clients = rows[:CLIENT_LIMIT]
     matching_amount = sum((row.view_amount or Decimal("0") for row in rows), Decimal("0"))
@@ -187,6 +204,7 @@ def campaign_detail(request, pk: int):
             "not_bought": total - bought_count,
             "unmatched": CampaignClient.objects.filter(campaign=campaign, client__isnull=True).count(),
             "today": date.today(),
+            "show_cards": campaign.channel == Campaign.CHANNEL_TELEGRAM,
             "filter_action": "campaign_detail",
             **filters,
         },
@@ -204,12 +222,17 @@ def campaign_reanalyze(request, pk: int):
         return redirect("campaign_detail", pk=campaign.pk)
     sent = campaign.sms_sent_on or campaign.analysis_period_start
     if not sent or date_to <= sent:
-        messages.error(request, _("Analysis end must be after the SMS send date."))
+        messages.error(request, _("Analysis end must be after the send date."))
         return redirect("campaign_detail", pk=campaign.pk)
     typed = [
-        CampaignRow(granit_client_id=item.granit_client_id, phone=item.phone)
+        CampaignRow(
+            granit_client_id=item.granit_client_id,
+            phone=item.phone,
+            card_number=item.card_number,
+        )
         for item in campaign.campaign_clients.all()
     ]
+    prefetch_card_clients(typed)
     analyze_rows(campaign, typed, sent, date_to)
     messages.success(request, _("This campaign was recalculated. Other blasts were not changed."))
     return redirect("campaign_detail", pk=campaign.pk)

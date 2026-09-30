@@ -55,25 +55,27 @@ def sql_product_parameters() -> tuple[str, list[int]]:
     return sql, [param_id]
 
 
-def sql_clients() -> str:
-    return """
+_CLIENT_COLUMNS = """
         SELECT O.ID AS CLIENT_ID,
                COALESCE(NULLIF(TRIM(O.FULLNAME), ''), O.NAME) AS CLIENT_NAME,
-               O.PHONE AS PHONE
+               O.PHONE AS PHONE,
+               TRIM(O.NAME) AS CARD_RAW
         FROM ORGN O
-    """
+"""
+
+
+def sql_clients() -> str:
+    return _CLIENT_COLUMNS
 
 
 def sql_clients_by_ids(ids: list[int]) -> tuple[str, list[int]]:
     placeholders = ",".join(["?"] * len(ids))
-    sql = f"""
-        SELECT O.ID AS CLIENT_ID,
-               COALESCE(NULLIF(TRIM(O.FULLNAME), ''), O.NAME) AS CLIENT_NAME,
-               O.PHONE AS PHONE
-        FROM ORGN O
-        WHERE O.ID IN ({placeholders})
-    """
-    return sql, ids
+    return f"{_CLIENT_COLUMNS} WHERE O.ID IN ({placeholders})", ids
+
+
+def sql_clients_by_cards(cards: list[str]) -> tuple[str, list[str]]:
+    placeholders = ",".join(["?"] * len(cards))
+    return f"{_CLIENT_COLUMNS} WHERE TRIM(O.NAME) IN ({placeholders})", cards
 
 
 def sql_sales_day() -> tuple[str, list]:

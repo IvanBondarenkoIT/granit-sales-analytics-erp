@@ -17,6 +17,7 @@
 <div class="container">
     <h1>{% trans "New campaign" %}</h1>
     <p class="hint">{% trans "Each mailing is a separate campaign. Saving here does not change older blasts." %}</p>
+    <p class="hint">{% trans "Telegram bot: choose that channel and upload the CSV export (card number, phone). Clients are matched by loyalty card." %}</p>
     {% if local_file_exists %}
     <p class="hint">{% trans "A local list for the 18 Sep 2026 blast is on this machine (not in git). Leave the checkbox off for a new list." %}</p>
     {% endif %}

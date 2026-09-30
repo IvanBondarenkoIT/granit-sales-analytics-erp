@@ -11,8 +11,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 msgid "Excel has no client rows"
 msgstr ""
@@ -309,7 +308,8 @@ msgstr "Группы товара"
 msgid "Products"
 msgstr "Товары"
 
-msgid "Optional if you upload a file. The list narrows to the selected groups."
+msgid ""
+"Optional if you upload a file. The list narrows to the selected groups."
 msgstr ""
 "Не обязательно, если загружаете файл. Список сужается по выбранным группам."
 
@@ -332,8 +332,8 @@ msgid "All promos"
 msgstr "Все акции"
 
 msgid ""
-"Start with dates and an Excel table. You can also pick groups or products by "
-"hand below."
+"Start with dates and an Excel table. You can also pick groups or products by"
+" hand below."
 msgstr ""
 "Сначала даты и таблица Excel. Группы и товары можно выбрать вручную ниже."
 
@@ -534,6 +534,59 @@ msgstr "Язык"
 msgid "Admin Panel"
 msgstr "Админка"
 
+msgid "Campaign Analysis"
+msgstr "?????? ????????"
+
+msgid "Sent on"
+msgstr "???? ????????"
+
+msgid "Channel"
+msgstr "?????"
+
+msgid "SMS"
+msgstr "SMS"
+
+msgid "Telegram bot"
+msgstr "Telegram-???"
+
+msgid "Card"
+msgstr "?????"
+
+msgid "Client list file"
+msgstr "???? ?? ??????? ????????"
+
+msgid ""
+"SMS: Excel with customer_id + phone. Telegram bot: CSV with card number + "
+"phone."
+msgstr ""
+"SMS: Excel ? customer_id ? ?????????. Telegram-???: CSV ? ??????? ????? ? "
+"?????????."
+
+msgid "Analysis end must be after the send date."
+msgstr "???? ????????? ?????? ???? ????? ???? ????????."
+
+msgid "The saved local list is for SMS only."
+msgstr "??????????? ????????? ?????? ? ?????? ??? SMS."
+
+msgid "Upload the Telegram bot CSV file."
+msgstr "????????? CSV-???? Telegram-????."
+
+msgid "Telegram bot list must be a .csv file."
+msgstr "?????? Telegram-???? ?????? ???? ?????? .csv."
+
+msgid "SMS list must be an .xlsx file."
+msgstr "?????? SMS ?????? ???? ?????? .xlsx."
+
+msgid "CSV has no card rows"
+msgstr "? CSV ??? ????? ? ???????? ????"
+
+msgid ""
+"Telegram bot: choose that channel and upload the CSV export (card number, "
+"phone). Clients are matched by loyalty card."
+msgstr ""
+"Telegram-???: ???????? ???? ????? ? ????????? CSV-???????? (????? ?????, "
+"???????). ??????? ?????????????? ?? ???????? ?????."
+
 #~ msgid "Stage 3 — Pending"
 #~ msgstr "Этап 3 — ожидает"
 
@@ -580,8 +633,7 @@ msgstr "Админка"
 #~ "SMS were sent on 18 September 2026. Default window is from that day until "
 #~ "today."
 #~ msgstr ""
-#~ "SMS разослали 18 сентября 2026. Окно по умолчанию — с этого дня до "
-#~ "сегодня."
+#~ "SMS разослали 18 сентября 2026. Окно по умолчанию — с этого дня до сегодня."
 
 #~ msgid "Saved local SMS list is available (not stored in git)."
 #~ msgstr "Локальный список SMS доступен (в git не лежит)."
@@ -593,8 +645,8 @@ msgstr "Админка"
 #~ msgstr "SMS разослали 18 сентября 2026."
 
 #~ msgid ""
-#~ "Slice sales for a period by product, group, production type, store, "
-#~ "client, or day."
+#~ "Slice sales for a period by product, group, production type, store, client, "
+#~ "or day."
 #~ msgstr ""
 #~ "Срез продаж за период: товар, группа, продукция, магазин, клиент или день."
 
@@ -602,12 +654,12 @@ msgstr "Админка"
 #~ "Compare daily sales in the promo window with the pre-period median, last "
 #~ "year, and a seasonal forecast."
 #~ msgstr ""
-#~ "Сравнение дневных продаж в окне акции с медианой до акции, прошлым годом "
-#~ "и сезонным прогнозом."
+#~ "Сравнение дневных продаж в окне акции с медианой до акции, прошлым годом и "
+#~ "сезонным прогнозом."
 
 #~ msgid ""
-#~ "An example promo table is on this machine (Candies group + Ballerina "
-#~ "SKU). You can tick the checkbox instead of uploading."
+#~ "An example promo table is on this machine (Candies group + Ballerina SKU). "
+#~ "You can tick the checkbox instead of uploading."
 #~ msgstr ""
-#~ "Пример таблицы акций есть на этой машине (группа Candies и товар "
-#~ "Ballerina). Можно поставить галочку вместо загрузки."
+#~ "Пример таблицы акций есть на этой машине (группа Candies и товар Ballerina)."
+#~ " Можно поставить галочку вместо загрузки."

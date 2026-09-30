@@ -312,7 +312,8 @@ msgstr "Product groups"
 msgid "Products"
 msgstr "Product"
 
-msgid "Optional if you upload a file. The list narrows to the selected groups."
+msgid ""
+"Optional if you upload a file. The list narrows to the selected groups."
 msgstr ""
 "Optional if you upload a file. The list narrows to the selected groups."
 
@@ -335,11 +336,11 @@ msgid "All promos"
 msgstr "All promos"
 
 msgid ""
-"Start with dates and an Excel table. You can also pick groups or products by "
-"hand below."
+"Start with dates and an Excel table. You can also pick groups or products by"
+" hand below."
 msgstr ""
-"Start with dates and an Excel table. You can also pick groups or products by "
-"hand below."
+"Start with dates and an Excel table. You can also pick groups or products by"
+" hand below."
 
 msgid "Or select groups and products by hand"
 msgstr "Or select groups and products by hand"
@@ -539,6 +540,59 @@ msgstr "Language"
 msgid "Admin Panel"
 msgstr "Admin Panel"
 
+msgid "Campaign Analysis"
+msgstr "Campaign Analysis"
+
+msgid "Sent on"
+msgstr "Sent on"
+
+msgid "Channel"
+msgstr "Channel"
+
+msgid "SMS"
+msgstr "SMS"
+
+msgid "Telegram bot"
+msgstr "Telegram bot"
+
+msgid "Card"
+msgstr "Card"
+
+msgid "Client list file"
+msgstr "Client list file"
+
+msgid ""
+"SMS: Excel with customer_id + phone. Telegram bot: CSV with card number + "
+"phone."
+msgstr ""
+"SMS: Excel with customer_id + phone. Telegram bot: CSV with card number + "
+"phone."
+
+msgid "Analysis end must be after the send date."
+msgstr "Analysis end must be after the send date."
+
+msgid "The saved local list is for SMS only."
+msgstr "The saved local list is for SMS only."
+
+msgid "Upload the Telegram bot CSV file."
+msgstr "Upload the Telegram bot CSV file."
+
+msgid "Telegram bot list must be a .csv file."
+msgstr "Telegram bot list must be a .csv file."
+
+msgid "SMS list must be an .xlsx file."
+msgstr "SMS list must be an .xlsx file."
+
+msgid "CSV has no card rows"
+msgstr "CSV has no card rows"
+
+msgid ""
+"Telegram bot: choose that channel and upload the CSV export (card number, "
+"phone). Clients are matched by loyalty card."
+msgstr ""
+"Telegram bot: choose that channel and upload the CSV export (card number, "
+"phone). Clients are matched by loyalty card."
+
 #~ msgid "Stage 3 — Pending"
 #~ msgstr "Stage 3 — Pending"
 
@@ -598,11 +652,11 @@ msgstr "Admin Panel"
 #~ msgstr "SMS sent on 18 September 2026."
 
 #~ msgid ""
-#~ "Slice sales for a period by product, group, production type, store, "
-#~ "client, or day."
+#~ "Slice sales for a period by product, group, production type, store, client, "
+#~ "or day."
 #~ msgstr ""
-#~ "Slice sales for a period by product, group, production type, store, "
-#~ "client, or day."
+#~ "Slice sales for a period by product, group, production type, store, client, "
+#~ "or day."
 
 #~ msgid ""
 #~ "Compare daily sales in the promo window with the pre-period median, last "
@@ -612,8 +666,8 @@ msgstr "Admin Panel"
 #~ "year, and a seasonal forecast."
 
 #~ msgid ""
-#~ "An example promo table is on this machine (Candies group + Ballerina "
-#~ "SKU). You can tick the checkbox instead of uploading."
+#~ "An example promo table is on this machine (Candies group + Ballerina SKU). "
+#~ "You can tick the checkbox instead of uploading."
 #~ msgstr ""
-#~ "An example promo table is on this machine (Candies group + Ballerina "
-#~ "SKU). You can tick the checkbox instead of uploading."
+#~ "An example promo table is on this machine (Candies group + Ballerina SKU). "
+#~ "You can tick the checkbox instead of uploading."

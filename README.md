@@ -143,6 +143,11 @@ docker compose exec web python manage.py etl_nightly
 # Stage 3 SMS (local Excel is gitignored; SMS sent 2026-09-18)
 docker compose exec web python manage.py import_sms_campaign --name "SMS 18 Sep 2026" --sent-on 2026-09-18 --to 2026-09-22
 
+# Telegram-bot blast (users.csv = card,phone; gitignored; sent 2026-09-21).
+# Run etl_dims first so Client.card_number (from ORGN.NAME) is filled.
+docker compose exec web python manage.py etl_dims
+docker compose exec web python manage.py import_tg_campaign --file data/local/users.csv --name "TG bot 21 Sep 2026" --sent-on 2026-09-21
+
 # Stage 5 promos: example table is written to data/local/promos_example.xlsx and docs/promos_example.xlsx
 
 # Django shell
@@ -224,6 +229,8 @@ Ensures Django tables land in schema `analytics`, not `public`.
 Upload Excel with client IDs/phones (~1700 records). Analyze: did these clients make purchases during a specified period?
 
 **Status:** Ready (STAGE 3) — Excel import, bought / not bought, catalog filters.
+
+Telegram-bot blasts use the same screens: upload a CSV of `card,phone` with channel «Telegram bot». Clients are matched by loyalty card (Granit `ORGN.NAME`, 13 digits), then by phone.
 
 ### 2. Sales Explorer
 

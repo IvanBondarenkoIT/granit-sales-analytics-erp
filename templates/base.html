@@ -78,7 +78,7 @@
     <div class="topbar">
         <nav class="nav">
             <a href="{% url 'home' %}"{% if request.path == '/' %} class="active"{% endif %}>{% trans "Home" %}</a>
-            <a href="{% url 'campaign_list' %}"{% if '/campaigns/' in request.path %} class="active"{% endif %}>{% trans "SMS Campaign Analysis" %}</a>
+            <a href="{% url 'campaign_list' %}"{% if '/campaigns/' in request.path %} class="active"{% endif %}>{% trans "Campaign Analysis" %}</a>
             <a href="{% url 'sales_explorer' %}"{% if '/sales/' in request.path %} class="active"{% endif %}>{% trans "Sales Explorer" %}</a>
             <a href="{% url 'promo_list' %}"{% if '/promos/' in request.path %} class="active"{% endif %}>{% trans "Promotion Effectiveness" %}</a>
         </nav>
