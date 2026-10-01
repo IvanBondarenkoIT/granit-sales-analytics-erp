@@ -56,3 +56,31 @@ class AuthGateTests(TestCase):
         response = self.client.get(reverse("login"))
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, reverse("register"))
+
+
+class QtyFilterTests(TestCase):
+    def test_russian_format(self):
+        from decimal import Decimal
+
+        from django.utils import translation
+
+        from core.templatetags.numbers import qty
+
+        with translation.override("ru"):
+            self.assertEqual(qty(Decimal("0.250")), "0,25")
+            self.assertEqual(qty(Decimal("65.000")), "65")
+            self.assertEqual(qty(Decimal("0.125")), "0,125")
+            self.assertEqual(qty(Decimal("1234.500")).replace("\xa0", " "), "1 234,5")
+            self.assertEqual(qty(Decimal("0")), "0")
+
+    def test_english_format(self):
+        from decimal import Decimal
+
+        from django.utils import translation
+
+        from core.templatetags.numbers import qty
+
+        with translation.override("en"):
+            self.assertEqual(qty(Decimal("0.250")), "0.25")
+            self.assertEqual(qty(Decimal("1234.500")), "1,234.5")
+            self.assertEqual(qty(None), "")

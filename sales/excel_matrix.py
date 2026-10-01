@@ -16,6 +16,7 @@ from sales.matrix import MatrixResult, ZERO, ensure_catchall, sales_in_period
 from sales.models import SuperGroup, SuperGroupMember
 
 TOTALS_LABEL = "ИТОГО"
+QTY_FORMAT = "#,##0.00#"
 
 
 def _fill(color: str) -> PatternFill:
@@ -71,7 +72,7 @@ def _hide_key_col(ws, headers: list[str]) -> None:
 
 def _style_metric_cell(cell, header: str) -> None:
     if header.endswith(" qty") or header in {"qty", "total_qty"}:
-        cell.number_format = "#,##0.0"
+        cell.number_format = QTY_FORMAT
     elif header.endswith(" amt") or header in {"amount", "total_amount"}:
         cell.number_format = "#,##0"
     elif header == "group_id" and cell.value not in ("", None):

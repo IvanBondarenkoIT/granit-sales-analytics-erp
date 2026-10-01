@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n numbers %}
 
 {% block title %}{% trans "Sales by super-groups" %}{% endblock %}
 
@@ -27,7 +27,8 @@
 {% block content %}
 <div class="container" style="max-width: 100%;">
     <h1>{% trans "Sales by super-groups" %}</h1>
-    <p class="hint">{% trans "Rows are super-groups, columns are stores with sales in the period. Cell = qty / amount. Totals must match all sales." %}</p>
+    <p class="hint">{% trans "Rows are super-groups, columns are stores with sales in the period. Cell = qty / amount. Totals must match all sales." %}
+        {% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}</p>
     <form class="toolbar" method="get">
         <div>
             <label for="date_from">{% trans "From" %}</label>
@@ -80,7 +81,7 @@
                     {% for store, cell in row.ordered_cells %}
                     <td style="background:#{{ row.color }};">
                         <a href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}&amp;store={{ store.granit_id }}">
-                            <span class="cell-qty">{{ cell.qty }}</span>
+                            <span class="cell-qty">{{ cell.qty|qty }}</span>
                         </a>
                     </td>
                     <td style="background:#{{ row.color }};">
@@ -89,7 +90,7 @@
                         </a>
                     </td>
                     {% endfor %}
-                    <td style="background:#{{ row.color }};"><span class="cell-qty">{{ row.total.qty }}</span></td>
+                    <td style="background:#{{ row.color }};"><span class="cell-qty">{{ row.total.qty|qty }}</span></td>
                     <td style="background:#{{ row.color }};"><span class="cell-amt">{{ row.total.amount }}</span></td>
                 </tr>
                 {% endfor %}
@@ -98,10 +99,10 @@
                 <tr>
                     <td class="sticky">{% trans "Total" %}</td>
                     {% for store, cell in matrix.ordered_column_totals %}
-                    <td>{{ cell.qty }}</td>
+                    <td>{{ cell.qty|qty }}</td>
                     <td>{{ cell.amount }}</td>
                     {% endfor %}
-                    <td>{{ matrix.grand.qty }}</td>
+                    <td>{{ matrix.grand.qty|qty }}</td>
                     <td>{{ matrix.grand.amount }}</td>
                 </tr>
             </tfoot>

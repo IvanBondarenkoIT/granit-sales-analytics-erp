@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n numbers %}
 
 {% block title %}{{ sg.title }}{% endblock %}
 
@@ -58,7 +58,7 @@
                     {{ row.name }}
                     {% endif %}
                 </td>
-                <td class="num">{{ row.qty }}</td>
+                <td class="num">{{ row.qty|qty }}</td>
                 <td class="num">{{ row.amount }}</td>
                 <td>
                     {% if not sg.is_catchall and row.granit_id %}
@@ -78,7 +78,7 @@
         <tfoot>
             <tr>
                 <td colspan="2">{% trans "Total" %}</td>
-                <td class="num">{{ total_qty }}</td>
+                <td class="num">{{ total_qty|qty }}</td>
                 <td class="num">{{ total_amount }}</td>
                 <td></td>
             </tr>

@@ -740,6 +740,51 @@ msgstr "Ниже"
 msgid "Order updated."
 msgstr "Порядок обновлён."
 
+msgid "Charts"
+msgstr "Графики"
+
+msgid "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
+msgstr "Кол-во: кг для весового товара (0,25 = 250 г), шт. для штучного."
+
+msgid "Last year"
+msgstr "Прошлый год"
+
+msgid "Extra revenue vs baseline"
+msgstr "Доп. выручка к базе"
+
+msgid "Best promo day"
+msgstr "Лучший день акции"
+
+msgid "Sales by day"
+msgstr "Продажи по дням"
+
+msgid "Promo days"
+msgstr "Дни акции"
+
+msgid "Promo period total"
+msgstr "Итог за период акции"
+
+msgid "actual"
+msgstr "факт"
+
+msgid "no data"
+msgstr "нет данных"
+
+msgid "Cumulative: extra revenue"
+msgstr "Накопительно: доп. выручка"
+
+msgid "Actual, cumulative"
+msgstr "Факт, накопительно"
+
+msgid "Baseline, cumulative"
+msgstr "База, накопительно"
+
+msgid "No analysis yet for this promo. Recalculate to build the charts."
+msgstr "Для этой акции ещё нет расчёта. Пересчитайте, чтобы построить графики."
+
+msgid "No pre-period baseline, so extra revenue cannot be calculated."
+msgstr "Нет базы до акции, поэтому доп. выручку посчитать нельзя."
+
 msgid "Product ID"
 msgstr "ID товара"
 

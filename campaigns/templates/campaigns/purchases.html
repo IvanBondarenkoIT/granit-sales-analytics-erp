@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n numbers %}
 
 {% block title %}{% trans "What they bought" %} — {{ campaign.name }}{% endblock %}
 
@@ -31,7 +31,7 @@
             <tr>
                 <td>{{ row.product__name }}</td>
                 <td>{{ row.product__group__name|default:"—" }}</td>
-                <td>{{ row.qty }}</td>
+                <td>{{ row.qty|qty }}</td>
                 <td>{{ row.amount }}</td>
             </tr>
             {% empty %}

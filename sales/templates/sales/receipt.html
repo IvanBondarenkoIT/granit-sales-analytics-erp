@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n numbers %}
 
 {% block title %}{% trans "Receipt" %} #{{ sale_id }}{% endblock %}
 
@@ -38,7 +38,7 @@
                 <tr{% if highlight_product_id == line.product.granit_id %} class="hit"{% endif %}>
                     <td>{{ line.product.name }}</td>
                     <td>{{ line.product.group.name|default:"—" }}</td>
-                    <td class="num">{{ line.quantity }}</td>
+                    <td class="num">{{ line.quantity|qty }}</td>
                     <td class="num">{{ line.amount }}</td>
                 </tr>
                 {% endfor %}
@@ -47,7 +47,7 @@
                 <tr>
                     <td>{% trans "Total" %}</td>
                     <td></td>
-                    <td class="num">{{ total_qty }}</td>
+                    <td class="num">{{ total_qty|qty }}</td>
                     <td class="num">{{ total_amount }}</td>
                 </tr>
             </tfoot>

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n numbers %}
 
 {% block title %}{{ group.name }}{% endblock %}
 
@@ -87,7 +87,7 @@
             <tr>
                 <td>{{ row.granit_id }}</td>
                 <td>{{ row.name }}</td>
-                <td class="num">{{ row.qty }}</td>
+                <td class="num">{{ row.qty|qty }}</td>
                 <td class="num">{{ row.amount }}</td>
                 <td>
                     <a href="{% url 'sales_explorer' %}?date_from={{ date_from|date:'Y-m-d' }}&amp;date_to={{ date_to|date:'Y-m-d' }}&amp;product={{ row.granit_id }}&amp;group_by=receipt">{% trans "Receipts" %}</a>
@@ -100,7 +100,7 @@
         <tfoot>
             <tr>
                 <td colspan="2">{% trans "Total" %}</td>
-                <td class="num">{{ total_qty }}</td>
+                <td class="num">{{ total_qty|qty }}</td>
                 <td class="num">{{ total_amount }}</td>
                 <td></td>
             </tr>

@@ -76,6 +76,28 @@ class MatrixBalanceTests(TestCase):
         catch = next(r for r in matrix.rows if r.is_catchall)
         self.assertEqual(catch.total.amount, Decimal("45.00"))
 
+    def test_matrix_page_qty_without_trailing_zeros(self):
+        SaleFact.objects.create(
+            sale_date=date(2026, 9, 21),
+            store=self.store_a,
+            product=self.p1,
+            quantity=Decimal("0.250"),
+            amount=Decimal("30.00"),
+            granit_sale_id=4,
+            granit_line_id=1,
+        )
+        user = get_user_model().objects.create_user("qty-viewer", password="test-pass-123")
+        self.client.force_login(user)
+        response = self.client.get(
+            reverse("sales_matrix"),
+            {"date_from": "2026-09-21", "date_to": "2026-09-22"},
+            HTTP_ACCEPT_LANGUAGE="ru",
+        )
+        self.assertEqual(response.status_code, 200)
+        html = response.content.decode()
+        self.assertIn("2,25", html)
+        self.assertNotIn(",000", html)
+
     def test_excel_export_bytes(self):
         from openpyxl import load_workbook
         from io import BytesIO
@@ -92,6 +114,9 @@ class MatrixBalanceTests(TestCase):
         sg = wb["Supergroups"]
         self.assertEqual(sg["A1"].value, "supergroup_key")
         self.assertIn("coffee kg", [c.value for c in sg["B"] if c.value])
+        qty_cell = sg.cell(2, 3)
+        self.assertTrue(sg.cell(1, 3).value.endswith(" qty"))
+        self.assertEqual(qty_cell.number_format, "#,##0.00#")
         sales = wb["Продажи"]
         self.assertEqual(sales["A1"].value, "group_id")
         # last row is ИТОГО

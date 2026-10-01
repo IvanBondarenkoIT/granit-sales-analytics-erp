@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n numbers %}
 
 {% block title %}{% trans "Order items" %} — {{ row.client.name|default:row.granit_client_id }}{% endblock %}
 
@@ -50,7 +50,7 @@
                 <tr>
                     <td>{{ line.product.name }}</td>
                     <td>{{ line.product.group.name|default:"—" }}</td>
-                    <td>{{ line.quantity }}</td>
+                    <td>{{ line.quantity|qty }}</td>
                     <td>{{ line.amount }}</td>
                 </tr>
                 {% endfor %}

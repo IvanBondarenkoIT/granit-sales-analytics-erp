@@ -746,6 +746,51 @@ msgstr "Move down"
 msgid "Order updated."
 msgstr "Order updated."
 
+msgid "Charts"
+msgstr "Charts"
+
+msgid "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
+msgstr "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
+
+msgid "Last year"
+msgstr "Last year"
+
+msgid "Extra revenue vs baseline"
+msgstr "Extra revenue vs baseline"
+
+msgid "Best promo day"
+msgstr "Best promo day"
+
+msgid "Sales by day"
+msgstr "Sales by day"
+
+msgid "Promo days"
+msgstr "Promo days"
+
+msgid "Promo period total"
+msgstr "Promo period total"
+
+msgid "actual"
+msgstr "actual"
+
+msgid "no data"
+msgstr "no data"
+
+msgid "Cumulative: extra revenue"
+msgstr "Cumulative: extra revenue"
+
+msgid "Actual, cumulative"
+msgstr "Actual, cumulative"
+
+msgid "Baseline, cumulative"
+msgstr "Baseline, cumulative"
+
+msgid "No analysis yet for this promo. Recalculate to build the charts."
+msgstr "No analysis yet for this promo. Recalculate to build the charts."
+
+msgid "No pre-period baseline, so extra revenue cannot be calculated."
+msgstr "No pre-period baseline, so extra revenue cannot be calculated."
+
 msgid "Product ID"
 msgstr "Product ID"
 
