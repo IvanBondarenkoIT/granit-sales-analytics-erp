@@ -39,6 +39,19 @@ class ProductGroup(models.Model):
     """Product group dimension - Granit product groups."""
     granit_id = models.IntegerField(unique=True, help_text="Group ID from Granit ERP")
     name = models.CharField(max_length=200)
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="children",
+        help_text="Parent group from GOODSGROUPS.PARENTID",
+    )
+    parent_path = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text="Cached name path e.g. DRINKS > Water",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

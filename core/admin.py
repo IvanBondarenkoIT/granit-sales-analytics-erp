@@ -18,9 +18,10 @@ class ClientAdmin(admin.ModelAdmin):
 
 @admin.register(ProductGroup)
 class ProductGroupAdmin(admin.ModelAdmin):
-    list_display = ['granit_id', 'name', 'created_at']
+    list_display = ['granit_id', 'name', 'parent', 'parent_path', 'created_at']
     search_fields = ['name', 'granit_id']
     ordering = ['name']
+    raw_id_fields = ['parent']
 
 
 @admin.register(ProductParameter)

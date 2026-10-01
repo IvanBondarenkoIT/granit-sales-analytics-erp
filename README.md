@@ -206,14 +206,25 @@ docker exec -it granit-analytics python manage.py createsuperuser
 
 All UI routes require login. `/health` stays public for the hub healthcheck.
 
+### After releasing the super-group matrix (once)
+
+Migrate is automatic. Seed is **not** — run on the server after the new image is live:
+
+```bash
+docker exec granit-analytics python manage.py etl_dims
+docker exec granit-analytics python manage.py seed_supergroups
+# optional later: seed_supergroups --fill-unmapped
+```
+
+Hub operator notes: `ssh-alternative-server-connection/docs/DEPLOY-GRANIT-MATRIX.md`.
+
 ### Nightly ETL (alt cron via hub)
 
 ```bash
 docker exec granit-analytics python manage.py etl_nightly
 ```
 
-Suggested: 03:00 Asia/Tbilisi. Command is idempotent and prints a summary to stdout (no secrets).
-
+Cron (via hub catalog): **04:30 Asia/Tbilisi**. Command is idempotent and prints a summary to stdout (no secrets).
 ### Schema check (CI / local)
 
 ```bash
@@ -243,6 +254,17 @@ Built with Django + HTMX for fast, interactive filtering without frontend framew
 
 **Status:** Ready (STAGE 4) — period slice, HTMX filters, group by product / group / production / store / client / day.
 
+### 2b. Super-group matrix
+
+Interactive matrix: super-group rows × store columns (qty + amount), shared membership editor, Excel export.
+Seed from `sales/seed/supergroups.json` (from monthly-sales-report YAML). Catch-all row «Outside super-groups» keeps totals equal to all `SaleFact` lines.
+
+```bash
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py seed_supergroups
+# open /sales/matrix/
+```
+
 ### 3. Promotion Effectiveness
 
 Enter promotion details (SKU or group, date range). Analysis compares:
@@ -260,8 +282,9 @@ Enter promotion details (SKU or group, date range). Analysis compares:
 - [x] **STAGE 2:** ETL implementation (proxy → incremental + backfill)
 - [x] **STAGE 3:** SMS campaign upload and analysis UI
 - [x] **STAGE 4:** Sales explorer with HTMX filters
+- [x] **STAGE 4b:** Super-group matrix (branch `feat/sales-supergroups` — merge to `main` to ship)
 - [x] **STAGE 5:** Promo analysis with baseline/YoY comparison
-- [ ] **Alt deploy:** prep in repo (Compose/CI/GHCR) — hub deploys when ready
+- [x] **Alt deploy:** prep in repo (Compose/CI/GHCR) — ship via hub `deploy_app.py granit-analytics`
 - [ ] **STAGE 6:** Optional alerts integration (notify-hub)
 
 ## Related Projects (Reference Only)

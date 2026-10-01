@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ sg.title }}{% endblock %}
+
+{% block extra_css %}
+        table { width: 100%; border-collapse: collapse; background: #fff; margin: 1rem 0; }
+        th, td { text-align: left; padding: 0.55rem; border-bottom: 1px solid #eee; }
+        td.num, th.num { text-align: right; }
+        .btn { background: #667eea; color: #fff; border: 0; padding: 0.35rem 0.7rem; border-radius: 6px; cursor: pointer; font: inherit; }
+        .btn-danger { background: #b91c1c; }
+        .toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; margin: 1rem 0; background: #fff; padding: 1rem; }
+        .panel { background: #fff; padding: 1rem; margin-top: 1.5rem; }
+        .swatch { display: inline-block; width: 1rem; height: 1rem; border: 1px solid #ccc; vertical-align: middle; }
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p><a href="{% url 'sales_matrix' %}?{{ period_query }}">← {% trans "Sales by super-groups" %}</a>
+       · <a href="{% url 'sales_matrix_edit' %}?{{ period_query }}">{% trans "Edit super-groups" %}</a></p>
+    <h1><span class="swatch" style="background:#{{ sg.color }}"></span> {{ sg.title }}</h1>
+    {% if sg.is_catchall %}
+    <p>{% trans "Remainder: product groups (and products without a group) not assigned to any super-group." %}</p>
+    {% endif %}
+
+    <form class="toolbar" method="get">
+        <input type="hidden" name="date_from" value="{{ date_from|date:'Y-m-d' }}">
+        <input type="hidden" name="date_to" value="{{ date_to|date:'Y-m-d' }}">
+        <div>
+            <label for="store">{% trans "Store" %}</label>
+            <select id="store" name="store" onchange="this.form.submit()">
+                <option value="">{% trans "All stores" %}</option>
+                {% for s in stores %}
+                <option value="{{ s.granit_id }}" {% if store_id == s.granit_id %}selected{% endif %}>{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans "Group ID" %}</th>
+                <th>{% trans "Product group" %}</th>
+                <th class="num">{% trans "Qty" %}</th>
+                <th class="num">{% trans "Amount" %}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row.granit_id|default:"—" }}</td>
+                <td>
+                    {% if row.granit_id %}
+                    <a href="{% url 'sales_matrix_group' row.granit_id %}?{{ period_query }}">{{ row.name }}</a>
+                    {% else %}
+                    {{ row.name }}
+                    {% endif %}
+                </td>
+                <td class="num">{{ row.qty }}</td>
+                <td class="num">{{ row.amount }}</td>
+                <td>
+                    {% if not sg.is_catchall and row.granit_id %}
+                    <form method="post" style="display:inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="remove">
+                        <input type="hidden" name="group_id" value="{{ row.granit_id }}">
+                        <button class="btn btn-danger" type="submit">{% trans "Remove" %}</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">{% trans "No sales for these groups in the period." %}</td></tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2">{% trans "Total" %}</td>
+                <td class="num">{{ total_qty }}</td>
+                <td class="num">{{ total_amount }}</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    {% if not sg.is_catchall %}
+    <div class="panel">
+        <h2>{% trans "Add unassigned group" %}</h2>
+        <form method="get" style="margin-bottom:0.75rem">
+            <input type="hidden" name="date_from" value="{{ date_from|date:'Y-m-d' }}">
+            <input type="hidden" name="date_to" value="{{ date_to|date:'Y-m-d' }}">
+            {% if store_id %}<input type="hidden" name="store" value="{{ store_id }}">{% endif %}
+            <input name="q" value="{{ request.GET.q }}" placeholder="{% trans "Search groups" %}">
+            <button class="btn" type="submit">{% trans "Search" %}</button>
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>{% trans "Group ID" %}</th>
+                    <th>{% trans "Product group" %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for g in available %}
+                <tr>
+                    <td>{{ g.granit_id }}</td>
+                    <td>{{ g.name }}</td>
+                    <td>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="add">
+                            <input type="hidden" name="group_id" value="{{ g.granit_id }}">
+                            <button class="btn" type="submit">{% trans "Add" %}</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3">{% trans "No unassigned groups with sales (or matching search)." %}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

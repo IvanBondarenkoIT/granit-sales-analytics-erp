@@ -593,6 +593,183 @@ msgstr ""
 "Telegram bot: choose that channel and upload the CSV export (card number, "
 "phone). Clients are matched by loyalty card."
 
+msgid "Sales by super-groups"
+msgstr "Sales by super-groups"
+
+msgid "Super-groups"
+msgstr "Super-groups"
+
+msgid ""
+"Rows are super-groups, columns are stores with sales in the period. Cell = "
+"qty / amount. Totals must match all sales."
+msgstr ""
+"Rows are super-groups, columns are stores with sales in the period. Cell = "
+"qty / amount. Totals must match all sales."
+
+msgid "From"
+msgstr "From"
+
+msgid "To"
+msgstr "To"
+
+msgid "Excel"
+msgstr "Excel"
+
+msgid "Edit super-groups"
+msgstr "Edit super-groups"
+
+msgid "Totals match SaleFact for the period."
+msgstr "Totals match SaleFact for the period."
+
+msgid "Totals do not match SaleFact — check membership."
+msgstr "Totals do not match SaleFact — check membership."
+
+msgid "Super-group"
+msgstr "Super-group"
+
+msgid "No sales in this period."
+msgstr "No sales in this period."
+
+msgid "Outside super-groups"
+msgstr "Outside super-groups"
+
+msgid ""
+"Changes are shared for all users. One product group belongs to at most one "
+"super-group."
+msgstr ""
+"Changes are shared for all users. One product group belongs to at most one "
+"super-group."
+
+msgid "Color"
+msgstr "Color"
+
+msgid "Title"
+msgstr "Title"
+
+msgid "Key"
+msgstr "Key"
+
+msgid "Order"
+msgstr "Order"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Members"
+msgstr "Members"
+
+msgid "Delete this super-group?"
+msgstr "Delete this super-group?"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "No super-groups yet. Seed from JSON or create below."
+msgstr "No super-groups yet. Seed from JSON or create below."
+
+msgid "View remainder"
+msgstr "View remainder"
+
+msgid "New super-group"
+msgstr "New super-group"
+
+msgid "Create"
+msgstr "Create"
+
+msgid "Key and title are required."
+msgstr "Key and title are required."
+
+msgid "A super-group with this key already exists."
+msgstr "A super-group with this key already exists."
+
+msgid "Super-group created."
+msgstr "Super-group created."
+
+msgid "Super-group updated."
+msgstr "Super-group updated."
+
+msgid "Super-group deleted; its groups are outside again."
+msgstr "Super-group deleted; its groups are outside again."
+
+msgid ""
+"Remainder: product groups (and products without a group) not assigned to any"
+" super-group."
+msgstr ""
+"Remainder: product groups (and products without a group) not assigned to any"
+" super-group."
+
+msgid "Group ID"
+msgstr "Group ID"
+
+msgid "Remove"
+msgstr "Remove"
+
+msgid "No sales for these groups in the period."
+msgstr "No sales for these groups in the period."
+
+msgid "Add unassigned group"
+msgstr "Add unassigned group"
+
+msgid "Search groups"
+msgstr "Search groups"
+
+msgid "Add"
+msgstr "Add"
+
+msgid "No unassigned groups with sales (or matching search)."
+msgstr "No unassigned groups with sales (or matching search)."
+
+msgid "Group removed from super-group."
+msgstr "Group removed from super-group."
+
+msgid "Group added to super-group."
+msgstr "Group added to super-group."
+
+msgid "Super-group owner"
+msgstr "Super-group owner"
+
+msgid "Super-group owner updated."
+msgstr "Super-group owner updated."
+
+msgid "Group moved to outside super-groups."
+msgstr "Group moved to outside super-groups."
+
+msgid "Super-group not found."
+msgstr "Super-group not found."
+
+msgid "Move up"
+msgstr "Move up"
+
+msgid "Move down"
+msgstr "Move down"
+
+msgid "Order updated."
+msgstr "Order updated."
+
+msgid "Product ID"
+msgstr "Product ID"
+
+msgid "No sales for this group in the period."
+msgstr "No sales for this group in the period."
+
+msgid "(no group)"
+msgstr "(no group)"
+
+msgid "Outside groups"
+msgstr "Outside groups"
+
+msgid "Total qty"
+msgstr "Total qty"
+
+msgid "Total amount"
+msgstr "Total amount"
+
+msgid "Matrix of super-groups × stores; edit shared membership"
+msgstr "Matrix of super-groups × stores; edit shared membership"
+
+msgid "Stage 4b — Local"
+msgstr "Stage 4b — Local"
+
 #~ msgid "Stage 3 — Pending"
 #~ msgstr "Stage 3 — Pending"
 

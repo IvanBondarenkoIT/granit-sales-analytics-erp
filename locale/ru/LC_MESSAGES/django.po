@@ -433,7 +433,7 @@ msgid "Granit client id"
 msgstr "ID клиента в Granit"
 
 msgid "Search"
-msgstr "Поиск"
+msgstr "Найти"
 
 msgid "Product name"
 msgstr "Название товара"
@@ -586,6 +586,183 @@ msgid ""
 msgstr ""
 "Telegram-бот: выберите этот канал и загрузите CSV-выгрузку (номер карты, "
 "телефон). Клиенты сопоставляются по бонусной карте."
+
+msgid "Sales by super-groups"
+msgstr "Продажи по супергруппам"
+
+msgid "Super-groups"
+msgstr "Супергруппы"
+
+msgid ""
+"Rows are super-groups, columns are stores with sales in the period. Cell = "
+"qty / amount. Totals must match all sales."
+msgstr ""
+"Строки — супергруппы, колонки — магазины с продажами за период. В ячейке qty"
+" / сумма. Итоги должны совпасть со всеми продажами."
+
+msgid "From"
+msgstr "С"
+
+msgid "To"
+msgstr "По"
+
+msgid "Excel"
+msgstr "Excel"
+
+msgid "Edit super-groups"
+msgstr "Редактировать супергруппы"
+
+msgid "Totals match SaleFact for the period."
+msgstr "Итоги совпадают с SaleFact за период."
+
+msgid "Totals do not match SaleFact — check membership."
+msgstr "Итоги не совпадают с SaleFact — проверьте состав."
+
+msgid "Super-group"
+msgstr "Супергруппа"
+
+msgid "No sales in this period."
+msgstr "Нет продаж за этот период."
+
+msgid "Outside super-groups"
+msgstr "Вне супергрупп"
+
+msgid ""
+"Changes are shared for all users. One product group belongs to at most one "
+"super-group."
+msgstr ""
+"Изменения общие для всех пользователей. Одна группа товаров входит не больше"
+" чем в одну супергруппу."
+
+msgid "Color"
+msgstr "Цвет"
+
+msgid "Title"
+msgstr "Название"
+
+msgid "Key"
+msgstr "Ключ"
+
+msgid "Order"
+msgstr "Порядок"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Members"
+msgstr "Состав"
+
+msgid "Delete this super-group?"
+msgstr "Удалить эту супергруппу?"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "No super-groups yet. Seed from JSON or create below."
+msgstr "Супергрупп ещё нет. Запустите сид из JSON или создайте ниже."
+
+msgid "View remainder"
+msgstr "Смотреть остаток"
+
+msgid "New super-group"
+msgstr "Новая супергруппа"
+
+msgid "Create"
+msgstr "Создать"
+
+msgid "Key and title are required."
+msgstr "Нужны ключ и название."
+
+msgid "A super-group with this key already exists."
+msgstr "Супергруппа с таким ключом уже есть."
+
+msgid "Super-group created."
+msgstr "Супергруппа создана."
+
+msgid "Super-group updated."
+msgstr "Супергруппа обновлена."
+
+msgid "Super-group deleted; its groups are outside again."
+msgstr "Супергруппа удалена; её группы снова вне супергрупп."
+
+msgid ""
+"Remainder: product groups (and products without a group) not assigned to any"
+" super-group."
+msgstr ""
+"Остаток: группы товаров (и товары без группы), не назначенные ни в одну "
+"супергруппу."
+
+msgid "Group ID"
+msgstr "ID группы"
+
+msgid "Remove"
+msgstr "Убрать"
+
+msgid "No sales for these groups in the period."
+msgstr "Нет продаж по этим группам за период."
+
+msgid "Add unassigned group"
+msgstr "Добавить группу без назначения"
+
+msgid "Search groups"
+msgstr "Поиск групп"
+
+msgid "Add"
+msgstr "Добавить"
+
+msgid "No unassigned groups with sales (or matching search)."
+msgstr "Нет свободных групп с продажами (или по поиску)."
+
+msgid "Group removed from super-group."
+msgstr "Группа убрана из супергруппы."
+
+msgid "Group added to super-group."
+msgstr "Группа добавлена в супергруппу."
+
+msgid "Super-group owner"
+msgstr "Владелец — супергруппа"
+
+msgid "Super-group owner updated."
+msgstr "Владелец супергруппы обновлён."
+
+msgid "Group moved to outside super-groups."
+msgstr "Группа перенесена во «Вне супергрупп»."
+
+msgid "Super-group not found."
+msgstr "Супергруппа не найдена."
+
+msgid "Move up"
+msgstr "Выше"
+
+msgid "Move down"
+msgstr "Ниже"
+
+msgid "Order updated."
+msgstr "Порядок обновлён."
+
+msgid "Product ID"
+msgstr "ID товара"
+
+msgid "No sales for this group in the period."
+msgstr "Нет продаж по этой группе за период."
+
+msgid "(no group)"
+msgstr "(без группы)"
+
+msgid "Outside groups"
+msgstr "Вне групп"
+
+msgid "Total qty"
+msgstr "Итого qty"
+
+msgid "Total amount"
+msgstr "Итого сумма"
+
+msgid "Matrix of super-groups × stores; edit shared membership"
+msgstr "Матрица супергрупп × магазины; общий редактор состава"
+
+msgid "Stage 4b — Local"
+msgstr "Этап 4b — локально"
 
 #~ msgid "Stage 3 — Pending"
 #~ msgstr "Этап 3 — ожидает"

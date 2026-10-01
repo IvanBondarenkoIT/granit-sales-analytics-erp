@@ -26,7 +26,7 @@ def sql_stores() -> str:
 
 
 def sql_product_groups() -> str:
-    return "SELECT ID, NAME FROM GOODSGROUPS"
+    return "SELECT ID, NAME, PARENTID FROM GOODSGROUPS"
 
 
 def sql_products() -> str:

@@ -1,5 +1,46 @@
 from django.db import models
-from core.models import Store, Client, Product
+from core.models import Store, Client, Product, ProductGroup
+
+
+class SuperGroup(models.Model):
+    """Shared product-group buckets for the sales matrix (same for all users)."""
+
+    key = models.SlugField(max_length=64, unique=True)
+    title = models.CharField(max_length=200)
+    color = models.CharField(max_length=6, default="FFFFFF", help_text="Hex RGB without #")
+    sort_order = models.PositiveIntegerField(default=0, db_index=True)
+    is_catchall = models.BooleanField(
+        default=False,
+        help_text="Synthetic 'Outside super-groups' row; no membership rows",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "dim_super_group"
+        ordering = ["sort_order", "title"]
+
+    def __str__(self):
+        return self.title
+
+
+class SuperGroupMember(models.Model):
+    """One Granit product group belongs to at most one super-group."""
+
+    super_group = models.ForeignKey(SuperGroup, on_delete=models.CASCADE, related_name="members")
+    product_group = models.OneToOneField(
+        ProductGroup,
+        on_delete=models.CASCADE,
+        related_name="super_group_member",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "dim_super_group_member"
+        ordering = ["super_group", "product_group__name"]
+
+    def __str__(self):
+        return f"{self.product_group.name} → {self.super_group.title}"
 
 
 class SaleFact(models.Model):

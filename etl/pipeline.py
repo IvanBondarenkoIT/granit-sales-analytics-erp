@@ -135,11 +135,14 @@ def upsert_stores(rows: Iterable[dict[str, Any]]) -> tuple[int, int]:
 
 
 def upsert_groups(rows: Iterable[dict[str, Any]]) -> tuple[int, int]:
+    """Load groups in two passes so parent FKs resolve after all rows exist."""
     inserted = updated = 0
+    parent_ids: dict[int, int | None] = {}
     for row in rows:
         granit_id = _as_int(row.get("ID"))
         if granit_id is None:
             continue
+        parent_ids[granit_id] = _as_int(row.get("PARENTID"))
         _, created = ProductGroup.objects.update_or_create(
             granit_id=granit_id,
             defaults={"name": _as_str(row.get("NAME"), 200) or f"#{granit_id}"},
@@ -148,6 +151,30 @@ def upsert_groups(rows: Iterable[dict[str, Any]]) -> tuple[int, int]:
             inserted += 1
         else:
             updated += 1
+
+    by_granit = {g.granit_id: g for g in ProductGroup.objects.all()}
+    names = {gid: g.name for gid, g in by_granit.items()}
+    for granit_id, parent_gid in parent_ids.items():
+        group = by_granit.get(granit_id)
+        if group is None:
+            continue
+        parent = by_granit.get(parent_gid) if parent_gid is not None else None
+        if parent is not None and parent.pk == group.pk:
+            parent = None
+        path_parts: list[str] = []
+        seen: set[int] = set()
+        current: int | None = granit_id
+        while current is not None and current not in seen:
+            seen.add(current)
+            path_parts.append(names.get(current) or f"#{current}")
+            current = parent_ids.get(current)
+        path_parts.reverse()
+        path = " > ".join(path_parts)
+        parent_pk = parent.pk if parent else None
+        if group.parent_id != parent_pk or group.parent_path != path:
+            group.parent = parent
+            group.parent_path = path
+            group.save(update_fields=["parent", "parent_path", "updated_at"])
     return inserted, updated
 
 

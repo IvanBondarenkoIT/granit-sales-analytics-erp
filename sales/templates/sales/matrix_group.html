@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ group.name }}{% endblock %}
+
+{% block extra_css %}
+        table { width: 100%; border-collapse: collapse; background: #fff; margin: 1rem 0; }
+        th, td { text-align: left; padding: 0.55rem; border-bottom: 1px solid #eee; }
+        td.num, th.num { text-align: right; }
+        .owner-panel {
+            background: #fff;
+            padding: 1rem 1.1rem;
+            margin: 1rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem 1rem;
+            align-items: flex-end;
+            border: 1px solid #eee;
+        }
+        .owner-panel label { display: block; font-weight: 600; margin-bottom: 0.3rem; }
+        .owner-panel select {
+            min-width: 16rem;
+            max-width: 100%;
+            padding: 0.45rem 0.5rem;
+            font: inherit;
+        }
+        .owner-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding-bottom: 0.45rem;
+            color: #555;
+            font-size: 0.95rem;
+        }
+        .btn { background: #667eea; color: #fff; border: 0; padding: 0.45rem 0.9rem; border-radius: 6px; cursor: pointer; font: inherit; height: 2.35rem; }
+        .swatch { display: inline-block; width: 0.9rem; height: 0.9rem; border: 1px solid #ccc; vertical-align: middle; }
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p><a href="{% url 'sales_matrix' %}?{{ period_query }}">← {% trans "Sales by super-groups" %}</a>
+       {% if current_sg %}
+       · <a href="{% url 'sales_matrix_sg' current_sg.pk %}?{{ period_query }}">{% trans "Members" %}: {{ current_sg.title }}</a>
+       {% endif %}
+    </p>
+    <h1>{{ group.name }} <small>({{ group.granit_id }})</small></h1>
+    {% if group.parent_path %}<p class="hint" style="color:#555">{{ group.parent_path }}</p>{% endif %}
+    <p>
+        <a href="{% url 'sales_explorer' %}?{{ explorer_query }}">{% trans "Open in Sales Explorer" %}</a>
+    </p>
+
+    <form class="owner-panel" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="set_owner">
+        <div>
+            <label for="sg_id">{% trans "Super-group owner" %}</label>
+            <select id="sg_id" name="sg_id">
+                <option value="outside" {% if not current_sg %}selected{% endif %}>{% trans "Outside super-groups" %}</option>
+                {% for sg in super_groups %}
+                <option value="{{ sg.pk }}" {% if current_sg and current_sg.pk == sg.pk %}selected{% endif %}>
+                    {{ sg.title }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if current_sg %}
+        <div class="owner-meta">
+            <span class="swatch" style="background:#{{ current_sg.color }}"></span>
+            <code>{{ current_sg.key }}</code>
+        </div>
+        {% endif %}
+        <button class="btn" type="submit">{% trans "Save" %}</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans "Product ID" %}</th>
+                <th>{% trans "Product" %}</th>
+                <th class="num">{% trans "Qty" %}</th>
+                <th class="num">{% trans "Amount" %}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row.granit_id }}</td>
+                <td>{{ row.name }}</td>
+                <td class="num">{{ row.qty }}</td>
+                <td class="num">{{ row.amount }}</td>
+                <td>
+                    <a href="{% url 'sales_explorer' %}?date_from={{ date_from|date:'Y-m-d' }}&amp;date_to={{ date_to|date:'Y-m-d' }}&amp;product={{ row.granit_id }}&amp;group_by=receipt">{% trans "Receipts" %}</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">{% trans "No sales for this group in the period." %}</td></tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2">{% trans "Total" %}</td>
+                <td class="num">{{ total_qty }}</td>
+                <td class="num">{{ total_amount }}</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+{% endblock %}

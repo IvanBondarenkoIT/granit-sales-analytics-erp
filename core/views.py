@@ -29,6 +29,12 @@ def home(request):
                 "url": "sales_explorer",
             },
             {
+                "name": _("Sales by super-groups"),
+                "description": _("Matrix of super-groups × stores; edit shared membership"),
+                "status": _("Stage 4b — Local"),
+                "url": "sales_matrix",
+            },
+            {
                 "name": _("Promotion Effectiveness"),
                 "description": _("Compare promo results vs baseline and YoY"),
                 "status": _("Stage 5 — Ready"),

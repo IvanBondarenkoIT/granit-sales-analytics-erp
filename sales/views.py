@@ -299,3 +299,233 @@ def sales_receipt(request, sale_id: int):
             "back_query": request.GET.urlencode(),
         },
     )
+
+
+def _matrix_period(request) -> tuple[date, date]:
+    default_from, default_to = _default_range()
+    date_from = _parse_date(request.GET.get("date_from"), default_from)
+    date_to = _parse_date(request.GET.get("date_to"), default_to)
+    if date_to < date_from:
+        date_from, date_to = date_to, date_from
+    return date_from, date_to
+
+
+def sales_matrix(request):
+    from sales.matrix import build_matrix
+
+    date_from, date_to = _matrix_period(request)
+    matrix = build_matrix(date_from, date_to)
+    return render(
+        request,
+        "sales/matrix.html",
+        {
+            "matrix": matrix,
+            "date_from": date_from,
+            "date_to": date_to,
+        },
+    )
+
+
+def sales_matrix_xlsx(request):
+    from django.http import HttpResponse
+
+    from sales.excel_matrix import matrix_to_xlsx
+    from sales.matrix import build_matrix
+
+    date_from, date_to = _matrix_period(request)
+    matrix = build_matrix(date_from, date_to)
+    payload = matrix_to_xlsx(matrix)
+    filename = f"supergroups_{date_from.isoformat()}_{date_to.isoformat()}.xlsx"
+    response = HttpResponse(
+        payload,
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    return response
+
+
+def sales_matrix_edit(request):
+    from django.contrib import messages
+    from django.db import transaction
+    from django.shortcuts import redirect
+
+    from sales.models import SuperGroup
+
+    def _ordered_groups():
+        return list(SuperGroup.objects.filter(is_catchall=False).order_by("sort_order", "title", "pk"))
+
+    def _renumber(groups):
+        for idx, sg in enumerate(groups):
+            if sg.sort_order != idx:
+                sg.sort_order = idx
+                sg.save(update_fields=["sort_order", "updated_at"])
+
+    date_from, date_to = _matrix_period(request)
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "create":
+            key = (request.POST.get("key") or "").strip().lower().replace(" ", "_")
+            title = (request.POST.get("title") or "").strip()
+            color = (request.POST.get("color") or "CCCCCC").lstrip("#")[:6]
+            if not key or not title:
+                messages.error(request, _("Key and title are required."))
+            elif SuperGroup.objects.filter(key=key).exists():
+                messages.error(request, _("A super-group with this key already exists."))
+            else:
+                order = SuperGroup.objects.filter(is_catchall=False).count()
+                SuperGroup.objects.create(key=key, title=title, color=color or "CCCCCC", sort_order=order)
+                messages.success(request, _("Super-group created."))
+        elif action == "update":
+            sg = SuperGroup.objects.filter(pk=request.POST.get("sg_id"), is_catchall=False).first()
+            if sg:
+                sg.title = (request.POST.get("title") or sg.title).strip() or sg.title
+                sg.color = (request.POST.get("color") or sg.color).lstrip("#")[:6]
+                sg.save()
+                messages.success(request, _("Super-group updated."))
+        elif action == "delete":
+            sg = SuperGroup.objects.filter(pk=request.POST.get("sg_id"), is_catchall=False).first()
+            if sg:
+                sg.delete()
+                _renumber(_ordered_groups())
+                messages.success(request, _("Super-group deleted; its groups are outside again."))
+        elif action in {"move_up", "move_down"}:
+            sg = SuperGroup.objects.filter(pk=request.POST.get("sg_id"), is_catchall=False).first()
+            if sg:
+                with transaction.atomic():
+                    groups = _ordered_groups()
+                    ids = [g.pk for g in groups]
+                    try:
+                        idx = ids.index(sg.pk)
+                    except ValueError:
+                        idx = -1
+                    swap_with = idx - 1 if action == "move_up" else idx + 1
+                    if idx >= 0 and 0 <= swap_with < len(groups):
+                        groups[idx], groups[swap_with] = groups[swap_with], groups[idx]
+                        _renumber(groups)
+                        messages.success(request, _("Order updated."))
+        return redirect(f"{request.path}?date_from={date_from}&date_to={date_to}")
+
+    groups = _ordered_groups()
+    catchall = SuperGroup.objects.filter(is_catchall=True).first()
+    return render(
+        request,
+        "sales/matrix_edit.html",
+        {
+            "super_groups": groups,
+            "catchall": catchall,
+            "date_from": date_from,
+            "date_to": date_to,
+            "period_query": f"date_from={date_from}&date_to={date_to}",
+        },
+    )
+
+
+def sales_matrix_sg(request, pk: int):
+    from django.contrib import messages
+    from django.shortcuts import get_object_or_404, redirect
+
+    from sales.matrix import group_sales_for_super_group, period_query, unassigned_groups
+    from sales.models import SuperGroup, SuperGroupMember
+
+    sg = get_object_or_404(SuperGroup, pk=pk)
+    date_from, date_to = _matrix_period(request)
+    store_id = _int_param(request, "store")
+
+    if request.method == "POST" and not sg.is_catchall:
+        action = request.POST.get("action")
+        if action == "remove":
+            SuperGroupMember.objects.filter(
+                super_group=sg, product_group__granit_id=request.POST.get("group_id")
+            ).delete()
+            messages.success(request, _("Group removed from super-group."))
+        elif action == "add":
+            group = ProductGroup.objects.filter(granit_id=request.POST.get("group_id")).first()
+            if group:
+                SuperGroupMember.objects.update_or_create(
+                    product_group=group,
+                    defaults={"super_group": sg},
+                )
+                messages.success(request, _("Group added to super-group."))
+        q = period_query(date_from, date_to, store=store_id)
+        return redirect(f"{request.path}?{q}")
+
+    rows = group_sales_for_super_group(sg, date_from, date_to, store_id)
+    available = []
+    if not sg.is_catchall:
+        available = list(unassigned_groups(request.GET.get("q") or "", date_from=date_from, date_to=date_to))
+    return render(
+        request,
+        "sales/matrix_sg.html",
+        {
+            "sg": sg,
+            "rows": rows,
+            "available": available,
+            "date_from": date_from,
+            "date_to": date_to,
+            "store_id": store_id,
+            "stores": Store.objects.order_by("name"),
+            "period_query": period_query(date_from, date_to, store=store_id),
+            "total_qty": sum((r["qty"] for r in rows), Decimal("0")),
+            "total_amount": sum((r["amount"] for r in rows), Decimal("0")),
+        },
+    )
+
+
+def sales_matrix_group(request, granit_id: int):
+    from django.contrib import messages
+    from django.shortcuts import get_object_or_404, redirect
+
+    from sales.matrix import period_query, product_sales_for_group
+    from sales.models import SuperGroup, SuperGroupMember
+
+    group = get_object_or_404(ProductGroup, granit_id=granit_id)
+    date_from, date_to = _matrix_period(request)
+    store_id = _int_param(request, "store")
+
+    if request.method == "POST" and request.POST.get("action") == "set_owner":
+        sg_id = (request.POST.get("sg_id") or "").strip()
+        if not sg_id or sg_id == "outside":
+            SuperGroupMember.objects.filter(product_group=group).delete()
+            messages.success(request, _("Group moved to outside super-groups."))
+        else:
+            sg = SuperGroup.objects.filter(pk=sg_id, is_catchall=False).first()
+            if sg:
+                SuperGroupMember.objects.update_or_create(
+                    product_group=group,
+                    defaults={"super_group": sg},
+                )
+                messages.success(request, _("Super-group owner updated."))
+            else:
+                messages.error(request, _("Super-group not found."))
+        return redirect(f"{request.path}?{period_query(date_from, date_to, store=store_id)}")
+
+    rows = product_sales_for_group(granit_id, date_from, date_to, store_id)
+    member = SuperGroupMember.objects.filter(product_group=group).select_related("super_group").first()
+    current_sg = member.super_group if member else None
+    explorer_params = {
+        "date_from": date_from,
+        "date_to": date_to,
+        "group": granit_id,
+        "group_by": "product",
+    }
+    if store_id is not None:
+        explorer_params["store"] = store_id
+    return render(
+        request,
+        "sales/matrix_group.html",
+        {
+            "group": group,
+            "rows": rows,
+            "date_from": date_from,
+            "date_to": date_to,
+            "store_id": store_id,
+            "period_query": period_query(date_from, date_to, store=store_id),
+            "explorer_query": _encode_params(explorer_params),
+            "total_qty": sum((r["qty"] for r in rows), Decimal("0")),
+            "total_amount": sum((r["amount"] for r in rows), Decimal("0")),
+            "current_sg": current_sg,
+            "super_groups": list(
+                SuperGroup.objects.filter(is_catchall=False).order_by("sort_order", "title")
+            ),
+        },
+    )

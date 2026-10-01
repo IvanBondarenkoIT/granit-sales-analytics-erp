@@ -1,0 +1,192 @@
+{
+  "source": "monthly-sales-report/mapping/supergroups.yaml",
+  "unmapped_key": "unclassified",
+  "exclude_key": "exclude",
+  "catchall": {
+    "key": "outside",
+    "title": "Outside super-groups",
+    "color": "FFFF00"
+  },
+  "supergroups": [
+    {
+      "key": "coffee_kg",
+      "title": "coffee kg",
+      "color": "F4B183",
+      "sort_order": 0
+    },
+    {
+      "key": "drinks",
+      "title": "drinks",
+      "color": "D9D9D9",
+      "sort_order": 1
+    },
+    {
+      "key": "blend_coffee",
+      "title": "blend coffee",
+      "color": "C9C9C9",
+      "sort_order": 2
+    },
+    {
+      "key": "singl_orig_coffee",
+      "title": "singl orig coffee",
+      "color": "B7B7B7",
+      "sort_order": 3
+    },
+    {
+      "key": "ingredients",
+      "title": "ingredients",
+      "color": "A9D08E",
+      "sort_order": 4
+    },
+    {
+      "key": "tea",
+      "title": "tea",
+      "color": "C6EFCE",
+      "sort_order": 5
+    },
+    {
+      "key": "matcha",
+      "title": "matcha",
+      "color": "70AD47",
+      "sort_order": 6
+    },
+    {
+      "key": "ice_cream",
+      "title": "ice cream",
+      "color": "DDEBF7",
+      "sort_order": 7
+    },
+    {
+      "key": "coffee_makers",
+      "title": "coffee makers",
+      "color": "E8D5B7",
+      "sort_order": 8
+    },
+    {
+      "key": "capsules",
+      "title": "capsules",
+      "color": "F8CBAD",
+      "sort_order": 9
+    },
+    {
+      "key": "sweets",
+      "title": "sweets",
+      "color": "E2D5F1",
+      "sort_order": 10
+    },
+    {
+      "key": "caotina",
+      "title": "caotina",
+      "color": "C6E0B4",
+      "sort_order": 11
+    },
+    {
+      "key": "caotina_drinks",
+      "title": "caotina drinks",
+      "color": "A9D08E",
+      "sort_order": 12
+    },
+    {
+      "key": "accessories",
+      "title": "accessories",
+      "color": "BDD7EE",
+      "sort_order": 13
+    },
+    {
+      "key": "cleaning",
+      "title": "cleaning",
+      "color": "BFBFBF",
+      "sort_order": 14
+    },
+    {
+      "key": "water",
+      "title": "water",
+      "color": "C5D9A5",
+      "sort_order": 15
+    },
+    {
+      "key": "drip",
+      "title": "drip",
+      "color": "FFFFFF",
+      "sort_order": 16
+    }
+  ],
+  "rules": {
+    "by_group_id": {
+      "11077": "coffee_kg",
+      "16279": "coffee_kg",
+      "16276": "coffee_kg",
+      "21871": "coffee_kg",
+      "27167": "capsules",
+      "25296": "capsules",
+      "25156": "capsules",
+      "26232": "sweets",
+      "25939": "sweets",
+      "22939": "caotina",
+      "21385": "caotina",
+      "24491": "caotina_drinks",
+      "26497": "drip",
+      "26761": "cleaning",
+      "22262": "cleaning",
+      "26754": "cleaning",
+      "26758": "cleaning",
+      "26759": "accessories",
+      "26753": "accessories",
+      "22031": "accessories",
+      "26762": "accessories",
+      "27122": "accessories",
+      "26755": "accessories",
+      "22030": "accessories",
+      "26760": "accessories",
+      "27289": "accessories",
+      "11066": "accessories",
+      "21270": "coffee_makers",
+      "26756": "coffee_makers",
+      "27238": "coffee_makers",
+      "26294": "coffee_makers",
+      "27090": "coffee_makers",
+      "26695": "coffee_makers",
+      "16483": "coffee_makers",
+      "22207": "coffee_makers",
+      "26949": "coffee_makers",
+      "21288": "coffee_makers",
+      "21882": "blend_coffee",
+      "23076": "blend_coffee",
+      "24342": "blend_coffee",
+      "24344": "blend_coffee",
+      "24882": "blend_coffee",
+      "25767": "blend_coffee",
+      "25788": "blend_coffee",
+      "26575": "blend_coffee",
+      "21671": "singl_orig_coffee",
+      "24435": "singl_orig_coffee",
+      "24438": "singl_orig_coffee",
+      "24884": "singl_orig_coffee",
+      "25775": "singl_orig_coffee",
+      "25789": "singl_orig_coffee",
+      "26576": "singl_orig_coffee",
+      "20408": "ingredients",
+      "21128": "ingredients",
+      "21663": "ingredients",
+      "26457": "ingredients",
+      "26860": "ingredients",
+      "26081": "tea",
+      "24857": "matcha",
+      "27274": "ice_cream",
+      "25539": "drinks",
+      "25546": "drinks",
+      "25777": "drinks"
+    },
+    "by_parent_path_prefix": {
+      "DRINKS > Water": "water",
+      "Water and Juices": "water",
+      "DRINKS > Ice Cream": "ice_cream",
+      "DRINKS > Espresso": "drinks",
+      "DRINKS > Syrup": "ingredients",
+      "DRINKS": "drinks",
+      "Coffee makers": "coffee_makers",
+      "Cards Loyalty": "exclude"
+    },
+    "by_ancestor_id": {}
+  }
+}

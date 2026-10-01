@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Sales by super-groups" %}{% endblock %}
+
+{% block extra_css %}
+        .matrix-wrap { overflow-x: auto; background: #fff; }
+        .matrix { border-collapse: collapse; min-width: 100%; font-size: 0.85rem; }
+        .matrix th, .matrix td { border: 1px solid #e5e7eb; padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; vertical-align: top; }
+        .matrix th.sticky, .matrix td.sticky { position: sticky; left: 0; text-align: left; z-index: 1; min-width: 170px; }
+        .matrix thead th { background: #f3f4f6; }
+        .matrix a { color: inherit; text-decoration: none; }
+        .matrix a:hover { text-decoration: underline; }
+        .matrix .cell-qty { display: block; color: #444; font-size: 0.8rem; }
+        .matrix .cell-amt { display: block; font-weight: 600; }
+        .matrix tfoot td { font-weight: 700; background: #f9fafb; }
+        .toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; margin: 1rem 0; background: #fff; padding: 1rem; }
+        .toolbar label { display: block; font-weight: 600; font-size: 0.85rem; }
+        .toolbar input { padding: 0.35rem; }
+        .btn { display: inline-block; background: #667eea; color: #fff; text-decoration: none; padding: 0.45rem 0.9rem; border-radius: 6px; border: 0; cursor: pointer; font: inherit; }
+        .btn-secondary { background: #64748b; }
+        .hint { color: #555; margin: 0.5rem 0 1rem; }
+        .ok { color: #047857; }
+        .bad { color: #b91c1c; }
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 100%;">
+    <h1>{% trans "Sales by super-groups" %}</h1>
+    <p class="hint">{% trans "Rows are super-groups, columns are stores with sales in the period. Cell = qty / amount. Totals must match all sales." %}</p>
+    <form class="toolbar" method="get">
+        <div>
+            <label for="date_from">{% trans "From" %}</label>
+            <input type="date" id="date_from" name="date_from" value="{{ date_from|date:'Y-m-d' }}">
+        </div>
+        <div>
+            <label for="date_to">{% trans "To" %}</label>
+            <input type="date" id="date_to" name="date_to" value="{{ date_to|date:'Y-m-d' }}">
+        </div>
+        <button class="btn" type="submit">{% trans "Apply" %}</button>
+        <a class="btn btn-secondary" href="{% url 'sales_matrix_xlsx' %}?{{ matrix.period_query }}">{% trans "Excel" %}</a>
+        <a class="btn btn-secondary" href="{% url 'sales_matrix_edit' %}?{{ matrix.period_query }}">{% trans "Edit super-groups" %}</a>
+        <a href="{% url 'sales_explorer' %}?date_from={{ date_from|date:'Y-m-d' }}&amp;date_to={{ date_to|date:'Y-m-d' }}">{% trans "Sales Explorer" %}</a>
+    </form>
+    <p class="{% if matrix.balanced %}ok{% else %}bad{% endif %}">
+        {% if matrix.balanced %}
+            {% trans "Totals match SaleFact for the period." %}
+        {% else %}
+            {% trans "Totals do not match SaleFact — check membership." %}
+            (matrix {{ matrix.grand.amount }} / fact {{ matrix.fact_total.amount }})
+        {% endif %}
+    </p>
+    {% if matrix.stores %}
+    <div class="matrix-wrap">
+        <table class="matrix">
+            <thead>
+                <tr>
+                    <th class="sticky">{% trans "Super-group" %}</th>
+                    {% for store in matrix.stores %}
+                    <th colspan="2">{{ store.name }}</th>
+                    {% endfor %}
+                    <th colspan="2">{% trans "Total" %}</th>
+                </tr>
+                <tr>
+                    <th class="sticky"></th>
+                    {% for store in matrix.stores %}
+                    <th>{% trans "Qty" %}</th>
+                    <th>{% trans "Amount" %}</th>
+                    {% endfor %}
+                    <th>{% trans "Qty" %}</th>
+                    <th>{% trans "Amount" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in matrix.rows %}
+                <tr>
+                    <td class="sticky" style="background:#{{ row.color }};">
+                        <a href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}">{{ row.title }}</a>
+                    </td>
+                    {% for store, cell in row.ordered_cells %}
+                    <td style="background:#{{ row.color }};">
+                        <a href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}&amp;store={{ store.granit_id }}">
+                            <span class="cell-qty">{{ cell.qty }}</span>
+                        </a>
+                    </td>
+                    <td style="background:#{{ row.color }};">
+                        <a href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}&amp;store={{ store.granit_id }}">
+                            <span class="cell-amt">{{ cell.amount }}</span>
+                        </a>
+                    </td>
+                    {% endfor %}
+                    <td style="background:#{{ row.color }};"><span class="cell-qty">{{ row.total.qty }}</span></td>
+                    <td style="background:#{{ row.color }};"><span class="cell-amt">{{ row.total.amount }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="sticky">{% trans "Total" %}</td>
+                    {% for store, cell in matrix.ordered_column_totals %}
+                    <td>{{ cell.qty }}</td>
+                    <td>{{ cell.amount }}</td>
+                    {% endfor %}
+                    <td>{{ matrix.grand.qty }}</td>
+                    <td>{{ matrix.grand.amount }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% else %}
+    <p class="hint">{% trans "No sales in this period." %}</p>
+    {% endif %}
+</div>
+{% endblock %}
