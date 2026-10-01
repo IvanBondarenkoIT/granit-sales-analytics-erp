@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load i18n l10n %}
+
+{% block title %}{% trans "Charts" %} — {{ promo.name }}{% endblock %}
+
+{% block extra_css %}
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1rem; margin: 1.25rem 0; }
+        .stat { background: #fff; padding: 1rem; }
+        .stat span { color: #555; font-size: 0.9rem; }
+        .stat strong { display: block; font-size: 1.4rem; color: #667eea; margin-top: 0.2rem; }
+        .stat small { color: #666; }
+        .up { color: #047857 !important; }
+        .down { color: #92400e !important; }
+        .card { background: #fff; padding: 1rem 1.1rem 0.75rem; margin: 1rem 0; }
+        .card h2 { font-size: 1.1rem; margin: 0 0 0.5rem; }
+        .legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; font-size: 0.85rem; color: #444; margin-bottom: 0.4rem; }
+        .legend i { display: inline-block; width: 1.4rem; height: 0; border-top: 3px solid; vertical-align: middle; margin-right: 0.35rem; }
+        .legend i.dash { border-top-style: dashed; }
+        .legend i.dot { border-top-style: dotted; }
+        .legend i.band { height: 0.75rem; border: 0; background: rgba(102, 126, 234, 0.12); }
+        svg.chart { width: 100%; height: auto; display: block; }
+        svg.chart text { font-size: 11px; fill: #666; font-family: inherit; }
+        svg.chart .grid { stroke: #eee; }
+        svg.chart .axis { stroke: #ccc; }
+        .hint { color: #555; }
+        .btn { background: #667eea; color: #fff; border: 0; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font: inherit; }
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p><a href="{% url 'promo_detail' promo.pk %}">← {{ promo.name }}</a></p>
+    <h1>{% trans "Charts" %}: {{ promo.name }}</h1>
+    <p class="hint">{{ promo.start_date }} — {{ promo.end_date }} · {% trans "Baseline days" %}: {{ promo.pre_period_days }}</p>
+
+    {% if charts.empty %}
+    <div class="card">
+        <p class="hint">{% trans "No analysis yet for this promo. Recalculate to build the charts." %}</p>
+        <form method="post" action="{% url 'promo_reanalyze' promo.pk %}">
+            {% csrf_token %}
+            <button class="btn" type="submit">{% trans "Recalculate" %}</button>
+        </form>
+    </div>
+    {% else %}
+    {% with k=charts.kpi %}
+    <div class="stats">
+        <div class="stat">
+            <span>{% trans "Extra revenue vs baseline" %}</span>
+            <strong class="{% if k.incremental is not None %}{% if k.incremental >= 0 %}up{% else %}down{% endif %}{% endif %}">{{ k.incremental_text }}</strong>
+        </div>
+        <div class="stat">
+            <span>{% trans "vs baseline" %}</span>
+            <strong class="{% if k.lift_pre is not None %}{% if k.lift_pre >= 0 %}up{% else %}down{% endif %}{% endif %}">
+                {% if k.lift_pre is not None %}{% if k.lift_pre >= 0 %}+{% endif %}{{ k.lift_pre|floatformat:1 }}%{% else %}—{% endif %}
+            </strong>
+        </div>
+        <div class="stat">
+            <span>{% trans "vs YoY" %}</span>
+            <strong class="{% if k.lift_yoy is not None %}{% if k.lift_yoy >= 0 %}up{% else %}down{% endif %}{% endif %}">
+                {% if k.lift_yoy is not None %}{% if k.lift_yoy >= 0 %}+{% endif %}{{ k.lift_yoy|floatformat:1 }}%{% else %}—{% endif %}
+            </strong>
+        </div>
+        <div class="stat">
+            <span>{% trans "Best promo day" %}</span>
+            <strong>{{ k.best_amount }}</strong>
+            <small>{{ k.best_day|date:"d.m.Y" }}</small>
+        </div>
+    </div>
+    {% endwith %}
+
+    {% localize off %}
+    {% with d=charts.daily %}
+    <div class="card">
+        <h2>{% trans "Sales by day" %}</h2>
+        <div class="legend">
+            <span><i style="border-color:#667eea"></i>{% trans "Actual" %}</span>
+            {% if d.has_last_year %}<span><i class="dash" style="border-color:#9ca3af"></i>{% trans "Last year" %}</span>{% endif %}
+            {% if d.has_baseline %}<span><i class="dash" style="border-color:#374151"></i>{% trans "Pre-period baseline" %}</span>{% endif %}
+            {% if d.has_forecast %}<span><i class="dot" style="border-color:#f59e0b"></i>{% trans "Forecast" %}</span>{% endif %}
+            <span><i class="band"></i>{% trans "Promo days" %}</span>
+        </div>
+        <svg class="chart" viewBox="0 0 {{ d.width }} {{ d.height }}" role="img" aria-label="{% trans "Sales by day" %}">
+            <rect x="{{ d.band.x }}" y="{{ d.band.y }}" width="{{ d.band.w }}" height="{{ d.band.h }}" fill="rgba(102,126,234,0.10)"></rect>
+            {% for t in d.y_axis %}
+            <line class="grid" x1="{{ d.pad_left }}" x2="{{ d.pad_right_x }}" y1="{{ t.y }}" y2="{{ t.y }}"></line>
+            <text x="{{ d.pad_left|add:'-6' }}" y="{{ t.y }}" text-anchor="end" dominant-baseline="middle">{{ t.label }}</text>
+            {% endfor %}
+            <line class="axis" x1="{{ d.pad_left }}" x2="{{ d.pad_right_x }}" y1="{{ d.axis_y }}" y2="{{ d.axis_y }}"></line>
+            {% for l in d.x_labels %}
+            <text x="{{ l.x }}" y="{{ d.axis_y|add:'18' }}" text-anchor="middle">{{ l.label }}</text>
+            {% endfor %}
+            {% if d.baseline_y is not None %}
+            <line x1="{{ d.pad_left }}" x2="{{ d.pad_right_x }}" y1="{{ d.baseline_y }}" y2="{{ d.baseline_y }}" stroke="#374151" stroke-width="1.5" stroke-dasharray="6 4"></line>
+            {% endif %}
+            {% for seg in d.last_year %}
+            <polyline points="{{ seg }}" fill="none" stroke="#9ca3af" stroke-width="1.8" stroke-dasharray="5 4"></polyline>
+            {% endfor %}
+            {% for seg in d.forecast %}
+            <polyline points="{{ seg }}" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-dasharray="2 4" stroke-linecap="round"></polyline>
+            {% endfor %}
+            {% for seg in d.actual %}
+            <polyline points="{{ seg }}" fill="none" stroke="#667eea" stroke-width="2.5" stroke-linejoin="round"></polyline>
+            {% endfor %}
+            {% for p in d.dots %}
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="{% if p.promo %}3.5{% else %}2.5{% endif %}" fill="#667eea"><title>{{ p.title }}</title></circle>
+            {% endfor %}
+        </svg>
+    </div>
+    {% endwith %}
+
+    {% with b=charts.bars %}
+    <div class="card">
+        <h2>{% trans "Promo period total" %}</h2>
+        <svg class="chart" viewBox="0 0 {{ b.width }} {{ b.height }}" role="img" aria-label="{% trans "Promo period total" %}">
+            {% for r in b.rows %}
+            <text x="0" y="{{ r.text_y }}" dominant-baseline="middle" style="font-size:13px; fill:#333">{{ r.label }}</text>
+            {% if r.value %}
+            <rect x="{{ r.bar_x }}" y="{{ r.y }}" width="{{ r.bar_w }}" height="{{ b.bar_h }}" rx="4"
+                  fill="{% if r.key == 'actual' %}#667eea{% elif r.key == 'baseline' %}#374151{% elif r.key == 'yoy' %}#9ca3af{% else %}#f59e0b{% endif %}"
+                  {% if r.key != 'actual' %}fill-opacity="0.75"{% endif %}><title>{{ r.label }}: {{ r.value }}</title></rect>
+            <text x="{{ r.value_x }}" y="{{ r.text_y }}" dominant-baseline="middle" style="font-size:13px; fill:#222; font-weight:600">{{ r.value }}</text>
+            {% if r.lift_text %}
+            <text x="{{ r.lift_x }}" y="{{ r.text_y }}" dominant-baseline="middle"
+                  style="font-size:12px; font-weight:600; fill:{% if r.lift >= 0 %}#047857{% else %}#92400e{% endif %}">{% trans "actual" %} {{ r.lift_text }}</text>
+            {% endif %}
+            {% else %}
+            <text x="{{ r.bar_x }}" y="{{ r.text_y }}" dominant-baseline="middle" style="font-size:12px; fill:#999">{% trans "no data" %}</text>
+            {% endif %}
+            {% endfor %}
+        </svg>
+    </div>
+    {% endwith %}
+
+    <div class="card">
+        <h2>{% trans "Cumulative: extra revenue" %}</h2>
+        {% with c=charts.cumulative %}
+        {% if c %}
+        <div class="legend">
+            <span><i style="border-color:#667eea"></i>{% trans "Actual, cumulative" %}</span>
+            <span><i class="dash" style="border-color:#374151"></i>{% trans "Baseline, cumulative" %}</span>
+        </div>
+        <svg class="chart" viewBox="0 0 {{ c.width }} {{ c.height }}" role="img" aria-label="{% trans "Cumulative: extra revenue" %}">
+            {% for t in c.y_axis %}
+            <line class="grid" x1="{{ c.pad_left }}" x2="{{ c.pad_right_x }}" y1="{{ t.y }}" y2="{{ t.y }}"></line>
+            <text x="{{ c.pad_left|add:'-6' }}" y="{{ t.y }}" text-anchor="end" dominant-baseline="middle">{{ t.label }}</text>
+            {% endfor %}
+            <line class="axis" x1="{{ c.pad_left }}" x2="{{ c.pad_right_x }}" y1="{{ c.axis_y }}" y2="{{ c.axis_y }}"></line>
+            {% for l in c.x_labels %}
+            <text x="{{ l.x }}" y="{{ c.axis_y|add:'18' }}" text-anchor="middle">{{ l.label }}</text>
+            {% endfor %}
+            <polygon points="{{ c.area }}" fill="{% if c.positive %}#047857{% else %}#b45309{% endif %}" fill-opacity="0.15"></polygon>
+            {% for seg in c.baseline %}
+            <polyline points="{{ seg }}" fill="none" stroke="#374151" stroke-width="1.8" stroke-dasharray="6 4"></polyline>
+            {% endfor %}
+            {% for seg in c.actual %}
+            <polyline points="{{ seg }}" fill="none" stroke="#667eea" stroke-width="2.5" stroke-linejoin="round"></polyline>
+            {% endfor %}
+            <text x="{{ c.end_x }}" y="{{ c.end_y }}" text-anchor="end"
+                  style="font-size:14px; font-weight:700; fill:{% if c.positive %}#047857{% else %}#92400e{% endif %}">{{ c.label }}</text>
+        </svg>
+        {% else %}
+        <p class="hint">{% trans "No pre-period baseline, so extra revenue cannot be calculated." %}</p>
+        {% endif %}
+        {% endwith %}
+    </div>
+    {% endlocalize %}
+    {% endif %}
+</div>
+{% endblock %}

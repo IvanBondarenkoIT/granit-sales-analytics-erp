@@ -8,5 +8,6 @@ urlpatterns = [
     path("example.xlsx", views.promo_example_xlsx, name="promo_example_xlsx"),
     path("new/products/", views.promo_product_options, name="promo_product_options"),
     path("<int:pk>/", views.promo_detail, name="promo_detail"),
+    path("<int:pk>/charts/", views.promo_charts, name="promo_charts"),
     path("<int:pk>/reanalyze/", views.promo_reanalyze, name="promo_reanalyze"),
 ]

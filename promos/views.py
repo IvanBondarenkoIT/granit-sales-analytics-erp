@@ -169,6 +169,23 @@ def promo_detail(request, pk: int):
     )
 
 
+def promo_charts(request, pk: int):
+    from promos.charts import build_promo_charts
+
+    promo = get_object_or_404(Promo, pk=pk)
+    labels = {
+        "actual": _("Actual"),
+        "baseline": _("Pre-period baseline"),
+        "yoy": _("Last year"),
+        "forecast": _("Forecast"),
+    }
+    return render(
+        request,
+        "promos/charts.html",
+        {"promo": promo, "charts": build_promo_charts(promo, labels)},
+    )
+
+
 @require_POST
 def promo_reanalyze(request, pk: int):
     promo = get_object_or_404(Promo, pk=pk)

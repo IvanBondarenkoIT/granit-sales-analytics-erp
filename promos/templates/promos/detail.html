@@ -32,9 +32,10 @@
         <p>{{ targets|join:", " }}</p>
         <p><a href="{% url 'sales_explorer' %}?{{ explorer_query }}">{% trans "Open in Sales Explorer" %}</a></p>
     </div>
-    <form method="post" action="{% url 'promo_reanalyze' promo.pk %}" style="margin: 1rem 0;">
+    <form method="post" action="{% url 'promo_reanalyze' promo.pk %}" style="margin: 1rem 0; display: flex; gap: 0.75rem; align-items: center;">
         {% csrf_token %}
         <button class="btn" type="submit">{% trans "Recalculate" %}</button>
+        <a class="btn" style="text-decoration: none;" href="{% url 'promo_charts' promo.pk %}">{% trans "Charts" %}</a>
     </form>
     <div class="stats">
         <div class="stat"><span>{% trans "Actual" %}</span><strong>{{ actual_sum }}</strong></div>
