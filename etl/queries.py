@@ -6,6 +6,8 @@ import re
 from django.conf import settings
 
 SALES_TYPES = (1, 2, 3, 5)
+# DGVDT.TYP 0 = sales invoice; rows with SZID duplicate receipts already loaded from STORZAKAZDT.
+INVOICE_TYPES = (0,)
 STOCK_CHUNK = 80
 _SAFE_IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
@@ -23,6 +25,14 @@ def product_param_id() -> int:
 
 def sql_stores() -> str:
     return "SELECT ID, NAME FROM STORGRP"
+
+
+def sql_warehouses() -> str:
+    return "SELECT ID, NAME FROM STORLIST"
+
+
+def sql_warehouse_groups() -> str:
+    return "SELECT STORID, GRPID FROM STORGRPREF"
 
 
 def sql_product_groups() -> str:
@@ -95,6 +105,26 @@ def sql_sales_day() -> tuple[str, list]:
           AND D.DAT_ >= ? AND D.DAT_ < ?
     """
     return sql, list(SALES_TYPES)
+
+
+def sql_invoices_day() -> tuple[str, list]:
+    sql = f"""
+        SELECT H.ID AS SALE_ID,
+               G.ID AS LINE_ID,
+               H.DAT_ AS SALE_DATE,
+               COALESCE(H.STOR, H.STORID) AS WAREHOUSE_ID,
+               H.NAMEID AS CLIENT_ID,
+               COALESCE(G.GDSKEY, K.GDSKEY) AS PRODUCT_ID,
+               COALESCE(G.QUANT, 0) AS QTY,
+               COALESCE(G.QUANT, 0) * COALESCE(G.PRICE, 0) AS AMOUNT
+        FROM DGVDT H
+        JOIN GDDDT G ON G.DGVKEY = H.ID
+        LEFT JOIN GDDKT K ON K.ID = G.GDDKEY
+        WHERE H.TYP IN ({",".join(["?"] * len(INVOICE_TYPES))})
+          AND H.SZID IS NULL
+          AND H.DAT_ >= ? AND H.DAT_ < ?
+    """
+    return sql, list(INVOICE_TYPES)
 
 
 def sql_stock_chunk(ids: list[int]) -> tuple[str, list[int]]:

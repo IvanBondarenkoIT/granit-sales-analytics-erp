@@ -34,20 +34,32 @@
         }
         .btn { background: #667eea; color: #fff; border: 0; padding: 0.45rem 0.9rem; border-radius: 6px; cursor: pointer; font: inherit; height: 2.35rem; }
         .swatch { display: inline-block; width: 0.9rem; height: 0.9rem; border: 1px solid #ccc; vertical-align: middle; }
+        .scope-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin: 0.5rem 0; }
+        .scope-row label { font-weight: 600; }
+        .scope-row select { padding: 0.35rem 0.45rem; font: inherit; }
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'sales_matrix' %}?{{ period_query }}">← {% trans "Sales by super-groups" %}</a>
+    <p><a href="{% url 'sales_matrix' %}?{{ matrix_query }}">← {% trans "Sales by super-groups" %}</a>
        {% if current_sg %}
        · <a href="{% url 'sales_matrix_sg' current_sg.pk %}?{{ period_query }}">{% trans "Members" %}: {{ current_sg.title }}</a>
        {% endif %}
     </p>
     <h1>{{ group.name }} <small>({{ group.granit_id }})</small></h1>
     {% if group.parent_path %}<p class="hint" style="color:#555">{{ group.parent_path }}</p>{% endif %}
-    <p>
+    <form class="scope-row" method="get">
+        <input type="hidden" name="date_from" value="{{ date_from|date:'Y-m-d' }}">
+        <input type="hidden" name="date_to" value="{{ date_to|date:'Y-m-d' }}">
+        {% if store_id %}<input type="hidden" name="store" value="{{ store_id }}">{% endif %}
+        <label for="scope">{% trans "Sales" %}</label>
+        <select id="scope" name="scope" onchange="this.form.submit()">
+            {% for value, label in scope_choices %}
+            <option value="{{ value }}" {% if scope == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
         <a href="{% url 'sales_explorer' %}?{{ explorer_query }}">{% trans "Open in Sales Explorer" %}</a>
-    </p>
+    </form>
 
     <form class="owner-panel" method="post">
         {% csrf_token %}
@@ -90,7 +102,7 @@
                 <td class="num">{{ row.qty|qty }}</td>
                 <td class="num">{{ row.amount }}</td>
                 <td>
-                    <a href="{% url 'sales_explorer' %}?date_from={{ date_from|date:'Y-m-d' }}&amp;date_to={{ date_to|date:'Y-m-d' }}&amp;product={{ row.granit_id }}&amp;group_by=receipt">{% trans "Receipts" %}</a>
+                    <a href="{% url 'sales_explorer' %}?date_from={{ date_from|date:'Y-m-d' }}&amp;date_to={{ date_to|date:'Y-m-d' }}&amp;product={{ row.granit_id }}&amp;group_by=receipt{% if scope_all %}&amp;scope=all{% endif %}">{% trans "Receipts" %}</a>
                 </td>
             </tr>
             {% empty %}

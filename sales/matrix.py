@@ -11,7 +11,7 @@ from django.db.models.functions import Coalesce
 from django.utils.translation import gettext as _
 
 from core.models import ProductGroup, Store
-from sales.models import SaleFact, SuperGroup, SuperGroupMember
+from sales.models import SCOPE_ALL, SCOPE_RETAIL, SaleFact, SuperGroup, SuperGroupMember
 
 
 ZERO = Decimal("0")
@@ -54,16 +54,19 @@ class MatrixResult:
     fact_total: Cell
     balanced: bool
     period_query: str
+    scope: str = SCOPE_RETAIL
 
 
-def period_query(date_from: date, date_to: date, **extra) -> str:
+def period_query(date_from: date, date_to: date, scope: str = SCOPE_RETAIL, **extra) -> str:
     params = {"date_from": date_from.isoformat(), "date_to": date_to.isoformat()}
+    if scope == SCOPE_ALL:
+        params["scope"] = SCOPE_ALL
     params.update({k: v for k, v in extra.items() if v not in (None, "")})
     return urlencode(params)
 
 
-def sales_in_period(date_from: date, date_to: date):
-    return SaleFact.objects.filter(sale_date__gte=date_from, sale_date__lte=date_to)
+def sales_in_period(date_from: date, date_to: date, scope: str = SCOPE_RETAIL):
+    return SaleFact.objects.for_scope(scope).filter(sale_date__gte=date_from, sale_date__lte=date_to)
 
 
 def ensure_catchall() -> SuperGroup:
@@ -85,8 +88,8 @@ def ensure_catchall() -> SuperGroup:
     return sg
 
 
-def build_matrix(date_from: date, date_to: date) -> MatrixResult:
-    qs = sales_in_period(date_from, date_to)
+def build_matrix(date_from: date, date_to: date, scope: str = SCOPE_RETAIL) -> MatrixResult:
+    qs = sales_in_period(date_from, date_to, scope)
     fact = qs.aggregate(
         qty=Coalesce(Sum("quantity"), ZERO),
         amount=Coalesce(Sum("amount"), ZERO),
@@ -169,7 +172,8 @@ def build_matrix(date_from: date, date_to: date) -> MatrixResult:
         grand=grand,
         fact_total=fact_total,
         balanced=balanced,
-        period_query=period_query(date_from, date_to),
+        period_query=period_query(date_from, date_to, scope),
+        scope=scope,
     )
 
 
@@ -178,8 +182,9 @@ def group_sales_for_super_group(
     date_from: date,
     date_to: date,
     store_id: int | None = None,
+    scope: str = SCOPE_RETAIL,
 ) -> list[dict]:
-    qs = sales_in_period(date_from, date_to)
+    qs = sales_in_period(date_from, date_to, scope)
     if store_id is not None:
         qs = qs.filter(store__granit_id=store_id)
     if super_group.is_catchall:
@@ -230,8 +235,9 @@ def product_sales_for_group(
     date_from: date,
     date_to: date,
     store_id: int | None = None,
+    scope: str = SCOPE_RETAIL,
 ) -> list[dict]:
-    qs = sales_in_period(date_from, date_to).filter(product__group__granit_id=group_granit_id)
+    qs = sales_in_period(date_from, date_to, scope).filter(product__group__granit_id=group_granit_id)
     if store_id is not None:
         qs = qs.filter(store__granit_id=store_id)
     rows = (
@@ -250,14 +256,16 @@ def product_sales_for_group(
     ]
 
 
-def unassigned_groups(q: str = "", *, with_sales_only: bool = True, date_from=None, date_to=None):
+def unassigned_groups(
+    q: str = "", *, with_sales_only: bool = True, date_from=None, date_to=None, scope: str = SCOPE_RETAIL
+):
     assigned = SuperGroupMember.objects.values_list("product_group_id", flat=True)
     qs = ProductGroup.objects.exclude(id__in=assigned)
     if q:
         qs = qs.filter(name__icontains=q)
     if with_sales_only and date_from and date_to:
         sold = (
-            sales_in_period(date_from, date_to)
+            sales_in_period(date_from, date_to, scope)
             .exclude(product__group_id=None)
             .values_list("product__group_id", flat=True)
             .distinct()

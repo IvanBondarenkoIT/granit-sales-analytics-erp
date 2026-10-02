@@ -4,7 +4,8 @@
     <span>{% trans "Qty" %}: <strong>{{ total_qty|qty }}</strong></span>
     <span>{% trans "Amount" %}: <strong>{{ total_amount }}</strong></span>
 </div>
-<p class="hint">{% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}</p>
+<p class="hint">{% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}
+    {% if scope_all %}{% trans "All warehouses: retail receipts plus sales invoices (office, HoReCa, service centres); transfers and write-offs are not included." %}{% endif %}</p>
 {% if truncated %}
 <p class="hint">{% blocktrans with shown=row_limit total=row_count %}Showing first {{ shown }} of {{ total }} rows.{% endblocktrans %}</p>
 {% endif %}
@@ -28,7 +29,7 @@
         <tr>
             <td>
                 {% if row.sale_id %}
-                <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}">{% trans "Receipt" %} #{{ row.name }}</a>
+                <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}{% if row.is_invoice %}&amp;source=invoice{% endif %}">{% if row.is_invoice %}{% trans "Invoice" %}{% else %}{% trans "Receipt" %}{% endif %} #{{ row.name }}</a>
                 {% else %}
                 {{ row.name }}
                 {% endif %}
@@ -42,7 +43,7 @@
             <td class="num">{{ row.amount }}</td>
             <td>
                 {% if row.sale_id %}
-                <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}">{% trans "Order items" %}</a>
+                <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}{% if row.is_invoice %}&amp;source=invoice{% endif %}">{% trans "Order items" %}</a>
                 {% elif row.receipts_query %}
                 <a href="{% url 'sales_explorer' %}?{{ row.receipts_query }}">{% trans "Receipts" %}</a>
                 {% endif %}

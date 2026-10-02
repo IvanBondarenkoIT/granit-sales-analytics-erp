@@ -752,6 +752,25 @@ msgstr "Charts"
 msgid "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
 msgstr "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
 
+msgid "Sales"
+msgstr "Sales"
+
+msgid "Retail"
+msgstr "Retail"
+
+msgid "All warehouses"
+msgstr "All warehouses"
+
+msgid "Invoice"
+msgstr "Invoice"
+
+msgid ""
+"All warehouses: retail receipts plus sales invoices (office, HoReCa, service "
+"centres); transfers and write-offs are not included."
+msgstr ""
+"All warehouses: retail receipts plus sales invoices (office, HoReCa, service "
+"centres); transfers and write-offs are not included."
+
 msgid "Last year"
 msgstr "Last year"
 

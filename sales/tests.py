@@ -10,7 +10,7 @@ from core.models import Product, ProductGroup, Store
 from sales.excel_matrix import matrix_to_xlsx
 from sales.management.commands.seed_supergroups import ensure_catalog
 from sales.matrix import build_matrix
-from sales.models import SaleFact, SuperGroup, SuperGroupMember
+from sales.models import SCOPE_ALL, SOURCE_INVOICE, SaleFact, SuperGroup, SuperGroupMember
 from sales.supergroups import load_seed_config, resolve_supergroup_key
 
 
@@ -209,3 +209,62 @@ class SeedAndViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         restored = list(SuperGroup.objects.filter(is_catchall=False).order_by("sort_order", "title", "pk"))
         self.assertEqual(restored[0].pk, first.pk)
+
+
+class ScopeTests(TestCase):
+    """Retail = cash-register receipts only; all = receipts + sales invoices from every warehouse."""
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user("scope-viewer", password="test-pass-123")
+        self.client.force_login(self.user)
+        self.shop = Store.objects.create(granit_id=33, name="BatumiMall")
+        self.horeca = Store.objects.create(granit_id=178, name="HORECA TBILISI", kind=Store.KIND_WAREHOUSE)
+        group = ProductGroup.objects.create(granit_id=11077, name="Coffee kg")
+        self.bean = Product.objects.create(granit_id=20575, name="Bean 250 g", group=group)
+        common = {"sale_date": date(2026, 8, 14), "product": self.bean, "granit_line_id": 1}
+        SaleFact.objects.create(store=self.shop, quantity=Decimal("0.250"), amount=Decimal("30.00"),
+                                granit_sale_id=5, **common)
+        SaleFact.objects.create(store=self.horeca, source=SOURCE_INVOICE, quantity=Decimal("5.000"),
+                                amount=Decimal("600.00"), granit_sale_id=5, **common)
+        self.period = {"date_from": "2026-08-14", "date_to": "2026-08-14"}
+
+    def test_matrix_retail_unchanged_all_adds_warehouse(self):
+        retail = build_matrix(date(2026, 8, 14), date(2026, 8, 14))
+        self.assertEqual(retail.grand.amount, Decimal("30.00"))
+        self.assertEqual([s.name for s in retail.stores], ["BatumiMall"])
+        full = build_matrix(date(2026, 8, 14), date(2026, 8, 14), SCOPE_ALL)
+        self.assertTrue(full.balanced)
+        self.assertEqual(full.grand.amount, Decimal("630.00"))
+        self.assertEqual([s.name for s in full.stores], ["BatumiMall", "HORECA TBILISI"])
+        self.assertIn("scope=all", full.period_query)
+
+    def test_pages_follow_scope(self):
+        page = self.client.get(reverse("sales_matrix"), self.period)
+        self.assertNotContains(page, "HORECA TBILISI</th>")
+        page = self.client.get(reverse("sales_matrix"), {**self.period, "scope": "all"})
+        self.assertContains(page, "HORECA TBILISI</th>")
+        self.assertContains(page, "scope=all")
+
+        explorer = self.client.get(reverse("sales_explorer"), {**self.period, "group_by": "receipt"})
+        self.assertEqual(explorer.context["total_amount"], Decimal("30.00"))
+        explorer = self.client.get(
+            reverse("sales_explorer"), {**self.period, "group_by": "receipt", "scope": "all"}
+        )
+        self.assertEqual(explorer.context["total_amount"], Decimal("630.00"))
+        self.assertContains(explorer, "source=invoice")
+
+        group = self.client.get(reverse("sales_matrix_group", args=[11077]), {**self.period, "scope": "all"})
+        self.assertEqual(group.context["total_amount"], Decimal("630.00"))
+
+    def test_receipt_and_invoice_with_same_id(self):
+        receipt = self.client.get(reverse("sales_receipt", args=[5]))
+        self.assertEqual(receipt.context["total_amount"], Decimal("30.00"))
+        invoice = self.client.get(reverse("sales_receipt", args=[5]), {"source": "invoice"})
+        self.assertEqual(invoice.context["total_amount"], Decimal("600.00"))
+        self.assertTrue(invoice.context["is_invoice"])
+
+    def test_promo_analysis_stays_retail(self):
+        from promos.analysis import _daily_totals
+
+        totals = _daily_totals([self.bean.id], date(2026, 8, 14), date(2026, 8, 14))
+        self.assertEqual(totals, {date(2026, 8, 14): Decimal("30.00")})

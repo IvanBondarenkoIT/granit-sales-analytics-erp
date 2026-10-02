@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 
 from core.models import Product, ProductGroup, ProductParameterValue, Store
-from sales.models import SaleFact
+from sales.models import SCOPE_ALL, SCOPE_RETAIL, SCOPES, SOURCE_INVOICE, SOURCE_RECEIPT, SaleFact
 
 ROW_LIMIT = 300
 GROUP_BY_OPTIONS = ("product", "group", "param", "store", "client", "day", "receipt")
@@ -22,7 +22,7 @@ GROUP_BY_VALUES = {
     "store": ("store__granit_id", "store__name"),
     "client": ("client__granit_id", "client__name"),
     "day": ("sale_date",),
-    "receipt": ("granit_sale_id", "sale_date", "store__name", "client__granit_id", "client__name"),
+    "receipt": ("source", "granit_sale_id", "sale_date", "store__name", "client__granit_id", "client__name"),
 }
 
 
@@ -57,6 +57,23 @@ def _choice(raw: str | None, allowed: tuple[str, ...], fallback: str) -> str:
     return fallback
 
 
+def _scope(request) -> str:
+    return _choice(request.GET.get("scope"), SCOPES, SCOPE_RETAIL)
+
+
+def _scope_choices() -> list[tuple[str, str]]:
+    return [(SCOPE_RETAIL, _("Retail")), (SCOPE_ALL, _("All warehouses"))]
+
+
+def _stores_with_sales(scope: str):
+    sold = SaleFact.objects.for_scope(scope).values("store_id").distinct()
+    return Store.objects.filter(id__in=sold).order_by("name")
+
+
+def _scope_context(scope: str) -> dict:
+    return {"scope": scope, "scope_choices": _scope_choices(), "scope_all": scope == SCOPE_ALL}
+
+
 def _encode_params(params: dict) -> str:
     items = []
     for key, value in params.items():
@@ -89,6 +106,7 @@ def _label_rows(group_by: str, rows: list[dict], base_params: dict) -> list[dict
     labeled = []
     for row in rows:
         sale_id = None
+        is_invoice = False
         receipts_params = dict(base_params)
         receipts_params["group_by"] = "receipt"
         if group_by == "product":
@@ -124,6 +142,7 @@ def _label_rows(group_by: str, rows: list[dict], base_params: dict) -> list[dict
             name = sale_id
             secondary = row.get("sale_date")
             receipts_params = None
+            is_invoice = row.get("source") == SOURCE_INVOICE
         else:
             name = row.get("sale_date")
             secondary = ""
@@ -138,6 +157,7 @@ def _label_rows(group_by: str, rows: list[dict], base_params: dict) -> list[dict
                 "client_name": row.get("client__name") or "—",
                 "client_granit_id": row.get("client__granit_id"),
                 "sale_id": sale_id,
+                "is_invoice": is_invoice,
                 "receipts_query": _encode_params(receipts_params) if receipts_params else "",
                 "qty": row.get("qty") or Decimal("0"),
                 "amount": row.get("amount") or Decimal("0"),
@@ -161,13 +181,14 @@ def _explorer_context(request) -> dict:
     query = (request.GET.get("q") or "").strip()
     group_by = _choice(request.GET.get("group_by"), GROUP_BY_OPTIONS, "product")
     sort = _choice(request.GET.get("sort"), SORT_OPTIONS, "amount")
+    scope = _scope(request)
 
     if product_id is not None and group_id is not None:
         if not Product.objects.filter(granit_id=product_id, group__granit_id=group_id).exists():
             product_id = None
 
     qs = _apply_filters(
-        SaleFact.objects.all(),
+        SaleFact.objects.for_scope(scope),
         date_from=date_from,
         date_to=date_to,
         store_id=store_id,
@@ -199,6 +220,7 @@ def _explorer_context(request) -> dict:
         "q": query,
         "group_by": group_by,
         "sort": sort,
+        "scope": scope if scope == SCOPE_ALL else None,
     }
     total_rows = aggregated.count()
     rows = _label_rows(group_by, list(aggregated[:ROW_LIMIT]), base_params)
@@ -215,6 +237,7 @@ def _explorer_context(request) -> dict:
     ).order_by("label")
 
     return {
+        **_scope_context(scope),
         "date_from": date_from,
         "date_to": date_to,
         "store_id": store_id,
@@ -226,7 +249,7 @@ def _explorer_context(request) -> dict:
         "group_by": group_by,
         "sort": sort,
         "explorer_query": _encode_params(base_params),
-        "stores": Store.objects.order_by("name"),
+        "stores": _stores_with_sales(scope),
         "groups": ProductGroup.objects.order_by("name"),
         "products": products_qs[:400],
         "param_values": param_values,
@@ -275,8 +298,9 @@ def sales_explorer(request):
 
 
 def sales_receipt(request, sale_id: int):
+    source = _choice(request.GET.get("source"), (SOURCE_RECEIPT, SOURCE_INVOICE), SOURCE_RECEIPT)
     lines = list(
-        SaleFact.objects.filter(granit_sale_id=sale_id)
+        SaleFact.objects.filter(granit_sale_id=sale_id, source=source)
         .select_related("product", "product__group", "store", "client")
         .order_by("granit_line_id")
     )
@@ -289,6 +313,7 @@ def sales_receipt(request, sale_id: int):
         "sales/receipt.html",
         {
             "sale_id": sale_id,
+            "is_invoice": source == SOURCE_INVOICE,
             "sale_date": first.sale_date,
             "store": first.store,
             "client": first.client,
@@ -314,11 +339,13 @@ def sales_matrix(request):
     from sales.matrix import build_matrix
 
     date_from, date_to = _matrix_period(request)
-    matrix = build_matrix(date_from, date_to)
+    scope = _scope(request)
+    matrix = build_matrix(date_from, date_to, scope)
     return render(
         request,
         "sales/matrix.html",
         {
+            **_scope_context(scope),
             "matrix": matrix,
             "date_from": date_from,
             "date_to": date_to,
@@ -333,9 +360,11 @@ def sales_matrix_xlsx(request):
     from sales.matrix import build_matrix
 
     date_from, date_to = _matrix_period(request)
-    matrix = build_matrix(date_from, date_to)
+    scope = _scope(request)
+    matrix = build_matrix(date_from, date_to, scope)
     payload = matrix_to_xlsx(matrix)
-    filename = f"supergroups_{date_from.isoformat()}_{date_to.isoformat()}.xlsx"
+    suffix = "_all" if scope == SCOPE_ALL else ""
+    filename = f"supergroups{suffix}_{date_from.isoformat()}_{date_to.isoformat()}.xlsx"
     response = HttpResponse(
         payload,
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -360,7 +389,10 @@ def sales_matrix_edit(request):
                 sg.sort_order = idx
                 sg.save(update_fields=["sort_order", "updated_at"])
 
+    from sales.matrix import period_query
+
     date_from, date_to = _matrix_period(request)
+    back_query = period_query(date_from, date_to, _scope(request))
     if request.method == "POST":
         action = request.POST.get("action")
         if action == "create":
@@ -403,7 +435,7 @@ def sales_matrix_edit(request):
                         groups[idx], groups[swap_with] = groups[swap_with], groups[idx]
                         _renumber(groups)
                         messages.success(request, _("Order updated."))
-        return redirect(f"{request.path}?date_from={date_from}&date_to={date_to}")
+        return redirect(f"{request.path}?{back_query}")
 
     groups = _ordered_groups()
     catchall = SuperGroup.objects.filter(is_catchall=True).first()
@@ -415,7 +447,7 @@ def sales_matrix_edit(request):
             "catchall": catchall,
             "date_from": date_from,
             "date_to": date_to,
-            "period_query": f"date_from={date_from}&date_to={date_to}",
+            "period_query": back_query,
         },
     )
 
@@ -430,6 +462,7 @@ def sales_matrix_sg(request, pk: int):
     sg = get_object_or_404(SuperGroup, pk=pk)
     date_from, date_to = _matrix_period(request)
     store_id = _int_param(request, "store")
+    scope = _scope(request)
 
     if request.method == "POST" and not sg.is_catchall:
         action = request.POST.get("action")
@@ -446,25 +479,29 @@ def sales_matrix_sg(request, pk: int):
                     defaults={"super_group": sg},
                 )
                 messages.success(request, _("Group added to super-group."))
-        q = period_query(date_from, date_to, store=store_id)
+        q = period_query(date_from, date_to, scope, store=store_id)
         return redirect(f"{request.path}?{q}")
 
-    rows = group_sales_for_super_group(sg, date_from, date_to, store_id)
+    rows = group_sales_for_super_group(sg, date_from, date_to, store_id, scope)
     available = []
     if not sg.is_catchall:
-        available = list(unassigned_groups(request.GET.get("q") or "", date_from=date_from, date_to=date_to))
+        available = list(
+            unassigned_groups(request.GET.get("q") or "", date_from=date_from, date_to=date_to, scope=scope)
+        )
     return render(
         request,
         "sales/matrix_sg.html",
         {
+            **_scope_context(scope),
+            "matrix_query": period_query(date_from, date_to, scope),
             "sg": sg,
             "rows": rows,
             "available": available,
             "date_from": date_from,
             "date_to": date_to,
             "store_id": store_id,
-            "stores": Store.objects.order_by("name"),
-            "period_query": period_query(date_from, date_to, store=store_id),
+            "stores": _stores_with_sales(scope),
+            "period_query": period_query(date_from, date_to, scope, store=store_id),
             "total_qty": sum((r["qty"] for r in rows), Decimal("0")),
             "total_amount": sum((r["amount"] for r in rows), Decimal("0")),
         },
@@ -481,6 +518,7 @@ def sales_matrix_group(request, granit_id: int):
     group = get_object_or_404(ProductGroup, granit_id=granit_id)
     date_from, date_to = _matrix_period(request)
     store_id = _int_param(request, "store")
+    scope = _scope(request)
 
     if request.method == "POST" and request.POST.get("action") == "set_owner":
         sg_id = (request.POST.get("sg_id") or "").strip()
@@ -497,9 +535,9 @@ def sales_matrix_group(request, granit_id: int):
                 messages.success(request, _("Super-group owner updated."))
             else:
                 messages.error(request, _("Super-group not found."))
-        return redirect(f"{request.path}?{period_query(date_from, date_to, store=store_id)}")
+        return redirect(f"{request.path}?{period_query(date_from, date_to, scope, store=store_id)}")
 
-    rows = product_sales_for_group(granit_id, date_from, date_to, store_id)
+    rows = product_sales_for_group(granit_id, date_from, date_to, store_id, scope)
     member = SuperGroupMember.objects.filter(product_group=group).select_related("super_group").first()
     current_sg = member.super_group if member else None
     explorer_params = {
@@ -507,6 +545,7 @@ def sales_matrix_group(request, granit_id: int):
         "date_to": date_to,
         "group": granit_id,
         "group_by": "product",
+        "scope": scope if scope == SCOPE_ALL else None,
     }
     if store_id is not None:
         explorer_params["store"] = store_id
@@ -514,12 +553,14 @@ def sales_matrix_group(request, granit_id: int):
         request,
         "sales/matrix_group.html",
         {
+            **_scope_context(scope),
+            "matrix_query": period_query(date_from, date_to, scope),
             "group": group,
             "rows": rows,
             "date_from": date_from,
             "date_to": date_to,
             "store_id": store_id,
-            "period_query": period_query(date_from, date_to, store=store_id),
+            "period_query": period_query(date_from, date_to, scope, store=store_id),
             "explorer_query": _encode_params(explorer_params),
             "total_qty": sum((r["qty"] for r in rows), Decimal("0")),
             "total_amount": sum((r["amount"] for r in rows), Decimal("0")),

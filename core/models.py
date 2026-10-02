@@ -2,9 +2,17 @@ from django.db import models
 
 
 class Store(models.Model):
-    """Store dimension - Granit retail locations."""
+    """Store dimension: Granit receipt groups (STORGRP) and warehouses without one (STORLIST)."""
+    KIND_GROUP = "group"
+    KIND_WAREHOUSE = "warehouse"
+    KIND_CHOICES = [
+        (KIND_GROUP, "Receipt group (STORGRP)"),
+        (KIND_WAREHOUSE, "Warehouse (STORLIST)"),
+    ]
+
     granit_id = models.IntegerField(unique=True, help_text="Store ID from Granit ERP")
     name = models.CharField(max_length=200)
+    kind = models.CharField(max_length=10, choices=KIND_CHOICES, default=KIND_GROUP)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

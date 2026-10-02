@@ -25,14 +25,17 @@ from etl.queries import (
     sql_clients,
     sql_clients_by_cards,
     sql_clients_by_ids,
+    sql_invoices_day,
     sql_product_groups,
     sql_product_parameters,
     sql_products,
     sql_sales_day,
     sql_stock_chunk,
     sql_stores,
+    sql_warehouse_groups,
+    sql_warehouses,
 )
-from sales.models import SaleFact, StockSnapshot
+from sales.models import SOURCE_INVOICE, SOURCE_RECEIPT, SaleFact, StockSnapshot
 
 CARD_NUMBER_RE = re.compile(r"^\d{13}$")
 
@@ -125,7 +128,7 @@ def upsert_stores(rows: Iterable[dict[str, Any]]) -> tuple[int, int]:
             continue
         _, created = Store.objects.update_or_create(
             granit_id=granit_id,
-            defaults={"name": _as_str(row.get("NAME"), 200) or f"#{granit_id}"},
+            defaults={"name": _as_str(row.get("NAME"), 200) or f"#{granit_id}", "kind": Store.KIND_GROUP},
         )
         if created:
             inserted += 1
@@ -341,15 +344,34 @@ def _backfill_missing_clients(client_ids: set[int]) -> None:
             ensure_client(cid)
 
 
-def load_sales_day(sale_date: date) -> int:
-    sql, base_params = sql_sales_day()
-    rows = query_rows(sql, base_params + [sale_date, sale_date + timedelta(days=1)])
-    if not rows:
-        with transaction.atomic():
-            deleted, _ = SaleFact.objects.filter(sale_date=sale_date).delete()
-        return 0
+def warehouse_store_routes() -> dict[int, int]:
+    """STORLIST.ID -> Store.granit_id: the warehouse's receipt group, else the warehouse itself."""
+    groups: dict[int, int] = {}
+    for row in query_rows(sql_warehouse_groups()):
+        stor_id, grp_id = _as_int(row.get("STORID")), _as_int(row.get("GRPID"))
+        if stor_id is not None and grp_id is not None:
+            groups[stor_id] = min(grp_id, groups.get(stor_id, grp_id))
+    group_ids = set(Store.objects.filter(kind=Store.KIND_GROUP).values_list("granit_id", flat=True))
+    routes: dict[int, int] = {}
+    for row in query_rows(sql_warehouses()):
+        stor_id = _as_int(row.get("ID"))
+        if stor_id is None:
+            continue
+        if stor_id in groups:
+            routes[stor_id] = groups[stor_id]
+            continue
+        if stor_id in group_ids:
+            raise ValueError(f"Warehouse {stor_id} collides with receipt group store {stor_id}")
+        Store.objects.update_or_create(
+            granit_id=stor_id,
+            defaults={"name": _as_str(row.get("NAME"), 200) or f"#{stor_id}", "kind": Store.KIND_WAREHOUSE},
+        )
+        routes[stor_id] = stor_id
+    return routes
 
-    store_ids = {_as_int(r.get("STORE_ID")) for r in rows}
+
+def _sale_facts(rows: list[dict[str, Any]], *, source: str, sale_date: date, store_of) -> list[SaleFact]:
+    store_ids = {store_of(r) for r in rows}
     product_ids = {_as_int(r.get("PRODUCT_ID")) for r in rows}
     client_ids = {_as_int(r.get("CLIENT_ID")) for r in rows}
     store_ids.discard(None)
@@ -371,7 +393,7 @@ def load_sales_day(sale_date: date) -> int:
     for row in rows:
         sale_id = _as_int(row.get("SALE_ID"))
         line_id = _as_int(row.get("LINE_ID"))
-        store_id = _as_int(row.get("STORE_ID"))
+        store_id = store_of(row)
         product_id = _as_int(row.get("PRODUCT_ID"))
         if sale_id is None or line_id is None or store_id is None or product_id is None:
             continue
@@ -387,6 +409,7 @@ def load_sales_day(sale_date: date) -> int:
         facts.append(
             SaleFact(
                 sale_date=_as_date(row.get("SALE_DATE")) or sale_date,
+                source=source,
                 store=store,
                 client=clients.get(client_id) if client_id is not None else None,
                 product=product,
@@ -396,6 +419,32 @@ def load_sales_day(sale_date: date) -> int:
                 granit_line_id=line_id,
             )
         )
+    return facts
+
+
+def load_sales_day(sale_date: date, routes: dict[int, int] | None = None) -> int:
+    """Receipts (retail) and sales invoices (all warehouses) for one day."""
+    if routes is None:
+        routes = warehouse_store_routes()
+    period = [sale_date, sale_date + timedelta(days=1)]
+
+    sql, base_params = sql_sales_day()
+    receipts = query_rows(sql, base_params + period)
+    sql, base_params = sql_invoices_day()
+    invoices = query_rows(sql, base_params + period)
+
+    facts = _sale_facts(
+        receipts,
+        source=SOURCE_RECEIPT,
+        sale_date=sale_date,
+        store_of=lambda r: _as_int(r.get("STORE_ID")),
+    )
+    facts += _sale_facts(
+        invoices,
+        source=SOURCE_INVOICE,
+        sale_date=sale_date,
+        store_of=lambda r: routes.get(_as_int(r.get("WAREHOUSE_ID"))),
+    )
 
     with transaction.atomic():
         SaleFact.objects.filter(sale_date=sale_date).delete()
@@ -407,11 +456,12 @@ def load_sales_range(date_from: date, date_to: date, progress=None) -> dict[str,
     """Load [date_from, date_to) one calendar day at a time."""
     if date_to <= date_from:
         raise ValueError("--to must be after --from")
+    routes = warehouse_store_routes()
     total = 0
     days = 0
     current = date_from
     while current < date_to:
-        count = load_sales_day(current)
+        count = load_sales_day(current, routes)
         total += count
         days += 1
         if progress:

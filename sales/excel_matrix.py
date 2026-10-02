@@ -101,10 +101,10 @@ def _freeze_and_filter(ws, headers: list[str], freeze_cols: int, *, exclude_last
         ws.auto_filter.ref = f"A1:{get_column_letter(len(headers))}{last}"
 
 
-def _facts_agg(date_from: date, date_to: date):
+def _facts_agg(date_from: date, date_to: date, scope: str):
     """Return long facts: store_id(pk), group_id(pk|None), qty, amount."""
     return list(
-        sales_in_period(date_from, date_to)
+        sales_in_period(date_from, date_to, scope)
         .values("store_id", "product__group_id")
         .annotate(qty=Sum("quantity"), amount=Sum("amount"))
     )
@@ -119,7 +119,7 @@ def matrix_to_xlsx(matrix: MatrixResult) -> bytes:
 
     by_store = {s.id: s for s in stores}
     groups = {g.id: g for g in ProductGroup.objects.all()}
-    facts = _facts_agg(date_from, date_to)
+    facts = _facts_agg(date_from, date_to, matrix.scope)
     sold_group_ids = {f["product__group_id"] for f in facts if f["product__group_id"] is not None}
     params = _dominant_param_by_group(list(sold_group_ids))
 
@@ -140,6 +140,7 @@ def matrix_to_xlsx(matrix: MatrixResult) -> bytes:
         return sg.key, sg.title
 
     wb = Workbook()
+    wb.properties.title = f"Sales {date_from:%Y-%m-%d}..{date_to:%Y-%m-%d} ({matrix.scope})"
 
     # ===== Продажи =====
     ws_sales = wb.active

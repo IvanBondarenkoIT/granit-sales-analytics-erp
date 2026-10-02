@@ -241,7 +241,7 @@ def campaign_reanalyze(request, pk: int):
 def _campaign_sales_qs(campaign: Campaign):
     date_from = campaign.analysis_period_start
     date_to = campaign.analysis_period_end
-    qs = SaleFact.objects.select_related("product", "product__group", "store", "client")
+    qs = SaleFact.objects.retail().select_related("product", "product__group", "store", "client")
     if date_from:
         qs = qs.filter(sale_date__gte=date_from)
     if date_to:

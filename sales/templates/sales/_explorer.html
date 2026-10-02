@@ -8,6 +8,14 @@
           hx-push-url="true"
           hx-trigger="change delay:200ms from:input:not(.select-filter), change delay:200ms from:select, submit">
         <label>
+            {% trans "Sales" %}
+            <select name="scope">
+                {% for value, label in scope_choices %}
+                <option value="{{ value }}"{% if scope == value %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
             {% trans "Date from" %}
             <input type="date" name="date_from" value="{{ date_from|date:'Y-m-d' }}">
         </label>

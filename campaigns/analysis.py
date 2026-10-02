@@ -92,7 +92,7 @@ def analyze_rows(
 
     totals = {
         row["client_id"]: row["amount"] or Decimal("0")
-        for row in SaleFact.objects.filter(
+        for row in SaleFact.objects.retail().filter(
             sale_date__gte=date_from,
             sale_date__lt=date_to,
             client_id__in=linked_ids,

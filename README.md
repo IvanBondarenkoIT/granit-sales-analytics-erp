@@ -218,6 +218,14 @@ docker exec granit-analytics python manage.py seed_supergroups
 
 Hub operator notes: `ssh-alternative-server-connection/docs/DEPLOY-GRANIT-MATRIX.md`.
 
+### After releasing «Retail / All warehouses» (once)
+
+Sales invoices (`DGVDT` TYP 0 without `SZID`) are loaded next to receipts as `SaleFact.source=invoice`. Reload history so old days get them too:
+
+```bash
+docker exec granit-analytics python manage.py etl_sales --from 2025-08-20 --to <yesterday>
+```
+
 ### Nightly ETL (alt cron via hub)
 
 ```bash
@@ -257,6 +265,7 @@ Built with Django + HTMX for fast, interactive filtering without frontend framew
 ### 2b. Super-group matrix
 
 Interactive matrix: super-group rows × store columns (qty + amount), shared membership editor, Excel export.
+«Sales» switch: **Retail** (receipts, default) or **All warehouses** (receipts + sales invoices from office, HoReCa, service centres; transfers and write-offs excluded). Promo and campaign analysis always use retail.
 Seed from `sales/seed/supergroups.json` (from monthly-sales-report YAML). Catch-all row «Outside super-groups» keeps totals equal to all `SaleFact` lines.
 
 ```bash

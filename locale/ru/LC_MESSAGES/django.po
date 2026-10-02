@@ -746,6 +746,25 @@ msgstr "Графики"
 msgid "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
 msgstr "Кол-во: кг для весового товара (0,25 = 250 г), шт. для штучного."
 
+msgid "Sales"
+msgstr "Продажи"
+
+msgid "Retail"
+msgstr "Розница"
+
+msgid "All warehouses"
+msgstr "Все склады"
+
+msgid "Invoice"
+msgstr "Накладная"
+
+msgid ""
+"All warehouses: retail receipts plus sales invoices (office, HoReCa, service "
+"centres); transfers and write-offs are not included."
+msgstr ""
+"Все склады: розничные чеки плюс расходные накладные (офис, хорека, "
+"сервис-центры); перемещения и списания не входят."
+
 msgid "Last year"
 msgstr "Прошлый год"
 

@@ -16,8 +16,8 @@
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'sales_matrix' %}?{{ period_query }}">← {% trans "Sales by super-groups" %}</a>
-       · <a href="{% url 'sales_matrix_edit' %}?{{ period_query }}">{% trans "Edit super-groups" %}</a></p>
+    <p><a href="{% url 'sales_matrix' %}?{{ matrix_query }}">← {% trans "Sales by super-groups" %}</a>
+       · <a href="{% url 'sales_matrix_edit' %}?{{ matrix_query }}">{% trans "Edit super-groups" %}</a></p>
     <h1><span class="swatch" style="background:#{{ sg.color }}"></span> {{ sg.title }}</h1>
     {% if sg.is_catchall %}
     <p>{% trans "Remainder: product groups (and products without a group) not assigned to any super-group." %}</p>
@@ -26,6 +26,14 @@
     <form class="toolbar" method="get">
         <input type="hidden" name="date_from" value="{{ date_from|date:'Y-m-d' }}">
         <input type="hidden" name="date_to" value="{{ date_to|date:'Y-m-d' }}">
+        <div>
+            <label for="scope">{% trans "Sales" %}</label>
+            <select id="scope" name="scope" onchange="this.form.submit()">
+                {% for value, label in scope_choices %}
+                <option value="{{ value }}" {% if scope == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
         <div>
             <label for="store">{% trans "Store" %}</label>
             <select id="store" name="store" onchange="this.form.submit()">
@@ -92,6 +100,7 @@
             <input type="hidden" name="date_from" value="{{ date_from|date:'Y-m-d' }}">
             <input type="hidden" name="date_to" value="{{ date_to|date:'Y-m-d' }}">
             {% if store_id %}<input type="hidden" name="store" value="{{ store_id }}">{% endif %}
+            {% if scope_all %}<input type="hidden" name="scope" value="all">{% endif %}
             <input name="q" value="{{ request.GET.q }}" placeholder="{% trans "Search groups" %}">
             <button class="btn" type="submit">{% trans "Search" %}</button>
         </form>

@@ -16,7 +16,7 @@
         .matrix tfoot td { font-weight: 700; background: #f9fafb; }
         .toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; margin: 1rem 0; background: #fff; padding: 1rem; }
         .toolbar label { display: block; font-weight: 600; font-size: 0.85rem; }
-        .toolbar input { padding: 0.35rem; }
+        .toolbar input, .toolbar select { padding: 0.35rem; }
         .btn { display: inline-block; background: #667eea; color: #fff; text-decoration: none; padding: 0.45rem 0.9rem; border-radius: 6px; border: 0; cursor: pointer; font: inherit; }
         .btn-secondary { background: #64748b; }
         .hint { color: #555; margin: 0.5rem 0 1rem; }
@@ -29,7 +29,18 @@
     <h1>{% trans "Sales by super-groups" %}</h1>
     <p class="hint">{% trans "Rows are super-groups, columns are stores with sales in the period. Cell = qty / amount. Totals must match all sales." %}
         {% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}</p>
+    {% if scope_all %}
+    <p class="hint">{% trans "All warehouses: retail receipts plus sales invoices (office, HoReCa, service centres); transfers and write-offs are not included." %}</p>
+    {% endif %}
     <form class="toolbar" method="get">
+        <div>
+            <label for="scope">{% trans "Sales" %}</label>
+            <select id="scope" name="scope" onchange="this.form.submit()">
+                {% for value, label in scope_choices %}
+                <option value="{{ value }}" {% if scope == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
         <div>
             <label for="date_from">{% trans "From" %}</label>
             <input type="date" id="date_from" name="date_from" value="{{ date_from|date:'Y-m-d' }}">
@@ -41,7 +52,7 @@
         <button class="btn" type="submit">{% trans "Apply" %}</button>
         <a class="btn btn-secondary" href="{% url 'sales_matrix_xlsx' %}?{{ matrix.period_query }}">{% trans "Excel" %}</a>
         <a class="btn btn-secondary" href="{% url 'sales_matrix_edit' %}?{{ matrix.period_query }}">{% trans "Edit super-groups" %}</a>
-        <a href="{% url 'sales_explorer' %}?date_from={{ date_from|date:'Y-m-d' }}&amp;date_to={{ date_to|date:'Y-m-d' }}">{% trans "Sales Explorer" %}</a>
+        <a href="{% url 'sales_explorer' %}?{{ matrix.period_query }}">{% trans "Sales Explorer" %}</a>
     </form>
     <p class="{% if matrix.balanced %}ok{% else %}bad{% endif %}">
         {% if matrix.balanced %}

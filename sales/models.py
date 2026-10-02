@@ -43,9 +43,30 @@ class SuperGroupMember(models.Model):
         return f"{self.product_group.name} → {self.super_group.title}"
 
 
+SOURCE_RECEIPT = "receipt"
+SOURCE_INVOICE = "invoice"
+SCOPE_RETAIL = "retail"
+SCOPE_ALL = "all"
+SCOPES = (SCOPE_RETAIL, SCOPE_ALL)
+
+
+class SaleFactQuerySet(models.QuerySet):
+    def retail(self):
+        return self.filter(source=SOURCE_RECEIPT)
+
+    def for_scope(self, scope: str):
+        return self if scope == SCOPE_ALL else self.retail()
+
+
 class SaleFact(models.Model):
     """Sales fact table - individual sale line items."""
+    SOURCE_CHOICES = [
+        (SOURCE_RECEIPT, "Cash-register receipt (STORZAKAZDT)"),
+        (SOURCE_INVOICE, "Sales invoice (DGVDT)"),
+    ]
+
     sale_date = models.DateField(db_index=True, help_text="Date of sale")
+    source = models.CharField(max_length=10, choices=SOURCE_CHOICES, default=SOURCE_RECEIPT, db_index=True)
     store = models.ForeignKey(Store, on_delete=models.PROTECT, related_name='sales')
     client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='sales')
@@ -58,13 +79,15 @@ class SaleFact(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
 
+    objects = SaleFactQuerySet.as_manager()
+
     class Meta:
         db_table = 'fact_sale'
         ordering = ['-sale_date', 'store', 'product']
         constraints = [
             models.UniqueConstraint(
-                fields=['granit_sale_id', 'granit_line_id'],
-                name='fact_sale_granit_line_uniq',
+                fields=['source', 'granit_sale_id', 'granit_line_id'],
+                name='fact_sale_source_line_uniq',
             ),
         ]
         indexes = [

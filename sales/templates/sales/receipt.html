@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n numbers %}
 
-{% block title %}{% trans "Receipt" %} #{{ sale_id }}{% endblock %}
+{% block title %}{% if is_invoice %}{% trans "Invoice" %}{% else %}{% trans "Receipt" %}{% endif %} #{{ sale_id }}{% endblock %}
 
 {% block extra_css %}
         table { width: 100%; border-collapse: collapse; background: #fff; margin: 0.75rem 0 1.5rem; }
@@ -18,7 +18,7 @@
 <div class="container">
     <p><a href="{% url 'sales_explorer' %}{% if back_query %}?{{ back_query }}{% endif %}">← {% trans "Sales Explorer" %}</a></p>
     <section class="order">
-        <h1>{% trans "Receipt" %} #{{ sale_id }}</h1>
+        <h1>{% if is_invoice %}{% trans "Invoice" %}{% else %}{% trans "Receipt" %}{% endif %} #{{ sale_id }}</h1>
         <p class="meta">
             {{ sale_date }}
             · {{ store.name }}

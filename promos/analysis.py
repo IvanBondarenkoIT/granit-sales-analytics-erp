@@ -43,7 +43,7 @@ def _daily_totals(product_ids: list[int], date_from: date, date_to: date) -> dic
     if not product_ids or date_to < date_from:
         return {}
     rows = (
-        SaleFact.objects.filter(
+        SaleFact.objects.retail().filter(
             product_id__in=product_ids,
             sale_date__gte=date_from,
             sale_date__lte=date_to,
