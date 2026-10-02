@@ -1,11 +1,13 @@
 from datetime import date
 from decimal import Decimal
+from io import StringIO
 from unittest.mock import patch
 
-from django.test import TestCase
+from django.core.management import call_command
+from django.test import TestCase, override_settings
 
 from core.models import Store
-from etl.pipeline import load_sales_day
+from etl.pipeline import load_sales_day, nightly_reload_range
 from etl.queries import sql_invoices_day, sql_sales_day
 from sales.models import SOURCE_INVOICE, SOURCE_RECEIPT, SaleFact
 
@@ -63,3 +65,40 @@ class LoadSalesDayTests(TestCase):
         mall_invoice = SaleFact.objects.get(source=SOURCE_INVOICE, granit_sale_id=2)
         self.assertEqual(mall_invoice.store.granit_id, 33)
         self.assertEqual(SaleFact.objects.retail().count(), 1)
+
+
+class NightlyReloadRangeTests(TestCase):
+    def test_two_full_months_back(self):
+        self.assertEqual(
+            nightly_reload_range(date(2026, 10, 2), 2), (date(2026, 8, 1), date(2026, 10, 2))
+        )
+        self.assertEqual(
+            nightly_reload_range(date(2026, 11, 1), 2), (date(2026, 9, 1), date(2026, 11, 1))
+        )
+
+    def test_crosses_year(self):
+        self.assertEqual(
+            nightly_reload_range(date(2027, 1, 1), 2), (date(2026, 11, 1), date(2027, 1, 1))
+        )
+
+    def test_zero_months_is_yesterday_only(self):
+        self.assertEqual(
+            nightly_reload_range(date(2026, 10, 2), 0), (date(2026, 10, 1), date(2026, 10, 2))
+        )
+
+    @override_settings(ETL_RELOAD_MONTHS=1)
+    def test_default_comes_from_settings(self):
+        self.assertEqual(nightly_reload_range(date(2026, 10, 2))[0], date(2026, 9, 1))
+
+
+class NightlyCommandTests(TestCase):
+    @patch("etl.management.commands.etl_nightly.load_stock", return_value={"rows": 0})
+    @patch("etl.management.commands.etl_nightly.load_sales_range", return_value={"days": 1, "rows": 0})
+    @patch("etl.management.commands.etl_nightly.load_dims", return_value={})
+    @patch(
+        "etl.management.commands.etl_nightly.nightly_reload_range",
+        return_value=(date(2026, 8, 1), date(2026, 10, 2)),
+    )
+    def test_reloads_whole_window(self, _range, _dims, sales, _stock):
+        call_command("etl_nightly", stdout=StringIO())
+        sales.assert_called_once_with(date(2026, 8, 1), date(2026, 10, 2))

@@ -233,6 +233,8 @@ docker exec granit-analytics python manage.py etl_nightly
 ```
 
 Cron (via hub catalog): **04:30 Asia/Tbilisi**. Command is idempotent and prints a summary to stdout (no secrets).
+
+Sales are reloaded every night from the 1st of the month two months back up to yesterday (2 Oct → from 1 Aug), so edits made in Granit to recent days are picked up. Older periods are closed for changes in Granit. Window length: `ETL_RELOAD_MONTHS` (default `2`, `0` = yesterday only). Each day is replaced as a whole, so reloads never duplicate.
 ### Schema check (CI / local)
 
 ```bash

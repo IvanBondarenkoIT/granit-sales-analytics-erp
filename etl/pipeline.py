@@ -525,6 +525,17 @@ def load_stock(snapshot_date: date | None = None) -> dict[str, int]:
     return {"rows": len(snapshots), "active": active_count}
 
 
+def nightly_reload_range(today: date | None = None, months: int | None = None) -> tuple[date, date]:
+    """[1st of the month `months` back, today); months=0 means yesterday only."""
+    today = today or date.today()
+    months = settings.ETL_RELOAD_MONTHS if months is None else months
+    yesterday = today - timedelta(days=1)
+    if months <= 0:
+        return yesterday, today
+    index = today.year * 12 + today.month - 1 - months
+    return date(index // 12, index % 12 + 1, 1), today
+
+
 def default_backfill_range() -> tuple[date, date]:
     yesterday = date.today() - timedelta(days=1)
     start = yesterday - timedelta(days=364)
