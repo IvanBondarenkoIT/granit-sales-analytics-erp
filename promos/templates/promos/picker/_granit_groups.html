@@ -1,0 +1,14 @@
+{% load i18n %}
+{% for g in groups %}
+<li>
+    {% if g.n_children %}
+    <button type="button" class="tree-toggle" aria-label="{% trans 'Expand' %}"
+            hx-get="{% url 'picker_granit_groups' %}?parent={{ g.pk }}"
+            hx-target="next .tree-children" hx-trigger="click once">▸</button>
+    {% else %}<span class="tree-spacer"></span>{% endif %}
+    <button type="button" class="tree-node" data-group="{{ g.pk }}">{{ g.name }}</button>
+    <ul class="tree-children"></ul>
+</li>
+{% empty %}
+<li class="muted">{% trans "No groups." %}</li>
+{% endfor %}

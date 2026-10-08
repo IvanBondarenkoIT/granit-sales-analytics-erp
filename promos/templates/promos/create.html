@@ -1,60 +1,389 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "New promo" %}{% endblock %}
+{% block title %}{% if promo %}{% trans "Edit promo" %}{% else %}{% trans "New promo" %}{% endif %}{% endblock %}
 
 {% block extra_css %}
-        form { background: #fff; padding: 2rem; max-width: 720px; }
-        label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; }
-        input[type=text], input[type=date], input[type=number], input[type=search], textarea, select { width: 100%; padding: 0.5rem; }
-        select[multiple] { min-height: 10rem; }
-        .hint { color: #666; font-size: 0.9rem; margin-bottom: 1rem; }
-        .help { color: #777; font-size: 0.85rem; margin: 0.2rem 0 0; }
-        .btn { margin-top: 1rem; background: #667eea; color: #fff; border: 0; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; }
+        .promo-form { background: #fff; padding: 2rem; max-width: 960px; }
+        .promo-form label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; }
+        .promo-form input[type=text], .promo-form input[type=date], .promo-form input[type=number], .promo-form textarea { width: 100%; padding: 0.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 1rem; }
+        .hint, .help, .muted { color: #777; font-size: 0.85rem; }
+        .help { margin: 0.2rem 0 0; }
+        .btn { background: #667eea; color: #fff; border: 0; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; }
+        .btn-secondary { background: #eef0ff; color: #3f4bb8; border: 1px solid #c7ccf5; padding: 0.55rem 1rem; border-radius: 6px; cursor: pointer; }
+        .btn-link { background: none; border: 0; color: #667eea; cursor: pointer; padding: 0; text-decoration: underline; font-size: 0.85rem; }
         .errors { color: #b91c1c; }
         .section { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; }
-        .section h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
-        .download { margin: 0.35rem 0 0.75rem; }
-{% endblock %}
+        .section h2 { font-size: 1.1rem; margin: 0 0 0.5rem; display: flex; gap: 0.5rem; align-items: baseline; }
+        .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 0.75rem; }
+        .sel-table { width: 100%; border-collapse: collapse; }
+        .sel-table th, .sel-table td { text-align: left; padding: 0.45rem 0.5rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        .sel-table th { color: #555; font-size: 0.8rem; }
+        .sel-table td.num, .sel-table th.num { text-align: right; }
+        .sel-table tr.sel-group td { background: #fafaf5; }
+        details.import { margin-top: 1.5rem; border: 1px solid #eee; border-radius: 6px; padding: 0.5rem 1rem; }
+        details.import summary { cursor: pointer; font-weight: 600; }
+        .submit-row { margin-top: 1.5rem; display: flex; gap: 1rem; align-items: center; }
+        .catalog-status { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; color: #666; font-size: 0.85rem; margin-bottom: 1rem; }
+        .catalog-status form { margin: 0; }
+        .catalog-status .warn { color: #b45309; }
 
-{% block extra_js %}
-<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+        dialog.picker { width: min(1100px, 96vw); height: min(780px, 92vh); padding: 0; border: 0; border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+        dialog.picker[open] { display: flex; flex-direction: column; }
+        dialog.picker::backdrop { background: rgba(20, 20, 40, .45); }
+        .picker-head, .picker-foot { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-bottom: 1px solid #eee; }
+        .picker-foot { border-top: 1px solid #eee; border-bottom: 0; justify-content: flex-end; }
+        .picker-head h2 { margin: 0; font-size: 1.1rem; flex: 1; }
+        .picker-close { background: none; border: 0; font-size: 1.5rem; cursor: pointer; line-height: 1; }
+        .picker-filter { display: flex; gap: 0.75rem; align-items: center; padding: 0.5rem 1rem; border-bottom: 1px solid #eee; }
+        .picker-filter input[type=search] { flex: 1; padding: 0.45rem; }
+        .picker-filter label { font-size: 0.85rem; color: #555; white-space: nowrap; }
+        .picker-body { flex: 1; display: grid; grid-template-columns: 300px 1fr; min-height: 0; }
+        .picker-tree { overflow: auto; border-right: 1px solid #eee; padding: 0.5rem; }
+        .picker-results { overflow: auto; padding: 0.5rem 1rem; }
+        .tree, .tree-children { list-style: none; margin: 0; padding: 0; }
+        .tree li { display: grid; grid-template-columns: 1.3rem 1fr; align-items: start; }
+        .tree li > .tree-children { grid-column: 1 / -1; }
+        .tree-children { padding-left: 1rem; display: none; }
+        li.open > .tree-children { display: block; }
+        .tree li.muted { display: block; }
+        .tree-toggle, .tree-spacer { display: inline-block; width: 1.3rem; }
+        .tree-toggle { background: none; border: 0; cursor: pointer; color: #666; padding: 0.2rem 0; }
+        li.open > .tree-toggle { transform: rotate(90deg); }
+        .tree-node { background: none; border: 0; cursor: pointer; padding: 0.2rem 0.3rem; text-align: left; border-radius: 4px; font-size: 0.9rem; }
+        .tree-node:hover { background: #f3f4f6; }
+        .tree-node.active { background: #667eea; color: #fff; }
+        .tree-node.active .muted { color: #e0e3ff; }
+        .tree-all { font-weight: 600; }
+        .rows-head { display: flex; justify-content: space-between; align-items: center; padding: 0.25rem 0 0.5rem; }
+        .picker-table { width: 100%; border-collapse: collapse; }
+        .picker-table td { padding: 0.4rem 0.4rem; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; vertical-align: top; }
+        .picker-table td.check { width: 2rem; }
+        .picker-table td.num { text-align: right; white-space: nowrap; }
+        .picker-table tr:not(.disabled):not(.load-more) { cursor: pointer; }
+        .picker-table tr:not(.disabled):not(.load-more):hover td { background: #f8f9ff; }
+        .picker-table tr.disabled td { color: #999; }
+        .picker-status { color: #15803d; font-size: 0.85rem; margin-right: auto; }
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'promo_list' %}">{% trans "All promos" %}</a></p>
-    <h1>{% trans "New promo" %}</h1>
-    <p class="hint">{% trans "Start with dates and an Excel table. You can also pick groups or products by hand below." %}</p>
-    <form method="post" enctype="multipart/form-data">
+    <p>{% if promo %}<a href="{% url 'promo_detail' promo.pk %}">{% trans "Back to promo" %}</a>{% else %}<a href="{% url 'promo_list' %}">{% trans "All promos" %}</a>{% endif %}</p>
+    <h1>{% if promo %}{% trans "Edit promo" %}: {{ promo.name }}{% else %}{% trans "New promo" %}{% endif %}</h1>
+    {% include "promos/_catalog_status.html" %}
+
+    <form method="post" enctype="multipart/form-data" class="promo-form" id="promo-form">
         {% csrf_token %}
         {% if form.non_field_errors %}<div class="errors">{{ form.non_field_errors }}</div>{% endif %}
-        {% for field in form %}
-            {% if field.name == 'groups' %}
-            <div class="section">
-                <h2>{% trans "Or select groups and products by hand" %}</h2>
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                <input type="search" class="select-filter" data-select="#{{ field.id_for_label }}" placeholder="{% trans 'Filter groups' %}" autocomplete="off">
-                {{ field }}
-                {% if field.help_text %}<p class="help">{{ field.help_text }}</p>{% endif %}
-                {% if field.errors %}<div class="errors">{{ field.errors }}</div>{% endif %}
-            {% elif field.name == 'products' %}
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% if field.help_text %}<p class="help">{{ field.help_text }}</p>{% endif %}
-                {% if field.errors %}<div class="errors">{{ field.errors }}</div>{% endif %}
+
+        {% with f=form.name %}
+        <label for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}
+        {% if f.errors %}<div class="errors">{{ f.errors }}</div>{% endif %}
+        {% endwith %}
+
+        <div class="grid">
+            {% for f in form %}{% if f.name == "promo_type" or f.name == "format" or f.name == "channels" %}
+            <div>
+                <label for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}
+                {% if f.errors %}<div class="errors">{{ f.errors }}</div>{% endif %}
             </div>
-            {% else %}
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}
-            {% if field.name == 'excel_file' %}
-            <p class="download"><a href="{% url 'promo_example_xlsx' %}">{% trans "Download example promo file" %}</a></p>
+            {% endif %}{% endfor %}
+        </div>
+        <div class="grid">
+            {% for f in form %}{% if f.name == "start_date" or f.name == "end_date" or f.name == "pre_period_days" %}
+            <div>
+                <label for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}
+                {% if f.name == "pre_period_days" and f.help_text %}<p class="help">{{ f.help_text }}</p>{% endif %}
+                {% if f.errors %}<div class="errors">{{ f.errors }}</div>{% endif %}
+            </div>
+            {% endif %}{% endfor %}
+        </div>
+
+        <div class="section">
+            <h2>{% trans "Promo products" %} <span class="muted">(<span id="selected-count">0</span>)</span></h2>
+            <div class="actions">
+                <button type="button" class="btn-secondary" data-open="picker-granit">+ {% trans "Add from Granit" %}</button>
+                <button type="button" class="btn-secondary" data-open="picker-site">+ {% trans "Add from website" %}</button>
+                <button type="button" class="btn-link" id="selected-clear">{% trans "Clear all" %}</button>
+            </div>
+            <table class="sel-table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Product (Granit)" %}</th>
+                        <th class="num">ID</th>
+                        <th>{% trans "On website" %}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="selected-body">
+                    {% for g in selected_groups %}
+                    <tr class="sel-group" data-group="{{ g.pk }}">
+                        <td>{% trans "Group" %}: {{ g.name }} <span class="muted">({{ g.n_products }})</span></td>
+                        <td class="num">{{ g.granit_id }}</td>
+                        <td class="muted">{% trans "whole group" %}</td>
+                        <td class="num">
+                            <button type="button" class="btn-link group-expand">{% trans "Expand into products" %}</button>
+                            <button type="button" class="btn-link sel-remove">{% trans "Remove" %}</button>
+                            <input type="hidden" name="group_ids" value="{{ g.pk }}">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% for item in selected_items %}
+                    <tr class="sel" data-pk="{{ item.pk }}">
+                        <td>{{ item.name }}</td>
+                        <td class="num">{{ item.granit_id }}</td>
+                        <td>{{ item.site }}</td>
+                        <td class="num">
+                            <button type="button" class="btn-link sel-remove">{% trans "Remove" %}</button>
+                            <input type="hidden" name="product_ids" value="{{ item.pk }}">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr id="selected-empty"><td colspan="4" class="muted">{% trans "No products yet. Use the buttons above to add from Granit or from the website." %}</td></tr>
+                </tbody>
+            </table>
+            {% if form.product_ids.errors %}<div class="errors">{{ form.product_ids.errors }}</div>{% endif %}
+        </div>
+
+        {% with f=form.notes %}
+        <label for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}
+        {% endwith %}
+
+        {% if not promo %}
+        <details class="import"{% if form.excel_file.errors %} open{% endif %}>
+            <summary>{% trans "Import from file (Excel)" %}</summary>
+            {% with f=form.excel_file %}
+            <label for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}
+            <p class="help">{{ f.help_text }} <a href="{% url 'promo_example_xlsx' %}">{% trans "Download example promo file" %}</a></p>
+            {% if f.errors %}<div class="errors">{{ f.errors }}</div>{% endif %}
+            {% endwith %}
+            {% if example_exists %}
+            {% with f=form.use_example_file %}
+            <label>{{ f }} {{ f.label }}</label>
+            <p class="help">{{ f.help_text }}</p>
+            {% endwith %}
             {% endif %}
-            {% if field.help_text %}<p class="help">{{ field.help_text }}</p>{% endif %}
-            {% if field.errors %}<div class="errors">{{ field.errors }}</div>{% endif %}
-            {% endif %}
-        {% endfor %}
-        <button class="btn" type="submit">{% trans "Save and analyze" %}</button>
+        </details>
+        {% endif %}
+
+        <div class="submit-row">
+            <button class="btn" type="submit">{% trans "Save and analyze" %}</button>
+        </div>
     </form>
 </div>
+
+<dialog class="picker" id="picker-granit" data-all-url="{% url 'picker_granit_all' %}">
+    <div class="picker-head">
+        <h2>{% trans "Products from Granit" %}</h2>
+        <button type="button" class="picker-close" aria-label="{% trans 'Close' %}">×</button>
+    </div>
+    <form class="picker-filter" id="granit-filter" onsubmit="return false">
+        <input type="hidden" name="group" value="">
+        <input type="search" name="q" placeholder="{% trans 'Search by name or Granit ID' %}" autocomplete="off"
+               hx-get="{% url 'picker_granit_products' %}" hx-target="#granit-results"
+               hx-include="#granit-filter" hx-trigger="input changed delay:300ms, search, refresh">
+        <label><input type="checkbox" name="inactive" value="1"
+               hx-get="{% url 'picker_granit_products' %}" hx-target="#granit-results"
+               hx-include="#granit-filter" hx-trigger="change"> {% trans "show inactive" %}</label>
+    </form>
+    <div class="picker-body">
+        <div class="picker-tree">
+            <button type="button" class="tree-node tree-all" data-group="">{% trans "All groups" %}</button>
+            <ul class="tree" hx-get="{% url 'picker_granit_groups' %}" hx-trigger="load"></ul>
+        </div>
+        <div class="picker-results" id="granit-results">
+            <p class="muted">{% trans "Pick a group on the left or type to search." %}</p>
+        </div>
+    </div>
+    <div class="picker-foot">
+        <span class="picker-status"></span>
+        <button type="button" class="btn-secondary picker-add-all" disabled>{% trans "Add whole group / all found" %}</button>
+        <button type="button" class="btn picker-add">{% trans "Add selected" %} (<span class="picker-count">0</span>)</button>
+        <button type="button" class="btn-secondary picker-done">{% trans "Done" %}</button>
+    </div>
+</dialog>
+
+<dialog class="picker" id="picker-site" data-all-url="{% url 'picker_site_all' %}">
+    <div class="picker-head">
+        <h2>{% trans "Products from website" %}</h2>
+        <button type="button" class="picker-close" aria-label="{% trans 'Close' %}">×</button>
+    </div>
+    <form class="picker-filter" id="site-filter" onsubmit="return false">
+        <input type="hidden" name="category" value="">
+        <input type="search" name="q" placeholder="{% trans 'Search website products' %}" autocomplete="off"
+               hx-get="{% url 'picker_site_products' %}" hx-target="#site-results"
+               hx-include="#site-filter" hx-trigger="input changed delay:300ms, search, refresh">
+        <span class="muted">{% trans "Only products linked to Granit can be added." %}</span>
+    </form>
+    <div class="picker-body">
+        <div class="picker-tree">
+            <button type="button" class="tree-node tree-all" data-group="">{% trans "All categories" %}</button>
+            <ul class="tree" hx-get="{% url 'picker_site_categories' %}" hx-trigger="load"></ul>
+        </div>
+        <div class="picker-results" id="site-results">
+            <p class="muted">{% trans "Pick a group on the left or type to search." %}</p>
+        </div>
+    </div>
+    <div class="picker-foot">
+        <span class="picker-status"></span>
+        <button type="button" class="btn-secondary picker-add-all" disabled>{% trans "Add whole group / all found" %}</button>
+        <button type="button" class="btn picker-add">{% trans "Add selected" %} (<span class="picker-count">0</span>)</button>
+        <button type="button" class="btn-secondary picker-done">{% trans "Done" %}</button>
+    </div>
+</dialog>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+<script>
+(function () {
+    const removeLabel = "{{ _('Remove')|escapejs }}";
+    const addedLabel = "{{ _('Added')|escapejs }}";
+    const groupAllUrl = "{% url 'picker_granit_all' %}";
+    const body = document.getElementById("selected-body");
+    const emptyRow = document.getElementById("selected-empty");
+    const counter = document.getElementById("selected-count");
+
+    function refreshCount() {
+        const n = body.querySelectorAll("tr.sel").length + body.querySelectorAll("tr.sel-group").length;
+        counter.textContent = n;
+        emptyRow.hidden = n > 0;
+    }
+
+    function addItem(item) {
+        if (!item.pk || body.querySelector('tr.sel[data-pk="' + item.pk + '"]')) return false;
+        const tr = document.createElement("tr");
+        tr.className = "sel";
+        tr.dataset.pk = item.pk;
+        for (const [text, cls] of [[item.name, ""], [item.granit_id, "num"], [item.site || "", ""]]) {
+            const td = document.createElement("td");
+            if (cls) td.className = cls;
+            td.textContent = text;
+            tr.appendChild(td);
+        }
+        const td = document.createElement("td");
+        td.className = "num";
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn-link sel-remove";
+        btn.textContent = removeLabel;
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "product_ids";
+        input.value = item.pk;
+        td.append(btn, input);
+        tr.appendChild(td);
+        body.insertBefore(tr, emptyRow);
+        return true;
+    }
+
+    function addItems(items) {
+        let added = 0;
+        for (const item of items) if (addItem(item)) added += 1;
+        refreshCount();
+        return added;
+    }
+
+    body.addEventListener("click", async function (e) {
+        const row = e.target.closest("tr");
+        if (e.target.classList.contains("sel-remove")) {
+            row.remove();
+            refreshCount();
+        } else if (e.target.classList.contains("group-expand")) {
+            const params = new URLSearchParams({group: row.dataset.group, direct: "1", inactive: "1"});
+            const resp = await fetch(groupAllUrl + "?" + params);
+            const data = await resp.json();
+            addItems(data.items);
+            row.remove();
+            refreshCount();
+        }
+    });
+
+    document.getElementById("selected-clear").addEventListener("click", function () {
+        body.querySelectorAll("tr.sel, tr.sel-group").forEach(function (tr) { tr.remove(); });
+        refreshCount();
+    });
+
+    document.querySelectorAll("[data-open]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            document.getElementById(btn.dataset.open).showModal();
+        });
+    });
+
+    document.querySelectorAll("dialog.picker").forEach(function (dlg) {
+        const filter = dlg.querySelector(".picker-filter");
+        const groupInput = filter.querySelector('input[type=hidden]');
+        const search = filter.querySelector('input[name=q]');
+        const status = dlg.querySelector(".picker-status");
+        const addAll = dlg.querySelector(".picker-add-all");
+        const countEl = dlg.querySelector(".picker-count");
+
+        function updateCount() {
+            countEl.textContent = dlg.querySelectorAll(".picker-results input.pick:checked").length;
+            addAll.disabled = !(groupInput.value || search.value.trim());
+        }
+        function flash(n) {
+            status.textContent = addedLabel + ": " + n;
+            setTimeout(function () { status.textContent = ""; }, 2500);
+        }
+
+        dlg.addEventListener("click", function (e) {
+            const t = e.target;
+            if (t.classList.contains("picker-close") || t.classList.contains("picker-done")) {
+                dlg.close();
+            } else if (t.classList.contains("tree-toggle")) {
+                t.closest("li").classList.toggle("open");
+            } else if (t.closest(".tree-node")) {
+                const node = t.closest(".tree-node");
+                dlg.querySelectorAll(".tree-node.active").forEach(function (n) { n.classList.remove("active"); });
+                node.classList.add("active");
+                groupInput.value = node.dataset.group;
+                const li = node.closest("li");
+                if (li && !li.classList.contains("open")) {
+                    const toggle = li.querySelector(":scope > .tree-toggle");
+                    if (toggle) toggle.click();
+                }
+                htmx.trigger(search, "refresh");
+                updateCount();
+            } else if (t.closest(".picker-table tr") && !t.closest("input, button, a")) {
+                const cb = t.closest("tr").querySelector("input.pick:not(:disabled)");
+                if (cb) {
+                    cb.checked = !cb.checked;
+                    updateCount();
+                }
+            } else if (t.closest(".picker-add")) {
+                const items = Array.from(dlg.querySelectorAll(".picker-results input.pick:checked")).map(function (cb) {
+                    cb.checked = false;
+                    return {pk: cb.value, name: cb.dataset.name, granit_id: cb.dataset.granit, site: cb.dataset.site};
+                });
+                flash(addItems(items));
+                dlg.querySelectorAll(".check-all").forEach(function (c) { c.checked = false; });
+                updateCount();
+            }
+        });
+
+        addAll.addEventListener("click", async function () {
+            addAll.disabled = true;
+            const resp = await fetch(dlg.dataset.allUrl + "?" + new URLSearchParams(new FormData(filter)));
+            const data = await resp.json();
+            flash(addItems(data.items));
+            updateCount();
+        });
+
+        dlg.addEventListener("change", function (e) {
+            if (e.target.classList.contains("check-all")) {
+                dlg.querySelectorAll(".picker-results input.pick:not(:disabled)").forEach(function (cb) {
+                    cb.checked = e.target.checked;
+                });
+            }
+            updateCount();
+        });
+        search.addEventListener("input", updateCount);
+        dlg.addEventListener("htmx:afterSwap", updateCount);
+    });
+
+    refreshCount();
+})();
+</script>
 {% endblock %}

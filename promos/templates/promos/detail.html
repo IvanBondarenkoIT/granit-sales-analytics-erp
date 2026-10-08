@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n numbers %}
 
 {% block title %}{{ promo.name }}{% endblock %}
 
@@ -16,22 +16,89 @@
         .hint { color: #555; margin: 0.75rem 0; }
         .btn { background: #667eea; color: #fff; border: 0; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
         .targets { background: #fff; padding: 1rem; margin: 1rem 0; }
+        .muted { color: #888; font-size: 0.85rem; }
+        .prices { overflow-x: auto; }
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'promo_list' %}">{% trans "All promos" %}</a></p>
+    <p><a href="{% url 'promo_list' %}">{% trans "All promos" %}</a> · <a href="{% url 'promo_edit' promo.pk %}">{% trans "Edit promo" %}</a></p>
     <h1>{{ promo.name }}</h1>
     <p>
         {% trans "Period" %}: <strong>{{ promo.start_date }} — {{ promo.end_date }}</strong>
         · {% trans "Baseline days" %}: {{ promo.pre_period_days }}
+        {% if promo.promo_type %} · {{ promo.promo_type }}{% endif %}
     </p>
+    {% if promo.format or promo.channels %}
+    <p class="hint">
+        {% if promo.format %}{% trans "Format" %}: {{ promo.format }}{% endif %}
+        {% if promo.format and promo.channels %} · {% endif %}
+        {% if promo.channels %}{% trans "Channels / locations" %}: {{ promo.channels }}{% endif %}
+    </p>
+    {% endif %}
     {% if promo.notes %}<p class="hint">{{ promo.notes }}</p>{% endif %}
     <div class="targets">
         <strong>{% trans "Targets" %}</strong>
         <p>{{ targets|join:", " }}</p>
         <p><a href="{% url 'sales_explorer' %}?{{ explorer_query }}">{% trans "Open in Sales Explorer" %}</a></p>
     </div>
+
+    {% if price_rows %}
+    <h2>{% trans "Prices, stock, earnings" %}</h2>
+    <p class="hint">{% trans "Costs and stock from Granit. Site prices are the promo list; sold average from Granit is shown in parentheses when it differs by more than one percent." %}</p>
+    <div class="prices">
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans "Product" %}</th>
+                <th class="num">{% trans "Last cost" %}</th>
+                <th class="num">{% trans "Avg cost 90d" %}</th>
+                <th class="num">{% trans "Retail price" %}</th>
+                <th class="num">{% trans "Sale price" %}</th>
+                <th class="num">{% trans "Margin" %}</th>
+                <th class="num">{% trans "Stock" %}</th>
+                <th class="num">{% trans "Est. earnings" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in price_rows %}
+            <tr>
+                <td>
+                    {{ row.product.name }}
+                    {% if row.site_name and row.site_name != row.product.name %}
+                    <div class="muted">{{ row.site_name }}</div>
+                    {% elif not row.has_site_link %}
+                    <div class="muted">{% trans "no site link" %}</div>
+                    {% endif %}
+                </td>
+                <td class="num">{% if row.last_cost is not None %}{{ row.last_cost }}{% else %}—{% endif %}</td>
+                <td class="num">{% if row.avg_cost_90d is not None %}{{ row.avg_cost_90d }}{% else %}—{% endif %}</td>
+                <td class="num">
+                    {% if row.retail_price is not None %}{{ row.retail_price }}{% else %}—{% endif %}
+                    {% if row.retail_compare is not None %}<span class="muted"> ({{ row.retail_compare }})</span>{% endif %}
+                </td>
+                <td class="num">
+                    {% if row.sale_price is not None %}{{ row.sale_price }}{% else %}—{% endif %}
+                    {% if row.sale_compare is not None %}<span class="muted"> ({{ row.sale_compare }})</span>{% endif %}
+                </td>
+                <td class="num">{% if row.margin_pct is not None %}{{ row.margin_pct }}%{% else %}—{% endif %}</td>
+                <td class="num">{{ row.stock_qty|qty }}</td>
+                <td class="num">{% if row.estimated_earnings is not None %}{{ row.estimated_earnings }}{% else %}—{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% if earnings_total is not None %}
+        <tfoot>
+            <tr>
+                <td colspan="7">{% trans "Total est. earnings" %}</td>
+                <td class="num">{{ earnings_total }}</td>
+            </tr>
+        </tfoot>
+        {% endif %}
+    </table>
+    </div>
+    {% endif %}
+
     <form method="post" action="{% url 'promo_reanalyze' promo.pk %}" style="margin: 1rem 0; display: flex; gap: 0.75rem; align-items: center;">
         {% csrf_token %}
         <button class="btn" type="submit">{% trans "Recalculate" %}</button>

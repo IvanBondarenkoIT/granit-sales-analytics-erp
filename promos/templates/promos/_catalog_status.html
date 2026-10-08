@@ -1,0 +1,21 @@
+{% load i18n tz %}
+<div class="catalog-status">
+    <span>
+        {% if catalog.running %}
+            {% trans "Catalog sync is running..." %}
+        {% elif catalog.run %}
+            {% trans "Catalog synced:" %} {{ catalog.run.completed_at|default:catalog.run.started_at|timezone:"Asia/Tbilisi"|date:"d.m.Y H:i" }}
+            {% if catalog.run.status == "failed" %}<span class="warn" title="{{ catalog.run.error_message }}">({% trans "with errors" %})</span>{% endif %}
+        {% else %}
+            {% trans "Catalog not synced yet." %}
+        {% endif %}
+        · {% trans "site products" %}: {{ catalog.site_products }} · {% trans "links" %}: {{ catalog.mappings }}
+    </span>
+    {% if user.is_staff and not catalog.running %}
+    <form method="post" action="{% url 'promo_sync_catalog' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button type="submit" class="btn-link">{% trans "Sync now" %}</button>
+    </form>
+    {% endif %}
+</div>

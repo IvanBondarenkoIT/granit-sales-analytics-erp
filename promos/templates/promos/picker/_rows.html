@@ -1,0 +1,52 @@
+{% load i18n %}
+{% if hint %}
+<p class="muted">{% trans "Pick a group on the left or type to search." %}</p>
+{% else %}
+{% if not append %}
+<div class="rows-head">
+    <label><input type="checkbox" class="check-all"> {% trans "Select all shown" %}</label>
+    <span class="muted">{% if group %}{{ group.name }} · {% endif %}{% trans "Found" %}: {{ total }}</span>
+</div>
+<table class="picker-table"><tbody>
+{% endif %}
+{% for item in items %}
+<tr{% if not item.pk %} class="disabled"{% endif %}>
+    <td class="check">
+        <input type="checkbox" class="pick" aria-label="{{ item.site|default:item.name }}"
+               {% if item.pk %}value="{{ item.pk }}" data-name="{{ item.name }}" data-granit="{{ item.granit_id }}" data-site="{{ item.site }}"{% else %}disabled{% endif %}>
+    </td>
+    {% if kind == "site" %}
+    <td>
+        {{ item.site }}
+        <div class="muted">{% if item.pk %}Granit #{{ item.granit_id }} · {{ item.name }}{% else %}{% trans "no Granit link" %}{% endif %}</div>
+    </td>
+    <td class="num">
+        {% if item.site_price is not None %}{{ item.site_price }}{% endif %}
+        {% if item.regular_price and item.site_price != item.regular_price %}<div class="muted"><s>{{ item.regular_price }}</s></div>{% endif %}
+        {% if not item.in_stock %}<div class="muted">{% trans "out of stock" %}</div>{% endif %}
+    </td>
+    {% else %}
+    <td>
+        {{ item.name }}
+        <div class="muted">#{{ item.granit_id }}{% if item.site %} · {% trans "site" %}: {{ item.site }}{% endif %}</div>
+    </td>
+    {% endif %}
+</tr>
+{% empty %}
+<tr><td colspan="3" class="muted">{% trans "Nothing found." %}</td></tr>
+{% endfor %}
+{% if next_offset is not None %}
+<tr class="load-more">
+    <td colspan="3">
+        <button type="button" class="btn-link"
+                hx-get="{{ request.path }}" hx-vals='{"offset": "{{ next_offset }}"}'
+                hx-include="#{{ kind }}-filter" hx-target="closest tr" hx-swap="outerHTML">
+            {% trans "Show more" %} ({{ next_offset }} / {{ total }})
+        </button>
+    </td>
+</tr>
+{% endif %}
+{% if not append %}
+</tbody></table>
+{% endif %}
+{% endif %}

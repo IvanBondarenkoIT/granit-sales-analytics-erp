@@ -1,7 +1,7 @@
 from datetime import date
 
 from django import forms
-from django.urls import reverse
+from django.db.models import Count
 from django.utils.translation import gettext_lazy as _
 
 from core.models import Product, ProductGroup
@@ -15,6 +15,9 @@ class PromoForm(forms.Form):
         required=False,
         help_text=_("Used when the file has no name column, or for a manual promo."),
     )
+    promo_type = forms.CharField(label=_("Type"), max_length=120, required=False)
+    format = forms.CharField(label=_("Format"), max_length=200, required=False)
+    channels = forms.CharField(label=_("Channels / locations"), max_length=300, required=False)
     start_date = forms.DateField(
         label=_("Promo start"),
         required=False,
@@ -32,7 +35,7 @@ class PromoForm(forms.Form):
         min_value=1,
         max_value=365,
         initial=14,
-        help_text=_("Median of daily sales in this window is the pre-period baseline."),
+        help_text=_("Average daily sales in this window (days without sales count as zero) is the pre-period baseline."),
     )
     excel_file = forms.FileField(
         label=_("Promo table (Excel)"),
@@ -50,51 +53,80 @@ class PromoForm(forms.Form):
         required=False,
         widget=forms.Textarea(attrs={"rows": 2}),
     )
-    groups = forms.ModelMultipleChoiceField(
-        label=_("Product groups"),
-        queryset=ProductGroup.objects.order_by("name"),
+    product_ids = forms.ModelMultipleChoiceField(
+        label=_("Promo products"),
+        queryset=Product.objects.all(),
         required=False,
-        widget=forms.SelectMultiple(attrs={"size": 8}),
+        widget=forms.MultipleHiddenInput,
     )
-    products = forms.ModelMultipleChoiceField(
-        label=_("Products"),
-        queryset=Product.objects.none(),
+    group_ids = forms.ModelMultipleChoiceField(
+        label=_("Product groups"),
+        queryset=ProductGroup.objects.all(),
         required=False,
-        widget=forms.SelectMultiple(attrs={"size": 8}),
-        help_text=_("Optional if you upload a file. The list narrows to the selected groups."),
+        widget=forms.MultipleHiddenInput,
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, promo=None, **kwargs):
+        self.promo = promo
+        if promo is not None:
+            initial = kwargs.setdefault("initial", {})
+            rows = list(promo.promo_products.all())
+            initial.update(
+                {
+                    "name": promo.name,
+                    "promo_type": promo.promo_type,
+                    "format": promo.format,
+                    "channels": promo.channels,
+                    "start_date": promo.start_date,
+                    "end_date": promo.end_date,
+                    "pre_period_days": promo.pre_period_days,
+                    "notes": promo.notes,
+                    "product_ids": [r.product_id for r in rows if r.product_id],
+                    "group_ids": [r.product_group_id for r in rows if r.product_group_id],
+                }
+            )
         super().__init__(*args, **kwargs)
-        group_ids = []
-        if self.data:
-            group_ids = self.data.getlist("groups")
-        elif self.initial.get("groups"):
-            group_ids = [str(pk) for pk in self.initial["groups"]]
-        products = Product.objects.order_by("name")
-        if group_ids:
-            self.fields["products"].queryset = products.filter(group_id__in=group_ids)
+        if promo is not None:
+            del self.fields["excel_file"]
+            del self.fields["use_example_file"]
+
+    def _selected_pks(self, name: str) -> list[int]:
+        if self.is_bound:
+            raw = self.data.getlist(name)
         else:
-            self.fields["products"].queryset = Product.objects.none()
-        self.fields["groups"].widget.attrs.update(
-            {
-                "hx-get": reverse("promo_product_options"),
-                "hx-target": "#id_products",
-                "hx-swap": "outerHTML",
-                "hx-trigger": "change",
-            }
-        )
+            raw = self.initial.get(name) or []
+        out = []
+        for value in raw:
+            try:
+                out.append(int(value))
+            except (TypeError, ValueError):
+                continue
+        return list(dict.fromkeys(out))
+
+    def selected_product_items(self) -> list[dict]:
+        from promos.picker import product_items
+
+        pks = self._selected_pks("product_ids")
+        by_pk = Product.objects.in_bulk(pks)
+        return product_items(by_pk[pk] for pk in pks if pk in by_pk)
+
+    def selected_groups(self) -> list[ProductGroup]:
+        pks = self._selected_pks("group_ids")
+        groups = ProductGroup.objects.annotate(n_products=Count("products")).in_bulk(pks)
+        return [groups[pk] for pk in pks if pk in groups]
 
     def clean(self):
         cleaned = super().clean()
         start = cleaned.get("start_date")
         end = cleaned.get("end_date")
         has_file = bool(cleaned.get("excel_file") or (cleaned.get("use_example_file") and LOCAL_PROMOS_XLSX.is_file()))
-        has_targets = bool(cleaned.get("groups") or cleaned.get("products"))
+        has_targets = bool(cleaned.get("product_ids") or cleaned.get("group_ids"))
         if start and end and end < start:
             raise forms.ValidationError(_("Promo end must be on or after the start date."))
         if not has_file and not has_targets:
-            raise forms.ValidationError(_("Upload a promo table or select at least one product group or product."))
+            raise forms.ValidationError(
+                _("Upload a promo table or select at least one product group or product.")
+            )
         if not has_file:
             if not cleaned.get("name"):
                 raise forms.ValidationError(_("Enter a promo name or upload a table."))

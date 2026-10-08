@@ -235,6 +235,23 @@ docker exec granit-analytics python manage.py etl_nightly
 Cron (via hub catalog): **04:30 Asia/Tbilisi**. Command is idempotent and prints a summary to stdout (no secrets).
 
 Sales are reloaded every night from the 1st of the month two months back up to yesterday (2 Oct → from 1 Aug), so edits made in Granit to recent days are picked up. Older periods are closed for changes in Granit. Window length: `ETL_RELOAD_MONTHS` (default `2`, `0` = yesterday only). Each day is replaced as a whole, so reloads never duplicate.
+
+After sales/stock the nightly job runs the **catalog sync** (same as `sync_catalog --no-dims`, logged as `ETLRun` type `catalog`). Each step is non-fatal and skipped when its keys are unset:
+- `etl_wp_mapping` — Google Sheets tab `granit` (`wp-id` ↔ `granit_id`) → `GranitWpMapping`
+- `etl_woo_catalog` — WooCommerce categories + products → `SiteCategory`, `SiteProduct`
+- `etl_product_costs` — last arrival cost (`DGVKT.TYP=0`), 90-day average arrival cost and stock from Granit `GDDKT`
+
+Manual run (also reloads Granit products/groups):
+
+```bash
+docker exec granit-analytics python manage.py sync_catalog
+```
+
+Staff users can start the same sync from the promo pages («Синхронизировать сейчас»); it runs in a background process and refuses to start while another catalog sync is running (30 min window).
+
+Server needs the Woo/Sheets variables from `.env.example` and an image built with the current `requirements.txt` (`gspread`, `google-auth`). For Docker, prefer `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64` over a file path.
+
+Local demo without Woo/Sheets: `python manage.py seed_promo_demo`.
 ### Schema check (CI / local)
 
 ```bash
@@ -280,11 +297,13 @@ docker compose exec web python manage.py seed_supergroups
 
 Enter promotion details (SKU or group, date range). Analysis compares:
 - Daily sales during promo
-- vs. Pre-period baseline (median of N days before)
+- vs. Pre-period baseline (average daily sales over N days before; days without sales count as zero)
 - vs. Year-over-year (YoY) same period
 - Optional: Overlay forecast (from `granit-rests-pre-order` logic)
 
-**Status:** Ready (STAGE 5) — Excel table or manual SKU/group, daily actual vs pre-period median vs YoY vs seasonal forecast.
+List has **Active / Passed** tabs. Promo card shows Granit last/avg-90d cost, stock, site retail/sale prices (Granit sold average in parentheses when it differs), margin, and estimated earnings `(sale − last cost) × stock`. Website catalog picker uses Sheets mapping `wp-id` ↔ `granit_id`.
+
+**Status:** Ready (STAGE 5) — Excel table or manual SKU/group, daily actual vs pre-period average vs YoY vs seasonal forecast; price/stock control on the detail page.
 
 ## Development Stages
 

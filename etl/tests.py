@@ -4,10 +4,20 @@ from io import StringIO
 from unittest.mock import patch
 
 from django.core.management import call_command
+from django.core.management.base import CommandError
 from django.test import TestCase, override_settings
 
-from core.models import Store
-from etl.pipeline import load_sales_day, nightly_reload_range
+from core.models import SiteCategory, SiteProduct, Store
+from etl.models import ETLRun
+from etl.pipeline import (
+    catalog_sync_running,
+    last_catalog_run,
+    load_sales_day,
+    load_woo_catalog,
+    nightly_reload_range,
+    run_catalog_sync,
+)
+from etl.woo import parse_woo_category, parse_woo_product
 from etl.queries import sql_invoices_day, sql_sales_day
 from sales.models import SOURCE_INVOICE, SOURCE_RECEIPT, SaleFact
 
@@ -92,6 +102,7 @@ class NightlyReloadRangeTests(TestCase):
 
 
 class NightlyCommandTests(TestCase):
+    @patch("etl.management.commands.etl_nightly.run_catalog_sync", return_value={})
     @patch("etl.management.commands.etl_nightly.load_stock", return_value={"rows": 0})
     @patch("etl.management.commands.etl_nightly.load_sales_range", return_value={"days": 1, "rows": 0})
     @patch("etl.management.commands.etl_nightly.load_dims", return_value={})
@@ -99,6 +110,63 @@ class NightlyCommandTests(TestCase):
         "etl.management.commands.etl_nightly.nightly_reload_range",
         return_value=(date(2026, 8, 1), date(2026, 10, 2)),
     )
-    def test_reloads_whole_window(self, _range, _dims, sales, _stock):
+    def test_reloads_whole_window(self, _range, _dims, sales, _stock, catalog):
         call_command("etl_nightly", stdout=StringIO())
         sales.assert_called_once_with(date(2026, 8, 1), date(2026, 10, 2))
+        catalog.assert_called_once()
+
+
+class WooCatalogTests(TestCase):
+    def test_parse_product_and_category(self):
+        product = parse_woo_product(
+            {"id": 7, "name": "[:ge]GE[:en]Machine EN[:]", "regular_price": "100",
+             "sale_price": "", "categories": [{"id": 3}, {"id": 5}]}
+        )
+        self.assertEqual(product["name"], "Machine EN")
+        self.assertEqual(product["category_ids"], ["3", "5"])
+        self.assertIsNone(product["sale_price"])
+        category = parse_woo_category({"id": 5, "name": "Dedica", "parent": 3, "count": 2})
+        self.assertEqual(category["parent_id"], "3")
+
+    def test_load_catalog_builds_tree_and_links(self):
+        result = load_woo_catalog(
+            products=[
+                {"wp_product_id": "7", "name": "Machine", "category_ids": ["3", "5"]},
+                {"wp_product_id": "8", "name": "Beans", "category_ids": ["9"]},
+            ],
+            categories=[
+                {"wp_category_id": "3", "name": "Coffee machines", "parent_id": None},
+                {"wp_category_id": "5", "name": "Dedica", "parent_id": "3"},
+            ],
+        )
+        self.assertEqual(result, {"rows": 2, "categories": 2, "links": 2})
+        child = SiteCategory.objects.get(wp_category_id="5")
+        self.assertEqual(child.parent.wp_category_id, "3")
+        machine = SiteProduct.objects.get(wp_product_id="7")
+        self.assertEqual(machine.categories.count(), 2)
+
+
+class CatalogSyncTests(TestCase):
+    def test_steps_run_even_if_one_fails(self):
+        def broken():
+            raise RuntimeError("sheets down")
+
+        details = run_catalog_sync(
+            loaders={
+                "wp_mapping": broken,
+                "woo_catalog": lambda: {"rows": 3},
+                "product_costs": lambda: {"rows": 10},
+            }
+        )
+        self.assertIn("error", details["wp_mapping"])
+        self.assertEqual(details["woo_catalog"], {"rows": 3})
+        run = last_catalog_run()
+        self.assertEqual(run.status, "failed")
+        self.assertEqual(run.records_processed, 13)
+        self.assertFalse(catalog_sync_running())
+
+    def test_running_detection(self):
+        ETLRun.objects.create(etl_type="catalog", status="running")
+        self.assertTrue(catalog_sync_running())
+        with self.assertRaises(CommandError):
+            call_command("sync_catalog", stdout=StringIO())

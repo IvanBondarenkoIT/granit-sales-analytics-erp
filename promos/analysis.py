@@ -110,6 +110,12 @@ def _seasonal_index(weekly_totals: dict[tuple[int, int], Decimal], iso_week: int
     return idx
 
 
+def _mean2(values: list[Decimal]) -> Decimal | None:
+    if not values:
+        return None
+    return (sum(values, Decimal("0")) / len(values)).quantize(Decimal("0.01"))
+
+
 def analyze_promo(promo: Promo) -> int:
     product_ids = target_product_ids(promo)
     PromoAnalysis.objects.filter(promo=promo).delete()
@@ -131,9 +137,9 @@ def analyze_promo(promo: Promo) -> int:
     daily = _daily_totals(product_ids, fetch_from, fetch_to)
 
     pre_values = _window_values(daily, pre_from, pre_to, wh_min, wh_max)
-    pre_median = median(pre_values) if pre_values else None
+    pre_mean = _mean2(pre_values)
     yoy_values = _window_values(daily, yoy_from, yoy_to, wh_min, wh_max)
-    yoy_median = median(yoy_values) if yoy_values else None
+    yoy_mean = _mean2(yoy_values)
     recent_values = _window_values(daily, recent_from, pre_to, wh_min, wh_max)
     recent_mean = mean(recent_values) if recent_values else Decimal("0")
 
@@ -152,8 +158,8 @@ def analyze_promo(promo: Promo) -> int:
                 promo=promo,
                 analysis_date=day,
                 actual_sales=daily.get(day, Decimal("0")),
-                baseline_pre_period=pre_median,
-                baseline_yoy=yoy_median,
+                baseline_pre_period=pre_mean,
+                baseline_yoy=yoy_mean,
                 forecast_value=forecast,
             )
         )

@@ -167,6 +167,17 @@ ETL_PRODUCT_PARAM_ID = int(os.getenv("ETL_PRODUCT_PARAM_ID", "2"))
 ETL_RELOAD_MONTHS = int(os.getenv("ETL_RELOAD_MONTHS", "2"))
 COMPANY_LEDGER_STORE_ID = 0
 
+GOOGLE_SHEETS_URL = os.getenv("GOOGLE_SHEETS_URL", "").strip()
+GOOGLE_SHEETS_TAB_GRANIT = os.getenv("GOOGLE_SHEETS_TAB_GRANIT", "granit").strip() or "granit"
+GOOGLE_SERVICE_ACCOUNT_JSON_PATH = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON_PATH", "").strip()
+GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON_BASE64", "").strip()
+
+WOO_API_URL = os.getenv("WOO_API_URL", "").strip()
+WOO_API_KEY = os.getenv("WOO_API_KEY", "").strip()
+WOO_API_SECRET = os.getenv("WOO_API_SECRET", "").strip()
+WOO_API_TIMEOUT = int(os.getenv("WOO_API_TIMEOUT", "60"))
+WOO_API_LANG = os.getenv("WOO_API_LANG", "en").strip()
+
 MAILERS = {
     "default": {
         "BACKEND": "django.core.mail.backends.console.EmailBackend",

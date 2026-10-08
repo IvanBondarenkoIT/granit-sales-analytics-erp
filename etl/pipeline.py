@@ -12,20 +12,26 @@ from django.utils import timezone
 
 from core.models import (
     Client,
+    GranitWpMapping,
     Product,
+    ProductCostSnapshot,
     ProductGroup,
     ProductParameter,
     ProductParameterValue,
+    SiteCategory,
+    SiteProduct,
     Store,
 )
 from etl.models import ETLRun, ETLWatermark
 from etl.proxy import query_rows
 from etl.queries import (
     STOCK_CHUNK,
+    sql_avg_cost_90d_chunk,
     sql_clients,
     sql_clients_by_cards,
     sql_clients_by_ids,
     sql_invoices_day,
+    sql_last_cost_chunk,
     sql_product_groups,
     sql_product_parameters,
     sql_products,
@@ -540,3 +546,198 @@ def default_backfill_range() -> tuple[date, date]:
     yesterday = date.today() - timedelta(days=1)
     start = yesterday - timedelta(days=364)
     return start, yesterday + timedelta(days=1)
+
+
+def load_wp_mapping(pairs=None) -> dict[str, int]:
+    """Replace GranitWpMapping from Sheets pairs or provided list."""
+    from etl.sheets import fetch_granit_mapping_rows, parse_granit_sheet_rows, sheets_configured
+
+    if pairs is None:
+        if not sheets_configured():
+            return {"skipped": 1, "rows": 0}
+        pairs = parse_granit_sheet_rows(fetch_granit_mapping_rows())
+    rows = [
+        GranitWpMapping(wp_product_id=p.wp_product_id, granit_id=p.granit_id)
+        for p in pairs
+    ]
+    with transaction.atomic():
+        GranitWpMapping.objects.all().delete()
+        GranitWpMapping.objects.bulk_create(rows, batch_size=1000)
+    set_watermark("wp_mapping", date.today())
+    return {"rows": len(rows)}
+
+
+def load_woo_catalog(products=None, categories=None) -> dict[str, int]:
+    """Replace SiteCategory + SiteProduct (and their links) from Woo API or provided dicts."""
+    from etl.woo import fetch_woo_categories, fetch_woo_products, woo_configured
+
+    if products is None:
+        if not woo_configured():
+            return {"skipped": 1, "rows": 0}
+        categories = fetch_woo_categories()
+        products = fetch_woo_products()
+    categories = categories or []
+
+    with transaction.atomic():
+        SiteProduct.categories.through.objects.all().delete()
+        SiteProduct.objects.all().delete()
+        SiteCategory.objects.all().delete()
+
+        cat_rows = SiteCategory.objects.bulk_create(
+            [
+                SiteCategory(
+                    wp_category_id=str(c["wp_category_id"]),
+                    name=c.get("name") or f"#{c['wp_category_id']}",
+                    slug=c.get("slug") or "",
+                    count=int(c.get("count") or 0),
+                )
+                for c in categories
+            ],
+            batch_size=500,
+        )
+        cat_by_wp = {c.wp_category_id: c for c in cat_rows}
+        with_parent = []
+        for c in categories:
+            parent = cat_by_wp.get(str(c.get("parent_id") or ""))
+            if parent is not None:
+                cat = cat_by_wp[str(c["wp_category_id"])]
+                cat.parent = parent
+                with_parent.append(cat)
+        SiteCategory.objects.bulk_update(with_parent, ["parent"], batch_size=500)
+
+        product_rows = SiteProduct.objects.bulk_create(
+            [
+                SiteProduct(
+                    wp_product_id=str(p["wp_product_id"]),
+                    name=p.get("name") or f"#{p['wp_product_id']}",
+                    sku=p.get("sku") or "",
+                    url=p.get("url") or "",
+                    regular_price=p.get("regular_price"),
+                    sale_price=p.get("sale_price"),
+                    in_stock=bool(p.get("in_stock", True)),
+                )
+                for p in products
+            ],
+            batch_size=500,
+        )
+        product_by_wp = {p.wp_product_id: p for p in product_rows}
+        Link = SiteProduct.categories.through
+        links = []
+        for p in products:
+            site = product_by_wp.get(str(p["wp_product_id"]))
+            for cid in p.get("category_ids") or []:
+                cat = cat_by_wp.get(str(cid))
+                if site is not None and cat is not None:
+                    links.append(Link(siteproduct_id=site.pk, sitecategory_id=cat.pk))
+        Link.objects.bulk_create(links, batch_size=1000, ignore_conflicts=True)
+    set_watermark("woo_catalog", date.today())
+    return {"rows": len(product_rows), "categories": len(cat_rows), "links": len(links)}
+
+
+def load_product_costs(snapshot_date: date | None = None) -> dict[str, int]:
+    """Last cost + 90d avg + stock for all known Granit products."""
+    snapshot_date = snapshot_date or (date.today() - timedelta(days=1))
+    avg_from = snapshot_date - timedelta(days=89)
+    avg_to = snapshot_date + timedelta(days=1)
+    product_ids = list(Product.objects.values_list("granit_id", flat=True))
+    if not product_ids:
+        return {"rows": 0}
+
+    last_by: dict[int, tuple[Decimal | None, Decimal]] = {}
+    avg_by: dict[int, Decimal] = {}
+    for i in range(0, len(product_ids), STOCK_CHUNK):
+        chunk = product_ids[i : i + STOCK_CHUNK]
+        sql, params = sql_last_cost_chunk(chunk)
+        for row in query_rows(sql, params):
+            pid = _as_int(row.get("PRODUCT_ID"))
+            if pid is None:
+                continue
+            raw_cost = row.get("LAST_COST")
+            last_by[pid] = (
+                _as_decimal(raw_cost) if raw_cost not in (None, "") else None,
+                _as_decimal(row.get("STOCK_QTY")),
+            )
+        sql, params = sql_avg_cost_90d_chunk(chunk, avg_from, avg_to)
+        for row in query_rows(sql, params):
+            pid = _as_int(row.get("PRODUCT_ID"))
+            if pid is None:
+                continue
+            if row.get("AVG_COST") not in (None, ""):
+                avg_by[pid] = _as_decimal(row.get("AVG_COST"))
+
+    products = {p.granit_id: p for p in Product.objects.filter(granit_id__in=product_ids)}
+    snapshots: list[ProductCostSnapshot] = []
+    for gid, product in products.items():
+        last_cost, stock_qty = last_by.get(gid, (None, Decimal("0")))
+        snapshots.append(
+            ProductCostSnapshot(
+                product=product,
+                snapshot_date=snapshot_date,
+                last_cost=last_cost,
+                avg_cost_90d=avg_by.get(gid),
+                stock_qty=stock_qty,
+            )
+        )
+    with transaction.atomic():
+        ProductCostSnapshot.objects.filter(snapshot_date=snapshot_date).delete()
+        ProductCostSnapshot.objects.bulk_create(snapshots, batch_size=1000)
+    set_watermark("product_costs", snapshot_date)
+    return {"rows": len(snapshots)}
+
+
+CATALOG_RUN_TYPE = "catalog"
+CATALOG_RUN_STALE = timedelta(minutes=30)
+
+
+def catalog_sync_running() -> bool:
+    return ETLRun.objects.filter(
+        etl_type=CATALOG_RUN_TYPE,
+        status="running",
+        started_at__gte=timezone.now() - CATALOG_RUN_STALE,
+    ).exists()
+
+
+def last_catalog_run() -> ETLRun | None:
+    return ETLRun.objects.filter(etl_type=CATALOG_RUN_TYPE).order_by("-started_at").first()
+
+
+def run_catalog_sync(
+    *,
+    include_dims: bool = False,
+    snapshot_date: date | None = None,
+    loaders: dict | None = None,
+    run: ETLRun | None = None,
+) -> dict:
+    """Granit dims (optional) + Sheets mapping + Woo catalog + Granit costs; one ETLRun.
+
+    Each step is independent: a failure is recorded in details and the rest still run.
+    """
+    snapshot_date = snapshot_date or (date.today() - timedelta(days=1))
+    steps = [
+        ("wp_mapping", load_wp_mapping),
+        ("woo_catalog", load_woo_catalog),
+        ("product_costs", lambda: load_product_costs(snapshot_date)),
+    ]
+    if include_dims:
+        steps.insert(0, ("dims", load_dims))
+    if loaders:
+        steps = [(key, loaders.get(key, fn)) for key, fn in steps]
+
+    run = run or start_run(CATALOG_RUN_TYPE)
+    details: dict = {"snapshot_date": str(snapshot_date)}
+    errors = []
+    for key, loader in steps:
+        try:
+            details[key] = loader()
+        except Exception as exc:  # noqa: BLE001 - keep the remaining steps running
+            details[key] = {"error": str(exc)[:500]}
+            errors.append(f"{key}: {exc}")
+    details["site_products"] = SiteProduct.objects.count()
+    details["mappings"] = GranitWpMapping.objects.count()
+    rows = sum(
+        int(details[key].get("rows", 0))
+        for key, _ in steps
+        if isinstance(details.get(key), dict)
+    )
+    finish_run(run, inserted=rows, processed=rows, error="; ".join(errors), details=details)
+    return details

@@ -283,8 +283,12 @@ msgstr "The end date is included. Fills empty end_date cells in the file."
 msgid "Baseline days before promo"
 msgstr "Baseline days before promo"
 
-msgid "Median of daily sales in this window is the pre-period baseline."
-msgstr "Median of daily sales in this window is the pre-period baseline."
+msgid ""
+"Average daily sales in this window (days without sales count as zero) is the "
+"pre-period baseline."
+msgstr ""
+"Average daily sales in this window (days without sales count as zero) is the "
+"pre-period baseline."
 
 msgid "Promo table (Excel)"
 msgstr "Promo table (Excel)"
@@ -833,6 +837,207 @@ msgstr "Matrix of super-groups × stores; edit shared membership"
 
 msgid "Stage 4b — Local"
 msgstr "Stage 4b — Local"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Passed"
+msgstr "Passed"
+
+msgid "Est. earnings"
+msgstr "Est. earnings"
+
+msgid "SKU"
+msgstr "SKU"
+
+msgid "No active promos."
+msgstr "No active promos."
+
+msgid "No passed promos."
+msgstr "No passed promos."
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Format"
+msgstr "Format"
+
+msgid "Channels / locations"
+msgstr "Channels / locations"
+
+msgid "Products (Granit)"
+msgstr "Products (Granit)"
+
+msgid "Products from website"
+msgstr "Products from website"
+
+msgid "Search the website catalog; only items linked to Granit can be saved."
+msgstr "Search the website catalog; only items linked to Granit can be saved."
+
+msgid "Search website products"
+msgstr "Search website products"
+
+msgid "no Granit link"
+msgstr "no Granit link"
+
+msgid "No website products match."
+msgstr "No website products match."
+
+msgid "Type to search the website catalog."
+msgstr "Type to search the website catalog."
+
+msgid "Prices, stock, earnings"
+msgstr "Prices, stock, earnings"
+
+msgid "Costs and stock from Granit. Site prices are the promo list; sold average from Granit is shown in parentheses when it differs by more than one percent."
+msgstr "Costs and stock from Granit. Site prices are the promo list; sold average from Granit is shown in parentheses when it differs by more than one percent."
+
+msgid "Last cost"
+msgstr "Last cost"
+
+msgid "Avg cost 90d"
+msgstr "Avg cost 90d"
+
+msgid "Retail price"
+msgstr "Retail price"
+
+msgid "Sale price"
+msgstr "Sale price"
+
+msgid "Margin"
+msgstr "Margin"
+
+msgid "Stock"
+msgstr "Stock"
+
+msgid "Total est. earnings"
+msgstr "Total est. earnings"
+
+msgid "no site link"
+msgstr "no site link"
+
+msgid "Catalog sync is already running."
+msgstr "Catalog sync is already running."
+
+msgid "Catalog sync started. Refresh the page in a few minutes."
+msgstr "Catalog sync started. Refresh the page in a few minutes."
+
+msgid "Catalog sync is running..."
+msgstr "Catalog sync is running..."
+
+msgid "Catalog synced:"
+msgstr "Catalog synced:"
+
+msgid "with errors"
+msgstr "with errors"
+
+msgid "Catalog not synced yet."
+msgstr "Catalog not synced yet."
+
+msgid "site products"
+msgstr "site products"
+
+msgid "links"
+msgstr "links"
+
+msgid "Sync now"
+msgstr "Sync now"
+
+msgid "Expand"
+msgstr "Expand"
+
+msgid "No groups."
+msgstr "No groups."
+
+msgid "No website categories yet. Run the catalog sync."
+msgstr "No website categories yet. Run the catalog sync."
+
+msgid "Pick a group on the left or type to search."
+msgstr "Pick a group on the left or type to search."
+
+msgid "Select all shown"
+msgstr "Select all shown"
+
+msgid "Found"
+msgstr "Found"
+
+msgid "out of stock"
+msgstr "out of stock"
+
+msgid "site"
+msgstr "site"
+
+msgid "Nothing found."
+msgstr "Nothing found."
+
+msgid "Show more"
+msgstr "Show more"
+
+msgid "Promo products"
+msgstr "Promo products"
+
+msgid "Edit promo"
+msgstr "Edit promo"
+
+msgid "Back to promo"
+msgstr "Back to promo"
+
+msgid "Add from Granit"
+msgstr "Add from Granit"
+
+msgid "Add from website"
+msgstr "Add from website"
+
+msgid "Clear all"
+msgstr "Clear all"
+
+msgid "Product (Granit)"
+msgstr "Product (Granit)"
+
+msgid "On website"
+msgstr "On website"
+
+msgid "whole group"
+msgstr "whole group"
+
+msgid "Expand into products"
+msgstr "Expand into products"
+
+msgid "No products yet. Use the buttons above to add from Granit or from the website."
+msgstr "No products yet. Use the buttons above to add from Granit or from the website."
+
+msgid "Import from file (Excel)"
+msgstr "Import from file (Excel)"
+
+msgid "Products from Granit"
+msgstr "Products from Granit"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "Search by name or Granit ID"
+msgstr "Search by name or Granit ID"
+
+msgid "show inactive"
+msgstr "show inactive"
+
+msgid "Add whole group / all found"
+msgstr "Add whole group / all found"
+
+msgid "Add selected"
+msgstr "Add selected"
+
+msgid "Done"
+msgstr "Done"
+
+msgid "Only products linked to Granit can be added."
+msgstr "Only products linked to Granit can be added."
+
+msgid "All categories"
+msgstr "All categories"
+
+msgid "Added"
+msgstr "Added"
 
 #~ msgid "Stage 3 — Pending"
 #~ msgstr "Stage 3 — Pending"

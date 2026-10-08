@@ -4,15 +4,22 @@ from .models import Promo, PromoProduct, PromoAnalysis
 
 @admin.register(Promo)
 class PromoAdmin(admin.ModelAdmin):
-    list_display = ['name', 'start_date', 'end_date', 'pre_period_days', 'created_at']
-    search_fields = ['name']
-    date_hierarchy = 'start_date'
-    ordering = ['-start_date']
+    list_display = [
+        "name",
+        "start_date",
+        "end_date",
+        "promo_type",
+        "pre_period_days",
+        "created_at",
+    ]
+    search_fields = ["name", "promo_type", "channels"]
+    date_hierarchy = "start_date"
+    ordering = ["-start_date"]
 
 
 @admin.register(PromoProduct)
 class PromoProductAdmin(admin.ModelAdmin):
-    list_display = ['promo', 'product', 'product_group']
+    list_display = ["promo", "product", "product_group", "manual_sale_price"]
     list_filter = ['promo']
     search_fields = ['product__name', 'product_group__name']
     ordering = ['promo']

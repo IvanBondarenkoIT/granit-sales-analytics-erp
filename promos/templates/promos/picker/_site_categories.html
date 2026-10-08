@@ -1,0 +1,14 @@
+{% load i18n %}
+{% for c in categories %}
+<li>
+    {% if c.n_children %}
+    <button type="button" class="tree-toggle" aria-label="{% trans 'Expand' %}"
+            hx-get="{% url 'picker_site_categories' %}?parent={{ c.pk }}"
+            hx-target="next .tree-children" hx-trigger="click once">▸</button>
+    {% else %}<span class="tree-spacer"></span>{% endif %}
+    <button type="button" class="tree-node" data-group="{{ c.pk }}">{{ c.name }}{% if c.count %} <span class="muted">({{ c.count }})</span>{% endif %}</button>
+    <ul class="tree-children"></ul>
+</li>
+{% empty %}
+<li class="muted">{% trans "No website categories yet. Run the catalog sync." %}</li>
+{% endfor %}

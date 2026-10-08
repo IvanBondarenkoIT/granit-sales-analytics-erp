@@ -138,3 +138,50 @@ def sql_stock_chunk(ids: list[int]) -> tuple[str, list[int]]:
         GROUP BY K.GDSKEY
     """
     return sql, ids
+
+
+def sql_last_cost_chunk(ids: list[int]) -> tuple[str, list[int]]:
+    """Last incoming price: newest arrival card (DGVKT.TYP=0), else newest card with a price.
+
+    GDDKT.QUANT is the remaining batch quantity, so sold-out batches still carry the cost.
+    """
+    placeholders = ",".join(["?"] * len(ids))
+    sql = f"""
+        SELECT g.ID AS PRODUCT_ID,
+               CAST(COALESCE(
+                   (SELECT FIRST 1 d2.PRICE
+                    FROM GDDKT d2
+                    JOIN DGVKT k2 ON k2.ID = d2.DGVKEY
+                    WHERE d2.GDSKEY = g.ID AND d2.PRICE > 0 AND k2.TYP = 0
+                    ORDER BY k2.DAT_ DESC, d2.ID DESC),
+                   (SELECT FIRST 1 d3.PRICE
+                    FROM GDDKT d3
+                    LEFT JOIN DGVKT k3 ON k3.ID = d3.DGVKEY
+                    WHERE d3.GDSKEY = g.ID AND d3.PRICE > 0
+                    ORDER BY COALESCE(k3.DAT_, d3.DATEREAL) DESC, d3.ID DESC)
+               ) AS NUMERIC(15, 2)) AS LAST_COST,
+               CAST(COALESCE(SUM(CASE WHEN d.QUANT > 0 THEN d.QUANT ELSE 0 END), 0)
+                    AS NUMERIC(15, 3)) AS STOCK_QTY
+        FROM GOODS g
+        LEFT JOIN GDDKT d ON d.GDSKEY = g.ID
+        WHERE g.ID IN ({placeholders})
+        GROUP BY g.ID
+    """
+    return sql, ids
+
+
+def sql_avg_cost_90d_chunk(ids: list[int], date_from, date_to) -> tuple[str, list]:
+    """Simple average of arrival card prices (DGVKT.TYP=0) in [date_from, date_to)."""
+    placeholders = ",".join(["?"] * len(ids))
+    sql = f"""
+        SELECT d.GDSKEY AS PRODUCT_ID,
+               CAST(SUM(d.PRICE) / COUNT(*) AS NUMERIC(15, 2)) AS AVG_COST
+        FROM GDDKT d
+        JOIN DGVKT k ON k.ID = d.DGVKEY
+        WHERE d.GDSKEY IN ({placeholders})
+          AND d.PRICE > 0
+          AND k.TYP = 0
+          AND k.DAT_ >= ? AND k.DAT_ < ?
+        GROUP BY d.GDSKEY
+    """
+    return sql, list(ids) + [date_from, date_to]

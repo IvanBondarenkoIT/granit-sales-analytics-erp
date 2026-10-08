@@ -281,8 +281,12 @@ msgstr "Конечная дата входит в период. Подставл
 msgid "Baseline days before promo"
 msgstr "Дней базы до акции"
 
-msgid "Median of daily sales in this window is the pre-period baseline."
-msgstr "Медиана дневных продаж в этом окне — база до акции."
+msgid ""
+"Average daily sales in this window (days without sales count as zero) is the "
+"pre-period baseline."
+msgstr ""
+"Средние продажи в день за это окно (дни без продаж считаются нулём) — база до "
+"акции."
 
 msgid "Promo table (Excel)"
 msgstr "Таблица акций (Excel)"
@@ -827,6 +831,207 @@ msgstr "Матрица супергрупп × магазины; общий ре
 
 msgid "Stage 4b — Local"
 msgstr "Этап 4b — локально"
+
+msgid "Active"
+msgstr "Активные"
+
+msgid "Passed"
+msgstr "Прошедшие"
+
+msgid "Est. earnings"
+msgstr "Ориент. заработок"
+
+msgid "SKU"
+msgstr "SKU"
+
+msgid "No active promos."
+msgstr "Нет активных акций."
+
+msgid "No passed promos."
+msgstr "Нет прошедших акций."
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "Format"
+msgstr "Формат"
+
+msgid "Channels / locations"
+msgstr "Каналы, локации"
+
+msgid "Products (Granit)"
+msgstr "Товары (Гранит)"
+
+msgid "Products from website"
+msgstr "Товары с сайта"
+
+msgid "Search the website catalog; only items linked to Granit can be saved."
+msgstr "Поиск по каталогу сайта; сохранить можно только товары со связью с Гранитом."
+
+msgid "Search website products"
+msgstr "Поиск товаров сайта"
+
+msgid "no Granit link"
+msgstr "нет связи с Гранитом"
+
+msgid "No website products match."
+msgstr "Нет совпадений в каталоге сайта."
+
+msgid "Type to search the website catalog."
+msgstr "Начните ввод для поиска по каталогу сайта."
+
+msgid "Prices, stock, earnings"
+msgstr "Цены, остатки, заработок"
+
+msgid "Costs and stock from Granit. Site prices are the promo list; sold average from Granit is shown in parentheses when it differs by more than one percent."
+msgstr "Входные цены и остаток — из Гранита. Цены акции — с сайта; средняя цена продажи по Граниту показана в скобках, если отличается больше чем на один процент."
+
+msgid "Last cost"
+msgstr "Входная посл."
+
+msgid "Avg cost 90d"
+msgstr "Входная ср. 90д"
+
+msgid "Retail price"
+msgstr "Розничная"
+
+msgid "Sale price"
+msgstr "Скидочная"
+
+msgid "Margin"
+msgstr "Маржа"
+
+msgid "Stock"
+msgstr "Остаток"
+
+msgid "Total est. earnings"
+msgstr "Итого ориент. заработок"
+
+msgid "no site link"
+msgstr "нет связи с сайтом"
+
+msgid "Catalog sync is already running."
+msgstr "Синхронизация каталога уже идёт."
+
+msgid "Catalog sync started. Refresh the page in a few minutes."
+msgstr "Синхронизация каталога запущена. Обновите страницу через несколько минут."
+
+msgid "Catalog sync is running..."
+msgstr "Синхронизация каталога идёт..."
+
+msgid "Catalog synced:"
+msgstr "Каталог синхронизирован:"
+
+msgid "with errors"
+msgstr "с ошибками"
+
+msgid "Catalog not synced yet."
+msgstr "Каталог ещё не синхронизирован."
+
+msgid "site products"
+msgstr "товаров сайта"
+
+msgid "links"
+msgstr "связей"
+
+msgid "Sync now"
+msgstr "Синхронизировать сейчас"
+
+msgid "Expand"
+msgstr "Раскрыть"
+
+msgid "No groups."
+msgstr "Нет групп."
+
+msgid "No website categories yet. Run the catalog sync."
+msgstr "Категорий сайта пока нет. Запустите синхронизацию каталога."
+
+msgid "Pick a group on the left or type to search."
+msgstr "Выберите группу слева или начните вводить для поиска."
+
+msgid "Select all shown"
+msgstr "Отметить все показанные"
+
+msgid "Found"
+msgstr "Найдено"
+
+msgid "out of stock"
+msgstr "нет в наличии"
+
+msgid "site"
+msgstr "сайт"
+
+msgid "Nothing found."
+msgstr "Ничего не найдено."
+
+msgid "Show more"
+msgstr "Показать ещё"
+
+msgid "Promo products"
+msgstr "Товары акции"
+
+msgid "Edit promo"
+msgstr "Редактировать акцию"
+
+msgid "Back to promo"
+msgstr "Назад к акции"
+
+msgid "Add from Granit"
+msgstr "Добавить из Гранита"
+
+msgid "Add from website"
+msgstr "Добавить с сайта"
+
+msgid "Clear all"
+msgstr "Очистить всё"
+
+msgid "Product (Granit)"
+msgstr "Товар (Гранит)"
+
+msgid "On website"
+msgstr "На сайте"
+
+msgid "whole group"
+msgstr "вся группа"
+
+msgid "Expand into products"
+msgstr "Раскрыть в товары"
+
+msgid "No products yet. Use the buttons above to add from Granit or from the website."
+msgstr "Товаров пока нет. Добавьте их кнопками выше — из Гранита или с сайта."
+
+msgid "Import from file (Excel)"
+msgstr "Импорт из файла (Excel)"
+
+msgid "Products from Granit"
+msgstr "Товары Гранита"
+
+msgid "Close"
+msgstr "Закрыть"
+
+msgid "Search by name or Granit ID"
+msgstr "Поиск по названию или ID Гранита"
+
+msgid "show inactive"
+msgstr "показать неактивные"
+
+msgid "Add whole group / all found"
+msgstr "Добавить всю группу / все найденные"
+
+msgid "Add selected"
+msgstr "Добавить выбранные"
+
+msgid "Done"
+msgstr "Готово"
+
+msgid "Only products linked to Granit can be added."
+msgstr "Добавить можно только товары, связанные с Гранитом."
+
+msgid "All categories"
+msgstr "Все категории"
+
+msgid "Added"
+msgstr "Добавлено"
 
 #~ msgid "Stage 3 — Pending"
 #~ msgstr "Этап 3 — ожидает"
