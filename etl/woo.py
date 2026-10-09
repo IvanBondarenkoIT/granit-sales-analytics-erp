@@ -39,6 +39,23 @@ def _as_decimal(raw) -> Decimal | None:
         return None
 
 
+def _is_cloudflare_challenge(resp) -> bool:
+    if resp.headers.get("cf-mitigated", "").lower() == "challenge":
+        return True
+    return "Just a moment" in (resp.text or "")[:2000]
+
+
+def _check_response(resp, path: str, page: int) -> None:
+    if resp.status_code < 400:
+        return
+    if _is_cloudflare_challenge(resp):
+        raise RuntimeError(
+            f"Woo blocked by Cloudflare challenge (HTTP {resp.status_code}) for this server IP; "
+            "allow it in Cloudflare WAF"
+        )
+    raise RuntimeError(f"Woo HTTP {resp.status_code} on {path} page {page}")
+
+
 def _fetch_pages(path: str, extra_params: dict, page_size: int, max_pages: int) -> list[dict]:
     base = (getattr(settings, "WOO_API_URL", None) or os.getenv("WOO_API_URL") or "").rstrip("/")
     key = (getattr(settings, "WOO_API_KEY", None) or os.getenv("WOO_API_KEY") or "").strip()
@@ -58,19 +75,23 @@ def _fetch_pages(path: str, extra_params: dict, page_size: int, max_pages: int) 
     out: list[dict] = []
     page = 1
     while page <= max_pages:
-        resp = requests.get(
-            endpoint,
-            params={
-                "per_page": page_size,
-                "page": page,
-                "consumer_key": key,
-                "consumer_secret": secret,
-                **extra_params,
-            },
-            headers=headers,
-            timeout=timeout,
-        )
-        resp.raise_for_status()
+        try:
+            resp = requests.get(
+                endpoint,
+                params={
+                    "per_page": page_size,
+                    "page": page,
+                    "consumer_key": key,
+                    "consumer_secret": secret,
+                    **extra_params,
+                },
+                headers=headers,
+                timeout=timeout,
+            )
+        except requests.RequestException as exc:
+            # requests puts the full URL (with consumer_key/secret) into its messages
+            raise RuntimeError(f"Woo request failed on {path} page {page}: {type(exc).__name__}") from None
+        _check_response(resp, path, page)
         batch = resp.json()
         if not batch:
             break

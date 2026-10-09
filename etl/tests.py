@@ -3,9 +3,10 @@ from decimal import Decimal
 from io import StringIO
 from unittest.mock import patch
 
+import requests
 from django.core.management import call_command
 from django.core.management.base import CommandError
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, TestCase, override_settings
 
 from core.models import SiteCategory, SiteProduct, Store
 from etl.models import ETLRun
@@ -17,7 +18,7 @@ from etl.pipeline import (
     nightly_reload_range,
     run_catalog_sync,
 )
-from etl.woo import parse_woo_category, parse_woo_product
+from etl.woo import _fetch_pages, parse_woo_category, parse_woo_product
 from etl.queries import sql_invoices_day, sql_sales_day
 from sales.models import SOURCE_INVOICE, SOURCE_RECEIPT, SaleFact
 
@@ -144,6 +145,42 @@ class WooCatalogTests(TestCase):
         self.assertEqual(child.parent.wp_category_id, "3")
         machine = SiteProduct.objects.get(wp_product_id="7")
         self.assertEqual(machine.categories.count(), 2)
+
+
+@override_settings(WOO_API_URL="https://shop.test/ge", WOO_API_KEY="ck_secret", WOO_API_SECRET="cs_secret")
+class WooFetchErrorTests(SimpleTestCase):
+    def _response(self, status, text="", headers=None):
+        resp = requests.Response()
+        resp.status_code = status
+        resp._content = text.encode()
+        resp.headers.update(headers or {})
+        resp.url = "https://shop.test/ge/wp-json/wc/v3/products?consumer_key=ck_secret&consumer_secret=cs_secret"
+        return resp
+
+    def _error(self, **kwargs):
+        with patch("etl.woo.requests.get", **kwargs):
+            with self.assertRaises(RuntimeError) as ctx:
+                _fetch_pages("products", {}, 100, 1)
+        message = str(ctx.exception)
+        self.assertNotIn("consumer_", message)
+        self.assertNotIn("secret", message)
+        return message
+
+    def test_cloudflare_challenge_is_explicit(self):
+        message = self._error(return_value=self._response(
+            403, "<html><title>Just a moment...</title></html>", {"cf-mitigated": "challenge"}
+        ))
+        self.assertIn("Cloudflare challenge", message)
+
+    def test_http_error_has_no_query_string(self):
+        message = self._error(return_value=self._response(401, '{"code":"woocommerce_rest_cannot_view"}'))
+        self.assertEqual(message, "Woo HTTP 401 on products page 1")
+
+    def test_network_error_hides_url(self):
+        message = self._error(side_effect=requests.ConnectionError(
+            "Max retries exceeded with url: /ge/wp-json/wc/v3/products?consumer_key=ck_secret&consumer_secret=cs_secret"
+        ))
+        self.assertIn("ConnectionError", message)
 
 
 class CatalogSyncTests(TestCase):
