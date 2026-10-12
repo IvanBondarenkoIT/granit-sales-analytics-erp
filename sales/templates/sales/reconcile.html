@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Reconciliation with Granit" %}{% endblock %}
+
+{% block extra_css %}{% include "sales/_reconcile_style.html" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p><a href="{% url 'sales_matrix' %}">{% trans "Super-groups" %}</a></p>
+    <h1>{% trans "Reconciliation with Granit" %}</h1>
+    <p class="rc-hint">
+        {% trans "Granit side: sales documents by realization date, the same as the Granit report «Sales by warehouses» (amount incl. VAT). Each total is split into goods lines, service lines and a leftover; the leftover must be zero, otherwise Granit has a kind of lines we do not load yet." %}
+    </p>
+
+    {% if current %}
+    <div class="rc-cards">
+        <div class="rc-card">
+            <div class="label">{% trans "Granit" %} · {{ current.month|date:"F Y" }}</div>
+            <div class="value">{{ current.totals.granit_total|floatformat:"2g" }}</div>
+        </div>
+        <div class="rc-card">
+            <div class="label">{% trans "Ours" %}</div>
+            <div class="value">{{ current.totals.ours_total|floatformat:"2g" }}</div>
+        </div>
+        <div class="rc-card {{ current.status }}">
+            <div class="label">{% trans "Difference" %}</div>
+            <div class="value">{{ current.totals.diff|floatformat:"2g" }}</div>
+        </div>
+        <div class="rc-card {% if current.state == "open" or current.state == "partial" %}{{ current.state }}{% elif current.flags %}bad{% else %}ok{% endif %}">
+            <div class="label">{% trans "Flags" %}</div>
+            <div class="value">{{ current.flags|length }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="rc-bar">
+        {% if user.is_staff %}
+        <form method="post" action="{% url 'sales_reconcile_refresh' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button class="btn" type="submit">{% trans "Recalculate (this and last month)" %}</button>
+        </form>
+        {% endif %}
+        <span class="muted">{% blocktrans %}Updated nightly. Tolerance per store: {{ tolerance }} GEL.{% endblocktrans %}</span>
+    </div>
+
+    {% if rows %}
+    <table class="rc-table">
+        <thead>
+            <tr>
+                <th>{% trans "Month" %}</th>
+                <th>{% trans "Granit total" %}</th>
+                <th>{% trans "Goods" %}</th>
+                <th>{% trans "Services" %}</th>
+                <th>{% trans "Leftover" %}</th>
+                <th>{% trans "Ours" %}</th>
+                <th>{% trans "Difference" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th class="text">{% trans "Flags" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr class="{{ row.status }}">
+                <td><a href="{% url 'sales_reconcile_month' row.key %}">{{ row.month|date:"F Y" }}</a></td>
+                <td>{{ row.totals.granit_total|floatformat:"2g" }}</td>
+                <td>{{ row.totals.granit_goods|floatformat:"2g" }}</td>
+                <td>{{ row.totals.granit_services|floatformat:"2g" }}</td>
+                <td class="{% if row.totals.leftover %}neg{% else %}muted{% endif %}">{{ row.totals.leftover|floatformat:"2g" }}</td>
+                <td>{{ row.totals.ours_total|floatformat:"2g" }}</td>
+                <td class="{% if row.totals.diff < 0 %}neg{% elif row.totals.diff > 0 %}pos{% else %}muted{% endif %}">{{ row.totals.diff|floatformat:"2g" }}</td>
+                <td>{% include "sales/_reconcile_status.html" with status=row.status %}</td>
+                <td class="text">
+                    {% for flag in row.flags|slice:":3" %}<span class="sub">{% include "sales/_reconcile_flag.html" %}</span>{% endfor %}
+                    {% if row.flags|length > 3 %}<span class="sub">{% blocktrans count n=row.flags|length|add:"-3" %}and {{ n }} more{% plural %}and {{ n }} more{% endblocktrans %}</span>{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if services.kinds %}
+    <h2>{% trans "Services by month (Granit)" %}</h2>
+    <div style="overflow-x:auto">
+    <table class="rc-table">
+        <thead>
+            <tr>
+                <th>{% trans "Service" %}</th>
+                {% for m in services.months %}<th>{{ m }}</th>{% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for kind in services.kinds %}
+            <tr>
+                <td>{{ kind.name }}{% if kind.new_in %} <span class="pill new">{% trans "new" %} {{ kind.new_in }}</span>{% endif %}</td>
+                {% for value in kind.values %}<td class="{% if not value %}muted{% endif %}">{% if value %}{{ value|floatformat:"2g" }}{% else %}—{% endif %}</td>{% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% endif %}
+    {% else %}
+    <p class="rc-hint">{% trans "No reconciliation yet. Run «manage.py reconcile_sales --months 12» or press Recalculate." %}</p>
+    {% endif %}
+</div>
+{% endblock %}

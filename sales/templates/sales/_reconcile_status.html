@@ -1,0 +1,1 @@
+{% load i18n %}<span class="pill {{ status }}">{% if status == "ok" %}{% trans "Matches" %}{% elif status == "warn" %}{% trans "Small difference" %}{% elif status == "open" %}{% trans "Month not closed" %}{% elif status == "partial" %}{% trans "Incomplete history" %}{% else %}{% trans "Mismatch" %}{% endif %}</span>

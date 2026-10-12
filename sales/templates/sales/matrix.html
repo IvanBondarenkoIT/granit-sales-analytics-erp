@@ -22,6 +22,11 @@
         .hint { color: #555; margin: 0.5rem 0 1rem; }
         .ok { color: #047857; }
         .bad { color: #b91c1c; }
+        .rc-badge { display: inline-block; padding: 0 0.5rem; border-radius: 999px; font-weight: 600; text-decoration: none; font-size: 0.85rem; }
+        .rc-badge.ok { background: #d1fae5; color: #065f46; }
+        .rc-badge.warn { background: #fef3c7; color: #92400e; }
+        .rc-badge.bad { background: #fee2e2; color: #991b1b; }
+        .rc-badge.open, .rc-badge.partial { background: #e2e8f0; color: #334155; }
 {% endblock %}
 
 {% block content %}
@@ -30,7 +35,7 @@
     <p class="hint">{% trans "Rows are super-groups, columns are stores with sales in the period. Cell = qty / amount. Totals must match all sales." %}
         {% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}</p>
     {% if scope_all %}
-    <p class="hint">{% trans "All warehouses: retail receipts plus sales invoices (office, HoReCa, service centres); transfers and write-offs are not included." %}</p>
+    <p class="hint">{% trans "All warehouses = the Granit report «Sales by warehouses»: receipts as realized by warehouse documents plus sales invoices with their services (office, HoReCa, service centres), by realization date. Receipts Granit has not realized yet are only in Retail; transfers and write-offs are not included." %}</p>
     {% endif %}
     <form class="toolbar" method="get">
         <div>
@@ -59,7 +64,16 @@
             {% trans "Totals match SaleFact for the period." %}
         {% else %}
             {% trans "Totals do not match SaleFact — check membership." %}
-            (matrix {{ matrix.grand.amount }} / fact {{ matrix.fact_total.amount }})
+            (matrix {{ matrix.grand.amount|money }} / fact {{ matrix.fact_total.amount|money }})
+        {% endif %}
+        {% if reconcile %}
+        ·
+        <a class="rc-badge {{ reconcile.status }}" href="{% url 'sales_reconcile_month' reconcile.key %}">
+            {% trans "Reconciliation with Granit" %} {{ reconcile.month|date:"m.Y" }}:
+            {% if reconcile.status == "ok" %}{% trans "OK" %}{% elif reconcile.status == "open" %}{% trans "Month not closed" %}{% elif reconcile.status == "partial" %}{% trans "Incomplete history" %}{% else %}{% trans "difference" %} {{ reconcile.totals.diff|floatformat:"2g" }}{% if reconcile.flags %}, {% blocktrans count n=reconcile.flags|length %}{{ n }} flag{% plural %}{{ n }} flags{% endblocktrans %}{% endif %}{% endif %}
+        </a>
+        {% else %}
+        · <a href="{% url 'sales_reconcile' %}">{% trans "Reconciliation with Granit" %}</a>
         {% endif %}
     </p>
     {% if matrix.stores %}
@@ -97,12 +111,12 @@
                     </td>
                     <td style="background:#{{ row.color }};">
                         <a href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}&amp;store={{ store.granit_id }}">
-                            <span class="cell-amt">{{ cell.amount }}</span>
+                            <span class="cell-amt">{{ cell.amount|money }}</span>
                         </a>
                     </td>
                     {% endfor %}
                     <td style="background:#{{ row.color }};"><span class="cell-qty">{{ row.total.qty|qty }}</span></td>
-                    <td style="background:#{{ row.color }};"><span class="cell-amt">{{ row.total.amount }}</span></td>
+                    <td style="background:#{{ row.color }};"><span class="cell-amt">{{ row.total.amount|money }}</span></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -111,10 +125,10 @@
                     <td class="sticky">{% trans "Total" %}</td>
                     {% for store, cell in matrix.ordered_column_totals %}
                     <td>{{ cell.qty|qty }}</td>
-                    <td>{{ cell.amount }}</td>
+                    <td>{{ cell.amount|money }}</td>
                     {% endfor %}
                     <td>{{ matrix.grand.qty|qty }}</td>
-                    <td>{{ matrix.grand.amount }}</td>
+                    <td>{{ matrix.grand.amount|money }}</td>
                 </tr>
             </tfoot>
         </table>

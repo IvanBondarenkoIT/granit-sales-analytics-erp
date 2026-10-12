@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n numbers %}
 
-{% block title %}{{ sg.title }}{% endblock %}
+{% block title %}{{ sg.display_title }}{% endblock %}
 
 {% block extra_css %}
         table { width: 100%; border-collapse: collapse; background: #fff; margin: 1rem 0; }
@@ -18,7 +18,7 @@
 <div class="container">
     <p><a href="{% url 'sales_matrix' %}?{{ matrix_query }}">← {% trans "Sales by super-groups" %}</a>
        · <a href="{% url 'sales_matrix_edit' %}?{{ matrix_query }}">{% trans "Edit super-groups" %}</a></p>
-    <h1><span class="swatch" style="background:#{{ sg.color }}"></span> {{ sg.title }}</h1>
+    <h1><span class="swatch" style="background:#{{ sg.color }}"></span> {{ sg.display_title }}</h1>
     {% if sg.is_catchall %}
     <p>{% trans "Remainder: product groups (and products without a group) not assigned to any super-group." %}</p>
     {% endif %}
@@ -67,7 +67,7 @@
                     {% endif %}
                 </td>
                 <td class="num">{{ row.qty|qty }}</td>
-                <td class="num">{{ row.amount }}</td>
+                <td class="num">{{ row.amount|money }}</td>
                 <td>
                     {% if not sg.is_catchall and row.granit_id %}
                     <form method="post" style="display:inline">
@@ -87,7 +87,7 @@
             <tr>
                 <td colspan="2">{% trans "Total" %}</td>
                 <td class="num">{{ total_qty|qty }}</td>
-                <td class="num">{{ total_amount }}</td>
+                <td class="num">{{ total_amount|money }}</td>
                 <td></td>
             </tr>
         </tfoot>

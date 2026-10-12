@@ -1,0 +1,1 @@
+{% load i18n %}{% if flag.kind == "leftover" %}{% trans "Granit has an unknown kind of lines" %}{% elif flag.kind == "new_service" %}{% trans "New service" %}{% else %}{% trans "Difference" %}{% endif %}: {{ flag.store }} ({{ flag.amount|floatformat:"2g" }})

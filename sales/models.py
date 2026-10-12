@@ -23,6 +23,14 @@ class SuperGroup(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def display_title(self) -> str:
+        if self.is_catchall:
+            from django.utils.translation import gettext
+
+            return gettext("Outside super-groups")
+        return self.title
+
 
 class SuperGroupMember(models.Model):
     """One Granit product group belongs to at most one super-group."""
@@ -45,6 +53,11 @@ class SuperGroupMember(models.Model):
 
 SOURCE_RECEIPT = "receipt"
 SOURCE_INVOICE = "invoice"
+SOURCE_SERVICE = "service"
+SOURCE_REALIZED = "realized"
+INVOICE_SOURCES = (SOURCE_INVOICE, SOURCE_SERVICE)
+# «All warehouses» mirrors the Granit report: receipts enter it through their warehouse documents.
+ALL_SCOPE_SOURCES = (SOURCE_REALIZED, SOURCE_INVOICE, SOURCE_SERVICE)
 SCOPE_RETAIL = "retail"
 SCOPE_ALL = "all"
 SCOPES = (SCOPE_RETAIL, SCOPE_ALL)
@@ -55,7 +68,7 @@ class SaleFactQuerySet(models.QuerySet):
         return self.filter(source=SOURCE_RECEIPT)
 
     def for_scope(self, scope: str):
-        return self if scope == SCOPE_ALL else self.retail()
+        return self.filter(source__in=ALL_SCOPE_SOURCES) if scope == SCOPE_ALL else self.retail()
 
 
 class SaleFact(models.Model):
@@ -63,6 +76,8 @@ class SaleFact(models.Model):
     SOURCE_CHOICES = [
         (SOURCE_RECEIPT, "Cash-register receipt (STORZAKAZDT)"),
         (SOURCE_INVOICE, "Sales invoice (DGVDT)"),
+        (SOURCE_SERVICE, "Invoice service line (GDDDTDDU)"),
+        (SOURCE_REALIZED, "Receipt line realized by a warehouse document (GDDDT.SZGDSID)"),
     ]
 
     sale_date = models.DateField(db_index=True, help_text="Date of sale")
@@ -72,10 +87,12 @@ class SaleFact(models.Model):
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='sales')
     
     quantity = models.DecimalField(max_digits=12, decimal_places=3, help_text="Quantity sold")
-    amount = models.DecimalField(max_digits=15, decimal_places=2, help_text="Sale amount (money)")
+    amount = models.DecimalField(
+        max_digits=18, decimal_places=6, help_text="Sale amount (money), unrounded like Granit lines"
+    )
     
-    granit_sale_id = models.IntegerField(help_text="Sale document ID from Granit ERP")
-    granit_line_id = models.IntegerField(help_text="Sale line ID from Granit ERP")
+    granit_sale_id = models.IntegerField(help_text="Sale document ID from Granit ERP (receipt ID for realized)")
+    granit_line_id = models.IntegerField(help_text="Sale line ID from Granit ERP (GDDDT.ID for realized)")
     
     created_at = models.DateTimeField(auto_now_add=True)
 

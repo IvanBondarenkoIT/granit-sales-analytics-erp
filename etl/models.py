@@ -44,3 +44,25 @@ class ETLWatermark(models.Model):
 
     def __str__(self):
         return f"{self.entity_name} - last: {self.last_processed_date or self.last_processed_id}"
+
+
+class ReconcileSnapshot(models.Model):
+    """Monthly reconciliation of our sales against Granit sales documents (see etl.reconcile)."""
+
+    month = models.DateField(unique=True, help_text="First day of the month")
+    data = models.JSONField(default=dict, blank=True)
+    granit_total = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    ours_total = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    flag_count = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'etl_reconcile_snapshot'
+        ordering = ['-month']
+
+    @property
+    def diff(self):
+        return self.ours_total - self.granit_total
+
+    def __str__(self):
+        return f"{self.month:%Y-%m}: granit {self.granit_total} / ours {self.ours_total}"

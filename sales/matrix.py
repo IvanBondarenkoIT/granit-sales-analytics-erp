@@ -126,7 +126,7 @@ def build_matrix(date_from: date, date_to: date, scope: str = SCOPE_RETAIL) -> M
     rows_by_sg[None] = MatrixRow(
         super_group=catchall,
         key=catchall.key,
-        title=catchall.title,
+        title=catchall.display_title,
         color=catchall.color,
         is_catchall=True,
     )
