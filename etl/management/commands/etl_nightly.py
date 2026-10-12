@@ -12,6 +12,7 @@ from etl.pipeline import (
     start_run,
 )
 from etl.proxy import ProxyApiError
+from etl.reconcile import refresh_months
 
 
 class Command(BaseCommand):
@@ -40,8 +41,26 @@ class Command(BaseCommand):
             finish_run(run, error=str(exc), details=details)
             raise
 
+        try:
+            details["reconcile"] = [
+                {"month": s.month.isoformat(), "diff": float(s.diff), "flags": s.flag_count}
+                for s in refresh_months(yesterday, 2)
+            ]
+        except Exception as exc:
+            details["reconcile"] = {"error": str(exc)}
         rows = details["sales"].get("rows", 0) + details["stock"].get("rows", 0)
         finish_run(run, inserted=rows, processed=rows, details=details)
+        reconcile = details["reconcile"]
+        if isinstance(reconcile, dict):
+            self.stderr.write(self.style.WARNING(f"reconcile failed: {reconcile['error']}"))
+        else:
+            for item in reconcile:
+                if item["flags"]:
+                    self.stderr.write(
+                        self.style.WARNING(
+                            f"reconcile {item['month'][:7]}: {item['flags']} flag(s), diff {item['diff']:.2f}"
+                        )
+                    )
 
         catalog = run_catalog_sync(snapshot_date=yesterday)
         details["catalog"] = catalog

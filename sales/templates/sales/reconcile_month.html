@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Reconciliation with Granit" %} · {{ row.month|date:"F Y" }}{% endblock %}
+
+{% block extra_css %}{% include "sales/_reconcile_style.html" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p><a href="{% url 'sales_reconcile' %}">{% trans "Reconciliation with Granit" %}</a></p>
+    <h1>{{ row.month|date:"F Y" }} {% include "sales/_reconcile_status.html" with status=row.status %}</h1>
+    <p class="rc-hint">{% trans "Click a store to see the documents that differ. «Amount incl. VAT» per warehouse is the line of the Granit report." %}
+        {% trans "«Not realized yet»: receipts of the month without a warehouse document in Granit; they are in Retail but not in All warehouses." %}</p>
+
+    <div class="rc-bar">
+        {% if user.is_staff %}
+        <form method="post" action="{% url 'sales_reconcile_refresh' %}">
+            {% csrf_token %}
+            <input type="hidden" name="month" value="{{ row.key }}">
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button class="btn" type="submit">{% trans "Recalculate this month" %}</button>
+        </form>
+        {% endif %}
+        <span class="muted">{% trans "Calculated" %}: {{ row.snap.created_at|date:"d.m.Y H:i" }}</span>
+    </div>
+
+    {% if row.state == "open" %}
+    <p class="rc-note">{% trans "The month is not closed yet: Granit realizes receipts with a delay of several days, so the difference is expected until all receipts are realized." %}</p>
+    {% elif row.state == "partial" %}
+    <p class="rc-note">{% trans "Our sales history starts inside this month, so it cannot match Granit." %}</p>
+    {% endif %}
+
+    {% if row.flags %}
+    <div class="rc-flags">
+        <ul>{% for flag in row.flags %}<li>{% include "sales/_reconcile_flag.html" %}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+
+    <table class="rc-table">
+        <thead>
+            <tr>
+                <th>{% trans "Store" %}</th>
+                <th>{% trans "Amount incl. VAT (Granit)" %}</th>
+                <th>{% trans "Goods" %}</th>
+                <th>{% trans "Services" %}</th>
+                <th>{% trans "Leftover" %}</th>
+                <th>{% trans "Ours: goods" %}</th>
+                <th>{% trans "Ours: services" %}</th>
+                <th>{% trans "Difference" %}</th>
+                <th>{% trans "Not realized yet" %}</th>
+                <th>{% trans "Status" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in stores %}
+            <tr class="{{ s.status }}">
+                <td class="text store">
+                    <a href="{% url 'sales_reconcile_docs' row.key s.store %}">{{ s.name }}</a>
+                    {% for wh in s.warehouses %}<span class="sub">{{ wh.name }}: {{ wh.amount|floatformat:"2g" }}</span>{% endfor %}
+                </td>
+                <td>{{ s.granit_total|floatformat:"2g" }}</td>
+                <td>{{ s.granit_goods|floatformat:"2g" }}</td>
+                <td class="{% if not s.granit_services %}muted{% endif %}">{{ s.granit_services|floatformat:"2g" }}</td>
+                <td class="{% if s.leftover %}neg{% else %}muted{% endif %}">{{ s.leftover|floatformat:"2g" }}</td>
+                <td>{{ s.ours_goods|floatformat:"2g" }}{% if s.diff_goods %}<span class="sub {% if s.diff_goods < 0 %}neg{% else %}pos{% endif %}">{{ s.diff_goods|floatformat:"2g" }}</span>{% endif %}</td>
+                <td class="{% if not s.ours_services %}muted{% endif %}">{{ s.ours_services|floatformat:"2g" }}{% if s.diff_services %}<span class="sub {% if s.diff_services < 0 %}neg{% else %}pos{% endif %}">{{ s.diff_services|floatformat:"2g" }}</span>{% endif %}</td>
+                <td class="{% if s.diff < 0 %}neg{% elif s.diff > 0 %}pos{% else %}muted{% endif %}">{{ s.diff|floatformat:"2g" }}</td>
+                <td class="{% if not s.pending %}muted{% endif %}">{{ s.pending|default:0|floatformat:"2g" }}</td>
+                <td>{% include "sales/_reconcile_status.html" with status=s.status %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>{% trans "Total" %}</td>
+                <td>{{ data.totals.granit_total|floatformat:"2g" }}</td>
+                <td>{{ data.totals.granit_goods|floatformat:"2g" }}</td>
+                <td>{{ data.totals.granit_services|floatformat:"2g" }}</td>
+                <td>{{ data.totals.leftover|floatformat:"2g" }}</td>
+                <td>{{ data.totals.ours_goods|floatformat:"2g" }}</td>
+                <td>{{ data.totals.ours_services|floatformat:"2g" }}</td>
+                <td>{{ data.totals.diff|floatformat:"2g" }}</td>
+                <td>{{ data.totals.pending|default:0|floatformat:"2g" }}</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    {% if data.services %}
+    <h2>{% trans "Services" %}</h2>
+    <table class="rc-table" style="width:auto">
+        <thead><tr><th>{% trans "Service" %}</th><th>{% trans "Granit" %}</th><th>{% trans "Ours" %}</th></tr></thead>
+        <tbody>
+            {% for item in data.services %}
+            <tr>
+                <td>{{ item.name }}{% if item.new %} <span class="pill new">{% trans "new" %}</span>{% endif %}</td>
+                <td>{{ item.granit|floatformat:"2g" }}</td>
+                <td>{{ item.ours|floatformat:"2g" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {% if data.other_types %}
+    <h2>{% trans "Other Granit documents (not sales, for information)" %}</h2>
+    <table class="rc-table" style="width:auto">
+        <thead><tr><th>{% trans "Document type" %}</th><th>{% trans "Documents" %}</th><th>{% trans "Amount" %}</th></tr></thead>
+        <tbody>
+            {% for t in data.other_types %}
+            <tr><td>TYP {{ t.typ }}</td><td>{{ t.docs }}</td><td>{{ t.amount|floatformat:"2g" }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

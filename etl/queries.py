@@ -108,10 +108,11 @@ def sql_sales_day() -> tuple[str, list]:
 
 
 def sql_invoices_day() -> tuple[str, list]:
+    """Invoice goods lines dated by REALDATE, like the Granit report «Реализация товара по складам»."""
     sql = f"""
         SELECT H.ID AS SALE_ID,
                G.ID AS LINE_ID,
-               H.DAT_ AS SALE_DATE,
+               H.REALDATE AS SALE_DATE,
                COALESCE(H.STOR, H.STORID) AS WAREHOUSE_ID,
                H.NAMEID AS CLIENT_ID,
                COALESCE(G.GDSKEY, K.GDSKEY) AS PRODUCT_ID,
@@ -122,9 +123,110 @@ def sql_invoices_day() -> tuple[str, list]:
         LEFT JOIN GDDKT K ON K.ID = G.GDDKEY
         WHERE H.TYP IN ({",".join(["?"] * len(INVOICE_TYPES))})
           AND H.SZID IS NULL
-          AND H.DAT_ >= ? AND H.DAT_ < ?
+          AND H.REALDATE >= ? AND H.REALDATE < ?
     """
     return sql, list(INVOICE_TYPES)
+
+
+def sql_realizations_day() -> tuple[str, list]:
+    """Receipt lines as realized by warehouse documents (DGVDT.SZID), dated by REALDATE.
+
+    Granit realizes a receipt later (usually next days) and may split it across warehouses or dates;
+    the report «Реализация товара по складам» counts these document lines, not the receipt.
+    """
+    sql = f"""
+        SELECT H.SZID AS SALE_ID,
+               G.ID AS LINE_ID,
+               H.REALDATE AS SALE_DATE,
+               COALESCE(H.STOR, H.STORID) AS WAREHOUSE_ID,
+               D.ORGNID AS CLIENT_ID,
+               COALESCE(S.GODSID, G.GDSKEY, K.GDSKEY) AS PRODUCT_ID,
+               COALESCE(G.QUANT, 0) AS QTY,
+               COALESCE(G.QUANT, 0) * COALESCE(G.PRICE, 0) AS AMOUNT
+        FROM DGVDT H
+        JOIN GDDDT G ON G.DGVKEY = H.ID
+        LEFT JOIN STORZDTGDS S ON S.ID = G.SZGDSID
+        LEFT JOIN STORZAKAZDT D ON D.ID = H.SZID
+        LEFT JOIN GDDKT K ON K.ID = G.GDDKEY
+        WHERE H.TYP IN ({",".join(["?"] * len(INVOICE_TYPES))})
+          AND H.SZID IS NOT NULL
+          AND H.REALDATE >= ? AND H.REALDATE < ?
+    """
+    return sql, list(INVOICE_TYPES)
+
+
+def sql_services_day() -> tuple[str, list]:
+    """Service lines (GDDDTDDU: repair, rental, delivery...) of sales invoices, dated by REALDATE."""
+    sql = f"""
+        SELECT H.ID AS SALE_ID,
+               U.ID AS LINE_ID,
+               H.REALDATE AS SALE_DATE,
+               COALESCE(H.STOR, H.STORID) AS WAREHOUSE_ID,
+               H.NAMEID AS CLIENT_ID,
+               U.NAMEID AS SERVICE_ID,
+               COALESCE(U.QUANT, 0) AS QTY,
+               COALESCE(U.QUANT, 0) * COALESCE(U.PRICE, 0) AS AMOUNT
+        FROM DGVDT H
+        JOIN GDDDTDDU U ON U.DGVKEY = H.ID
+        WHERE H.TYP IN ({",".join(["?"] * len(INVOICE_TYPES))})
+          AND H.SZID IS NULL
+          AND H.REALDATE >= ? AND H.REALDATE < ?
+    """
+    return sql, list(INVOICE_TYPES)
+
+
+def sql_service_catalog() -> str:
+    return "SELECT ID, NAME FROM HBGDDDU"
+
+
+def _period_where(alias: str = "H") -> str:
+    types = ",".join(str(t) for t in INVOICE_TYPES)
+    return f"{alias}.TYP IN ({types}) AND {alias}.REALDATE >= ? AND {alias}.REALDATE < ?"
+
+
+def sql_reconcile_headers() -> str:
+    """Sales documents per warehouse: header sum (= Granit report «Сумма с НДС»)."""
+    return f"""
+        SELECT COALESCE(H.STOR, H.STORID) AS WAREHOUSE_ID, COUNT(*) AS DOCS, SUM(H.SUMMA) AS AMOUNT
+        FROM DGVDT H WHERE {_period_where()} GROUP BY 1
+    """
+
+
+def sql_reconcile_goods() -> str:
+    return f"""
+        SELECT COALESCE(H.STOR, H.STORID) AS WAREHOUSE_ID, SUM(G.QUANT * G.PRICE) AS AMOUNT
+        FROM DGVDT H JOIN GDDDT G ON G.DGVKEY = H.ID WHERE {_period_where()} GROUP BY 1
+    """
+
+
+def sql_reconcile_services() -> str:
+    return f"""
+        SELECT COALESCE(H.STOR, H.STORID) AS WAREHOUSE_ID, U.NAMEID AS SERVICE_ID, SUM(U.QUANT * U.PRICE) AS AMOUNT
+        FROM DGVDT H JOIN GDDDTDDU U ON U.DGVKEY = H.ID WHERE {_period_where()} GROUP BY 1, 2
+    """
+
+
+def sql_reconcile_other_types() -> str:
+    """Other warehouse document types (transfers, write-offs...): shown for information only."""
+    types = ",".join(str(t) for t in INVOICE_TYPES)
+    return f"""
+        SELECT H.TYP AS TYP, COUNT(*) AS DOCS, SUM(H.SUMMA) AS AMOUNT
+        FROM DGVDT H WHERE H.TYP NOT IN ({types}) AND H.REALDATE >= ? AND H.REALDATE < ? GROUP BY 1
+    """
+
+
+def sql_reconcile_documents(warehouse_ids: list[int]) -> tuple[str, list[int]]:
+    """Per-document split for drill-down: header sum, goods lines, service lines."""
+    placeholders = ",".join(["?"] * len(warehouse_ids))
+    sql = f"""
+        SELECT H.ID AS SALE_ID, H.NBR AS NBR, H.DAT_ AS DOC_DATE, H.REALDATE AS REAL_DATE, H.SZID AS SZID,
+               COALESCE(H.STOR, H.STORID) AS WAREHOUSE_ID, H.SUMMA AS AMOUNT,
+               (SELECT SUM(G.QUANT * G.PRICE) FROM GDDDT G WHERE G.DGVKEY = H.ID) AS GOODS,
+               (SELECT SUM(U.QUANT * U.PRICE) FROM GDDDTDDU U WHERE U.DGVKEY = H.ID) AS SERVICES
+        FROM DGVDT H
+        WHERE {_period_where()} AND COALESCE(H.STOR, H.STORID) IN ({placeholders})
+    """
+    return sql, warehouse_ids
 
 
 def sql_stock_chunk(ids: list[int]) -> tuple[str, list[int]]:

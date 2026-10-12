@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n numbers %}
 
 {% block title %}{{ campaign.name }}{% endblock %}
 
@@ -50,7 +50,7 @@
     </p>
     {% if truncated %}
     <p class="hint">{% blocktrans with shown=row_limit total=row_count %}Showing first {{ shown }} of {{ total }} rows.{% endblocktrans %}
-       {% blocktrans with amount=matching_amount %}Amount of all matching rows: {{ amount }}{% endblocktrans %}</p>
+       {% blocktrans with amount=matching_amount|money %}Amount of all matching rows: {{ amount }}{% endblocktrans %}</p>
     {% endif %}
     {% if clients %}
     <table>
@@ -73,7 +73,7 @@
                 <td class="{% if row.view_bought %}yes{% else %}no{% endif %}">
                     {% if row.view_bought %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}
                 </td>
-                <td class="num">{{ row.view_amount }}</td>
+                <td class="num">{{ row.view_amount|money }}</td>
                 <td>
                     {% if row.view_bought %}
                     <a href="{% url 'campaign_client_purchases' campaign.pk row.pk %}?{{ filter_query|slice:'1:' }}">{% trans "Order items" %}</a>
@@ -85,7 +85,7 @@
         <tfoot>
             <tr>
                 <td colspan="{% if show_cards %}4{% else %}3{% endif %}">{% trans "Total" %}</td>
-                <td class="num">{{ shown_amount }}</td>
+                <td class="num">{{ shown_amount|money }}</td>
                 <td></td>
             </tr>
         </tfoot>

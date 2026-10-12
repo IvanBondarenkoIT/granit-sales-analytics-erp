@@ -252,6 +252,26 @@ Staff users can start the same sync from the promo pages («Синхронизи
 Server needs the Woo/Sheets variables from `.env.example` and an image built with the current `requirements.txt` (`gspread`, `google-auth`). For Docker, prefer `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64` over a file path.
 
 Local demo without Woo/Sheets: `python manage.py seed_promo_demo`.
+
+### Reconciliation with Granit
+
+The Granit report «Реализация товара по складам» equals the header sum (`DGVDT.SUMMA`) of sales documents (TYP 0) by **realization date** (`REALDATE`). Every header sum is goods lines (`GDDDT`) plus service lines (`GDDDTDDU`, catalog `HBGDDDU`: coffee machine repair, rental, delivery, training…). So:
+- invoices and their services are loaded by `REALDATE`;
+- receipts are loaded twice: `source=receipt` by receipt date (Retail; includes receipts Granit has not processed yet, `STORZAKAZDT.STATE=0`), and `source=realized` = the warehouse document lines linked to receipt lines (`GDDDT.SZGDSID`), by `REALDATE` and the document's warehouse (All warehouses). Granit realizes receipts with a delay of up to ~25 days, sometimes a receipt is split across two days; the nightly reload of the last 2 months (`ETL_RELOAD_MONTHS`) picks that up;
+- `amount` keeps 6 decimals (Granit lines have fractional cents and the report sums them unrounded); pages show 2 decimals;
+- services are `SaleFact.source=service` lines on synthetic products «Услуга: <name>» (`granit_id = -HBGDDDU.ID`) in the group «Услуги» (`granit_id = -1`). They count in «All warehouses», not in Retail;
+- a document whose `REALDATE` changed in Granit moves to the new day on reload (old rows are removed by document ID).
+
+`/sales/reconcile/` («Сверка» in the menu) shows, per month and store: Granit total, goods, services, **leftover** (total − goods − services, must be 0), ours and the difference. Click-through: month → stores → documents that differ. Flags: non-zero leftover (Granit has a new kind of lines we do not load), a new service kind, a store difference above `RECONCILE_TOLERANCE` (default 1 GEL). Other document types (transfers, write-offs) are listed for information only. «Not realized yet» = retail receipts of the month without a warehouse document. A month that is not over yet is «Month not closed», the first month of our history is «Incomplete history»; both are informational and do not raise flags.
+
+Snapshots are refreshed by `etl_nightly` (this and last month) and by staff with «Пересчитать». Manual:
+
+```bash
+docker exec granit-analytics python manage.py reconcile_sales --month 2026-08 --months 12   # exit 1 when there are flags
+```
+
+After releasing this (once): `migrate`, then reload history (`etl_sales --from 2025-08-20 --to <today>`) and `reconcile_sales --months 15`.
+
 ### Schema check (CI / local)
 
 ```bash
@@ -284,7 +304,7 @@ Built with Django + HTMX for fast, interactive filtering without frontend framew
 ### 2b. Super-group matrix
 
 Interactive matrix: super-group rows × store columns (qty + amount), shared membership editor, Excel export.
-«Sales» switch: **Retail** (receipts, default) or **All warehouses** (receipts + sales invoices from office, HoReCa, service centres; transfers and write-offs excluded). Promo and campaign analysis always use retail.
+«Sales» switch: **Retail** (receipts, default) or **All warehouses** (exactly the Granit report «Реализация товара по складам»: realized receipt lines + sales invoices with their services from office, HoReCa, service centres, all by realization date; transfers and write-offs excluded). Promo and campaign analysis always use retail.
 Seed from `sales/seed/supergroups.json` (from monthly-sales-report YAML). Catch-all row «Outside super-groups» keeps totals equal to all `SaleFact` lines.
 
 ```bash

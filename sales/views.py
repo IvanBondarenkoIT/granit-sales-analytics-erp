@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 
 from core.models import Product, ProductGroup, ProductParameterValue, Store
-from sales.models import SCOPE_ALL, SCOPE_RETAIL, SCOPES, SOURCE_INVOICE, SOURCE_RECEIPT, SaleFact
+from sales.models import INVOICE_SOURCES, SCOPE_ALL, SCOPE_RETAIL, SCOPES, SOURCE_RECEIPT, SaleFact
 
 ROW_LIMIT = 300
 GROUP_BY_OPTIONS = ("product", "group", "param", "store", "client", "day", "receipt")
@@ -142,7 +142,7 @@ def _label_rows(group_by: str, rows: list[dict], base_params: dict) -> list[dict
             name = sale_id
             secondary = row.get("sale_date")
             receipts_params = None
-            is_invoice = row.get("source") == SOURCE_INVOICE
+            is_invoice = row.get("source") in INVOICE_SOURCES
         else:
             name = row.get("sale_date")
             secondary = ""
@@ -298,9 +298,10 @@ def sales_explorer(request):
 
 
 def sales_receipt(request, sale_id: int):
-    source = _choice(request.GET.get("source"), (SOURCE_RECEIPT, SOURCE_INVOICE), SOURCE_RECEIPT)
+    source = _choice(request.GET.get("source"), (SOURCE_RECEIPT, *INVOICE_SOURCES), SOURCE_RECEIPT)
+    sources = INVOICE_SOURCES if source in INVOICE_SOURCES else (SOURCE_RECEIPT,)
     lines = list(
-        SaleFact.objects.filter(granit_sale_id=sale_id, source=source)
+        SaleFact.objects.filter(granit_sale_id=sale_id, source__in=sources)
         .select_related("product", "product__group", "store", "client")
         .order_by("granit_line_id")
     )
@@ -313,7 +314,7 @@ def sales_receipt(request, sale_id: int):
         "sales/receipt.html",
         {
             "sale_id": sale_id,
-            "is_invoice": source == SOURCE_INVOICE,
+            "is_invoice": source in INVOICE_SOURCES,
             "sale_date": first.sale_date,
             "store": first.store,
             "client": first.client,
@@ -337,6 +338,7 @@ def _matrix_period(request) -> tuple[date, date]:
 
 def sales_matrix(request):
     from sales.matrix import build_matrix
+    from sales.reconcile_views import latest_status
 
     date_from, date_to = _matrix_period(request)
     scope = _scope(request)
@@ -347,6 +349,7 @@ def sales_matrix(request):
         {
             **_scope_context(scope),
             "matrix": matrix,
+            "reconcile": latest_status(date_to),
             "date_from": date_from,
             "date_to": date_to,
         },

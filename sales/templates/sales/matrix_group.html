@@ -43,7 +43,7 @@
 <div class="container">
     <p><a href="{% url 'sales_matrix' %}?{{ matrix_query }}">← {% trans "Sales by super-groups" %}</a>
        {% if current_sg %}
-       · <a href="{% url 'sales_matrix_sg' current_sg.pk %}?{{ period_query }}">{% trans "Members" %}: {{ current_sg.title }}</a>
+       · <a href="{% url 'sales_matrix_sg' current_sg.pk %}?{{ period_query }}">{% trans "Members" %}: {{ current_sg.display_title }}</a>
        {% endif %}
     </p>
     <h1>{{ group.name }} <small>({{ group.granit_id }})</small></h1>
@@ -100,7 +100,7 @@
                 <td>{{ row.granit_id }}</td>
                 <td>{{ row.name }}</td>
                 <td class="num">{{ row.qty|qty }}</td>
-                <td class="num">{{ row.amount }}</td>
+                <td class="num">{{ row.amount|money }}</td>
                 <td>
                     <a href="{% url 'sales_explorer' %}?date_from={{ date_from|date:'Y-m-d' }}&amp;date_to={{ date_to|date:'Y-m-d' }}&amp;product={{ row.granit_id }}&amp;group_by=receipt{% if scope_all %}&amp;scope=all{% endif %}">{% trans "Receipts" %}</a>
                 </td>
@@ -113,7 +113,7 @@
             <tr>
                 <td colspan="2">{% trans "Total" %}</td>
                 <td class="num">{{ total_qty|qty }}</td>
-                <td class="num">{{ total_amount }}</td>
+                <td class="num">{{ total_amount|money }}</td>
                 <td></td>
             </tr>
         </tfoot>

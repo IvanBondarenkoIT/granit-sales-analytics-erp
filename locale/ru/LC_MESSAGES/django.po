@@ -763,11 +763,17 @@ msgid "Invoice"
 msgstr "Накладная"
 
 msgid ""
-"All warehouses: retail receipts plus sales invoices (office, HoReCa, service "
-"centres); transfers and write-offs are not included."
+"All warehouses = the Granit report «Sales by warehouses»: receipts as "
+"realized by warehouse documents plus sales invoices with their services "
+"(office, HoReCa, service centres), by realization date. Receipts Granit has "
+"not realized yet are only in Retail; transfers and write-offs are not "
+"included."
 msgstr ""
-"Все склады: розничные чеки плюс расходные накладные (офис, хорека, "
-"сервис-центры); перемещения и списания не входят."
+"Все склады = отчёт Гранита «Реализация товара по складам»: чеки — по "
+"складским документам, которыми Гранит их провёл, плюс расходные накладные с "
+"услугами (офис, хорека, сервис-центры), по дате реализации. Чеки, ещё не "
+"проведённые в Граните, есть только в «Рознице»; перемещения и списания не "
+"входят."
 
 msgid "Last year"
 msgstr "Прошлый год"
@@ -1032,6 +1038,212 @@ msgstr "Все категории"
 
 msgid "Added"
 msgstr "Добавлено"
+
+msgid "Reconciliation"
+msgstr "Сверка"
+
+msgid "Reconciliation with Granit"
+msgstr "Сверка с Гранитом"
+
+msgid "Unknown month."
+msgstr "Неизвестный месяц."
+
+msgid "Granit is not reachable: %(error)s"
+msgstr "Гранит недоступен: %(error)s"
+
+msgid "Granit is not reachable"
+msgstr "Гранит недоступен"
+
+msgid "Reconciliation recalculated."
+msgstr "Сверка пересчитана."
+
+msgid "Granit has an unknown kind of lines"
+msgstr "В Гранте появился новый вид строк"
+
+msgid "New service"
+msgstr "Новая услуга"
+
+msgid "Difference"
+msgstr "Разница"
+
+msgid "difference"
+msgstr "разница"
+
+msgid "Matches"
+msgstr "Сходится"
+
+msgid "Small difference"
+msgstr "Мелкая разница"
+
+msgid "Mismatch"
+msgstr "Расхождение"
+
+msgid ""
+"Granit side: sales documents by realization date, the same as the Granit "
+"report «Sales by warehouses» (amount incl. VAT). Each total is split into "
+"goods lines, service lines and a leftover; the leftover must be zero, "
+"otherwise Granit has a kind of lines we do not load yet."
+msgstr ""
+"Сторона Гранита: документы продажи по дате реализации, как в отчёте Гранита "
+"«Реализация товара по складам» (сумма с НДС). Каждая сумма разложена на "
+"товары, услуги и остаток; остаток должен быть нулевым, иначе в Гранте "
+"появился вид строк, который мы ещё не загружаем."
+
+msgid "Granit"
+msgstr "Гранит"
+
+msgid "Ours"
+msgstr "У нас"
+
+msgid "Flags"
+msgstr "Флаги"
+
+msgid "Recalculate (this and last month)"
+msgstr "Пересчитать (этот и прошлый месяц)"
+
+msgid "Updated nightly. Tolerance per store: %(tolerance)s GEL."
+msgstr "Обновляется ночью. Допуск на магазин: %(tolerance)s лари."
+
+msgid "Month"
+msgstr "Месяц"
+
+msgid "Granit total"
+msgstr "Гранит итого"
+
+msgid "Goods"
+msgstr "Товары"
+
+msgid "Services"
+msgstr "Услуги"
+
+msgid "Service"
+msgstr "Услуга"
+
+msgid "Leftover"
+msgstr "Остаток"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "and %(n)s more"
+msgid_plural "and %(n)s more"
+msgstr[0] "и ещё %(n)s"
+msgstr[1] "и ещё %(n)s"
+msgstr[2] "и ещё %(n)s"
+
+msgid "Services by month (Granit)"
+msgstr "Услуги по месяцам (Гранит)"
+
+msgid "new"
+msgstr "новая"
+
+msgid ""
+"No reconciliation yet. Run «manage.py reconcile_sales --months 12» or press "
+"Recalculate."
+msgstr ""
+"Сверки ещё нет. Запустите «manage.py reconcile_sales --months 12» или нажмите "
+"«Пересчитать»."
+
+msgid ""
+"Click a store to see the documents that differ. «Amount incl. VAT» per "
+"warehouse is the line of the Granit report."
+msgstr ""
+"Нажмите на магазин, чтобы увидеть документы с расхождением. «Сумма с НДС» по "
+"складу — это строка отчёта Гранита."
+
+msgid "Recalculate this month"
+msgstr "Пересчитать этот месяц"
+
+msgid "Calculated"
+msgstr "Рассчитано"
+
+msgid "Amount incl. VAT (Granit)"
+msgstr "Сумма с НДС (Гранит)"
+
+msgid "Ours: goods"
+msgstr "У нас: товары"
+
+msgid "Ours: services"
+msgstr "У нас: услуги"
+
+msgid "Other Granit documents (not sales, for information)"
+msgstr "Другие документы Гранита (не продажи, для информации)"
+
+msgid "Document type"
+msgstr "Тип документа"
+
+msgid "Documents"
+msgstr "Документов"
+
+msgid ""
+"Documents where Granit and our sales disagree. Receipt documents are "
+"compared through the receipt: one receipt can be split into several "
+"warehouse documents."
+msgstr ""
+"Документы, по которым Гранит и наши продажи расходятся. Документы по чекам "
+"сравниваются через чек: один чек может разбиваться на несколько складских "
+"документов."
+
+msgid "Checked: %(checked)s, with a difference: %(total)s."
+msgstr "Проверено: %(checked)s, с расхождением: %(total)s."
+
+msgid "Document"
+msgstr "Документ"
+
+msgid "Document date"
+msgstr "Дата документа"
+
+msgid "Realization date"
+msgstr "Дата реализации"
+
+msgid "Our dates"
+msgstr "Наши даты"
+
+msgid "not loaded"
+msgstr "не загружено"
+
+msgid "Showing the first %(shown)s by size of the difference."
+msgstr "Показаны первые %(shown)s по размеру расхождения."
+
+msgid "All documents match."
+msgstr "Все документы сходятся."
+
+msgid "OK"
+msgstr "OK"
+
+msgid "%(n)s flag"
+msgid_plural "%(n)s flags"
+msgstr[0] "%(n)s флаг"
+msgstr[1] "%(n)s флага"
+msgstr[2] "%(n)s флагов"
+
+msgid "Month not closed"
+msgstr "Месяц не закрыт"
+
+msgid "Incomplete history"
+msgstr "Неполная история"
+
+msgid ""
+"The month is not closed yet: Granit realizes receipts with a delay of "
+"several days, so the difference is expected until all receipts are realized."
+msgstr ""
+"Месяц ещё не закрыт: Гранит проводит чеки с задержкой в несколько дней, "
+"поэтому разница ожидаема, пока все чеки не проведены."
+
+msgid "Our sales history starts inside this month, so it cannot match Granit."
+msgstr ""
+"Наша история продаж начинается внутри этого месяца, поэтому сойтись с "
+"Гранитом он не может."
+
+msgid "Not realized yet"
+msgstr "Ещё не проведено"
+
+msgid ""
+"«Not realized yet»: receipts of the month without a warehouse document in "
+"Granit; they are in Retail but not in All warehouses."
+msgstr ""
+"«Ещё не проведено» — чеки месяца без складского документа в Граните: они "
+"есть в «Рознице», но не во «Всех складах»."
 
 #~ msgid "Stage 3 — Pending"
 #~ msgstr "Этап 3 — ожидает"

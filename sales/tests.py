@@ -10,7 +10,7 @@ from core.models import Product, ProductGroup, Store
 from sales.excel_matrix import matrix_to_xlsx
 from sales.management.commands.seed_supergroups import ensure_catalog
 from sales.matrix import build_matrix
-from sales.models import SCOPE_ALL, SOURCE_INVOICE, SaleFact, SuperGroup, SuperGroupMember
+from sales.models import SCOPE_ALL, SOURCE_INVOICE, SOURCE_REALIZED, SOURCE_SERVICE, SaleFact, SuperGroup, SuperGroupMember
 from sales.supergroups import load_seed_config, resolve_supergroup_key
 
 
@@ -224,6 +224,8 @@ class ScopeTests(TestCase):
         common = {"sale_date": date(2026, 8, 14), "product": self.bean, "granit_line_id": 1}
         SaleFact.objects.create(store=self.shop, quantity=Decimal("0.250"), amount=Decimal("30.00"),
                                 granit_sale_id=5, **common)
+        SaleFact.objects.create(store=self.shop, source=SOURCE_REALIZED, quantity=Decimal("0.250"),
+                                amount=Decimal("30.00"), granit_sale_id=5, **common)
         SaleFact.objects.create(store=self.horeca, source=SOURCE_INVOICE, quantity=Decimal("5.000"),
                                 amount=Decimal("600.00"), granit_sale_id=5, **common)
         self.period = {"date_from": "2026-08-14", "date_to": "2026-08-14"}
@@ -256,6 +258,19 @@ class ScopeTests(TestCase):
         group = self.client.get(reverse("sales_matrix_group", args=[11077]), {**self.period, "scope": "all"})
         self.assertEqual(group.context["total_amount"], Decimal("630.00"))
 
+    def test_service_group_with_negative_id(self):
+        services = ProductGroup.objects.create(granit_id=-1, name="Услуги")
+        repair = Product.objects.create(granit_id=-1, name="Услуга: ремонт", group=services)
+        SaleFact.objects.create(sale_date=date(2026, 8, 14), store=self.horeca, product=repair,
+                                source=SOURCE_SERVICE, quantity=Decimal("1"), amount=Decimal("50.00"),
+                                granit_sale_id=6, granit_line_id=1)
+        outside = SuperGroup.objects.create(key="outside", title="Outside", is_catchall=True)
+        page = self.client.get(reverse("sales_matrix_sg", args=[outside.pk]), {**self.period, "scope": "all"})
+        self.assertContains(page, "/sales/matrix/group/-1/")
+        group = self.client.get(reverse("sales_matrix_group", args=[-1]), {**self.period, "scope": "all"})
+        self.assertEqual(group.status_code, 200)
+        self.assertEqual(group.context["total_amount"], Decimal("50.00"))
+
     def test_receipt_and_invoice_with_same_id(self):
         receipt = self.client.get(reverse("sales_receipt", args=[5]))
         self.assertEqual(receipt.context["total_amount"], Decimal("30.00"))
@@ -268,3 +283,92 @@ class ScopeTests(TestCase):
 
         totals = _daily_totals([self.bean.id], date(2026, 8, 14), date(2026, 8, 14))
         self.assertEqual(totals, {date(2026, 8, 14): Decimal("30.00")})
+
+
+class ReconcilePageTests(TestCase):
+    def setUp(self):
+        from etl.models import ReconcileSnapshot
+
+        self.user = get_user_model().objects.create_user("viewer", password="test-pass-123")
+        self.client.force_login(self.user)
+        self.store = Store.objects.create(granit_id=133, name="СЦ ГРУЗИЯ")
+        store_row = {
+            "store": 133, "name": "СЦ ГРУЗИЯ", "docs": 3,
+            "warehouses": [{"id": 133, "name": "СЦ ГРУЗИЯ", "amount": 150.0}],
+            "granit_total": 150.0, "granit_goods": 40.0, "granit_services": 100.0, "leftover": 10.0,
+            "ours_goods": 40.0, "ours_services": 100.0, "ours_total": 140.0,
+            "diff": -10.0, "diff_goods": 0.0, "diff_services": 0.0, "flags": ["leftover", "diff"],
+        }
+        ReconcileSnapshot.objects.create(
+            month=date(2026, 8, 1),
+            granit_total=Decimal("150"),
+            ours_total=Decimal("140"),
+            flag_count=2,
+            data={
+                "month": "2026-08-01",
+                "stores": [store_row],
+                "totals": {k: v for k, v in store_row.items() if isinstance(v, float)},
+                "services": [{"id": 1, "name": "ремонт кофеварки", "granit": 100.0, "ours": 100.0, "new": True}],
+                "other_types": [{"typ": 1, "docs": 4, "amount": 500.0}],
+                "flags": [
+                    {"kind": "leftover", "store": "СЦ ГРУЗИЯ", "amount": 10.0},
+                    {"kind": "diff", "store": "СЦ ГРУЗИЯ", "amount": -10.0},
+                ],
+            },
+        )
+
+    def test_overview_month_and_matrix_badge(self):
+        page = self.client.get(reverse("sales_reconcile"))
+        self.assertEqual(page.status_code, 200)
+        self.assertEqual(page.context["current"]["status"], "bad")
+        self.assertEqual(page.context["services"]["kinds"][0]["new_in"], "2026-08")
+        self.assertContains(page, reverse("sales_reconcile_month", args=["2026-08"]))
+
+        month = self.client.get(reverse("sales_reconcile_month", args=["2026-08"]))
+        self.assertEqual(month.context["stores"][0]["status"], "bad")
+        self.assertContains(month, reverse("sales_reconcile_docs", args=["2026-08", 133]))
+        self.assertEqual(self.client.get(reverse("sales_reconcile_month", args=["2026-07"])).status_code, 404)
+
+        matrix = self.client.get(reverse("sales_matrix"), {"date_from": "2026-08-01", "date_to": "2026-08-31"})
+        self.assertEqual(matrix.context["reconcile"]["key"], "2026-08")
+        self.assertContains(matrix, "rc-badge bad")
+
+    def test_open_month_is_not_a_mismatch(self):
+        from etl.models import ReconcileSnapshot
+
+        snap = ReconcileSnapshot.objects.get(month=date(2026, 8, 1))
+        snap.data["state"] = "open"
+        snap.save()
+        page = self.client.get(reverse("sales_reconcile"), HTTP_ACCEPT_LANGUAGE="ru")
+        self.assertEqual(page.context["current"]["status"], "open")
+        month = self.client.get(reverse("sales_reconcile_month", args=["2026-08"]), HTTP_ACCEPT_LANGUAGE="ru")
+        self.assertContains(month, "Месяц не закрыт")
+        matrix = self.client.get(reverse("sales_matrix"), {"date_from": "2026-08-01", "date_to": "2026-08-31"})
+        self.assertContains(matrix, "rc-badge open")
+
+    def test_documents_page(self):
+        from unittest.mock import patch
+
+        rows = [{
+            "kind": "invoice", "key": 10, "docs": [{"id": 10, "nbr": "7", "doc_date": date(2026, 8, 3),
+                                                   "real_date": date(2026, 8, 3)}],
+            "granit": 150.0, "goods": 40.0, "services": 100.0, "leftover": 10.0,
+            "ours": 140.0, "ours_dates": [date(2026, 8, 3)], "diff": -10.0,
+        }]
+        with patch("sales.reconcile_views.month_documents", return_value={"rows": rows, "total": 1, "checked": 5}):
+            page = self.client.get(reverse("sales_reconcile_docs", args=["2026-08", 133]))
+        self.assertEqual(page.status_code, 200)
+        self.assertContains(page, "DGVDT 10")
+
+    def test_refresh_is_staff_only(self):
+        from unittest.mock import patch
+
+        url = reverse("sales_reconcile_refresh")
+        with patch("sales.reconcile_views.refresh_months") as refresh:
+            self.assertEqual(self.client.post(url).status_code, 403)
+            refresh.assert_not_called()
+            self.user.is_staff = True
+            self.user.save()
+            response = self.client.post(url, {"next": "https://evil.example/"})
+            refresh.assert_called_once()
+        self.assertEqual(response["Location"], reverse("sales_reconcile"))

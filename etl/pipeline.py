@@ -35,15 +35,33 @@ from etl.queries import (
     sql_product_groups,
     sql_product_parameters,
     sql_products,
+    sql_realizations_day,
     sql_sales_day,
+    sql_service_catalog,
+    sql_services_day,
     sql_stock_chunk,
     sql_stores,
     sql_warehouse_groups,
     sql_warehouses,
 )
-from sales.models import SOURCE_INVOICE, SOURCE_RECEIPT, SaleFact, StockSnapshot
+from sales.models import (
+    INVOICE_SOURCES,
+    SOURCE_INVOICE,
+    SOURCE_REALIZED,
+    SOURCE_RECEIPT,
+    SOURCE_SERVICE,
+    SaleFact,
+    StockSnapshot,
+)
 
 CARD_NUMBER_RE = re.compile(r"^\d{13}$")
+# Services (HBGDDDU) are stored as synthetic products: negative IDs never clash with GOODS.ID.
+SERVICE_GROUP_ID = -1
+SERVICE_GROUP_NAME = "Услуги"
+
+
+def service_product_id(service_id: int) -> int:
+    return -abs(service_id)
 
 
 def _as_int(value: Any) -> int | None:
@@ -298,10 +316,38 @@ def ensure_client(granit_id: int | None) -> Client | None:
     return client
 
 
+def upsert_service_products(rows: Iterable[dict[str, Any]]) -> dict[int, Product]:
+    """HBGDDDU rows -> «Услуга: <name>» products in the «Услуги» group. Returns {service_id: product}."""
+    group, _ = ProductGroup.objects.update_or_create(
+        granit_id=SERVICE_GROUP_ID,
+        defaults={"name": SERVICE_GROUP_NAME, "parent": None, "parent_path": SERVICE_GROUP_NAME},
+    )
+    out: dict[int, Product] = {}
+    for row in rows:
+        service_id = _as_int(row.get("ID"))
+        if service_id is None:
+            continue
+        name = _as_str(row.get("NAME"), 480) or f"#{service_id}"
+        product, _ = Product.objects.update_or_create(
+            granit_id=service_product_id(service_id),
+            defaults={"name": f"Услуга: {name}", "group": group, "is_active": True},
+        )
+        out[service_id] = product
+    return out
+
+
+def ensure_service_products(service_ids: Iterable[int]) -> None:
+    wanted = {service_product_id(s) for s in service_ids}
+    known = set(Product.objects.filter(granit_id__in=wanted).values_list("granit_id", flat=True))
+    if wanted - known:
+        upsert_service_products(query_rows(sql_service_catalog()))
+
+
 def load_dims() -> dict[str, int]:
     stores_i, stores_u = upsert_stores(query_rows(sql_stores()))
     groups_i, groups_u = upsert_groups(query_rows(sql_product_groups()))
     products_i, products_u = upsert_products(query_rows(sql_products()))
+    upsert_service_products(query_rows(sql_service_catalog()))
     param_sql, param_params = sql_product_parameters()
     params_i, params_u = upsert_parameters(query_rows(param_sql, param_params))
     clients_i, clients_u = upsert_clients(query_rows(sql_clients()))
@@ -376,9 +422,20 @@ def warehouse_store_routes() -> dict[int, int]:
     return routes
 
 
-def _sale_facts(rows: list[dict[str, Any]], *, source: str, sale_date: date, store_of) -> list[SaleFact]:
+def _row_product_id(row: dict[str, Any]) -> int | None:
+    return _as_int(row.get("PRODUCT_ID"))
+
+
+def _row_service_product_id(row: dict[str, Any]) -> int | None:
+    service_id = _as_int(row.get("SERVICE_ID"))
+    return service_product_id(service_id) if service_id is not None else None
+
+
+def _sale_facts(
+    rows: list[dict[str, Any]], *, source: str, sale_date: date, store_of, product_of=_row_product_id
+) -> list[SaleFact]:
     store_ids = {store_of(r) for r in rows}
-    product_ids = {_as_int(r.get("PRODUCT_ID")) for r in rows}
+    product_ids = {product_of(r) for r in rows}
     client_ids = {_as_int(r.get("CLIENT_ID")) for r in rows}
     store_ids.discard(None)
     product_ids.discard(None)
@@ -400,7 +457,7 @@ def _sale_facts(rows: list[dict[str, Any]], *, source: str, sale_date: date, sto
         sale_id = _as_int(row.get("SALE_ID"))
         line_id = _as_int(row.get("LINE_ID"))
         store_id = store_of(row)
-        product_id = _as_int(row.get("PRODUCT_ID"))
+        product_id = product_of(row)
         if sale_id is None or line_id is None or store_id is None or product_id is None:
             continue
         key = (sale_id, line_id)
@@ -429,15 +486,28 @@ def _sale_facts(rows: list[dict[str, Any]], *, source: str, sale_date: date, sto
 
 
 def load_sales_day(sale_date: date, routes: dict[int, int] | None = None) -> int:
-    """Receipts (retail) and sales invoices (all warehouses) for one day."""
+    """One day of receipts (retail, by receipt date) and of warehouse documents (all warehouses, by REALDATE):
+    receipt realizations, sales invoices and their service lines.
+
+    Documents may move between days when they are edited in Granit: their old rows are removed
+    by document / line ID before the insert.
+    """
     if routes is None:
         routes = warehouse_store_routes()
     period = [sale_date, sale_date + timedelta(days=1)]
 
     sql, base_params = sql_sales_day()
     receipts = query_rows(sql, base_params + period)
+    sql, base_params = sql_realizations_day()
+    realized = query_rows(sql, base_params + period)
     sql, base_params = sql_invoices_day()
     invoices = query_rows(sql, base_params + period)
+    sql, base_params = sql_services_day()
+    services = query_rows(sql, base_params + period)
+    ensure_service_products({s for s in (_as_int(r.get("SERVICE_ID")) for r in services) if s is not None})
+
+    def warehouse_store(row):
+        return routes.get(_as_int(row.get("WAREHOUSE_ID")))
 
     facts = _sale_facts(
         receipts,
@@ -445,15 +515,24 @@ def load_sales_day(sale_date: date, routes: dict[int, int] | None = None) -> int
         sale_date=sale_date,
         store_of=lambda r: _as_int(r.get("STORE_ID")),
     )
+    facts += _sale_facts(realized, source=SOURCE_REALIZED, sale_date=sale_date, store_of=warehouse_store)
+    facts += _sale_facts(invoices, source=SOURCE_INVOICE, sale_date=sale_date, store_of=warehouse_store)
     facts += _sale_facts(
-        invoices,
-        source=SOURCE_INVOICE,
+        services,
+        source=SOURCE_SERVICE,
         sale_date=sale_date,
-        store_of=lambda r: routes.get(_as_int(r.get("WAREHOUSE_ID"))),
+        store_of=warehouse_store,
+        product_of=_row_service_product_id,
     )
+    invoice_ids = {f.granit_sale_id for f in facts if f.source in INVOICE_SOURCES}
+    realized_line_ids = {f.granit_line_id for f in facts if f.source == SOURCE_REALIZED}
 
     with transaction.atomic():
         SaleFact.objects.filter(sale_date=sale_date).delete()
+        if invoice_ids:
+            SaleFact.objects.filter(source__in=INVOICE_SOURCES, granit_sale_id__in=invoice_ids).delete()
+        if realized_line_ids:
+            SaleFact.objects.filter(source=SOURCE_REALIZED, granit_line_id__in=realized_line_ids).delete()
         SaleFact.objects.bulk_create(facts, batch_size=1000)
     return len(facts)
 
