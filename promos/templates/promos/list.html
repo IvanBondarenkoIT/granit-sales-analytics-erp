@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n numbers %}
 
 {% block title %}{% trans "Promotion Effectiveness" %}{% endblock %}
 
@@ -47,7 +47,7 @@
                 <td><a href="{% url 'promo_detail' row.promo.pk %}">{{ row.promo.name }}</a></td>
                 <td>{{ row.promo.start_date }} — {{ row.promo.end_date }}</td>
                 <td class="num">{{ row.sku_count }}</td>
-                <td class="num">{% if row.estimated_earnings is not None %}{{ row.estimated_earnings }}{% else %}—{% endif %}</td>
+                <td class="num">{% if row.estimated_earnings is not None %}{{ row.estimated_earnings|money }}{% else %}—{% endif %}</td>
             </tr>
             {% endfor %}
         </tbody>

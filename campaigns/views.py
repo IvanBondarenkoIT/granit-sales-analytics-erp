@@ -179,7 +179,7 @@ def campaign_detail(request, pk: int):
         item.view_amount = amount
         rows.append(item)
     rows.sort(
-        key=lambda r: (-bool(r.view_bought), -float(r.view_amount or 0), r.granit_client_id or 0, r.card_number)
+        key=lambda r: (-bool(r.view_bought), -(r.view_amount or Decimal("0")), r.granit_client_id or 0, r.card_number)
     )
     row_count = len(rows)
     clients = rows[:CLIENT_LIMIT]

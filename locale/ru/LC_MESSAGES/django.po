@@ -381,8 +381,8 @@ msgid "vs YoY"
 msgstr "к YoY"
 
 msgid ""
-"No sales in the warehouse for the same window last year, so YoY is empty."
-msgstr "В складе нет продаж за то же окно год назад, поэтому YoY пустой."
+"No retail sales in the same window last year, so YoY is empty."
+msgstr "Нет розничных продаж за то же окно год назад, поэтому YoY пустой."
 
 msgid "Day"
 msgstr "День"
@@ -1234,6 +1234,9 @@ msgid "Our sales history starts inside this month, so it cannot match Granit."
 msgstr ""
 "Наша история продаж начинается внутри этого месяца, поэтому сойтись с "
 "Гранитом он не может."
+
+msgid "Realization"
+msgstr "Реализация"
 
 msgid "Not realized yet"
 msgstr "Ещё не проведено"

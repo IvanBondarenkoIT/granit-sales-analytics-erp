@@ -71,19 +71,19 @@
                     <div class="muted">{% trans "no site link" %}</div>
                     {% endif %}
                 </td>
-                <td class="num">{% if row.last_cost is not None %}{{ row.last_cost }}{% else %}—{% endif %}</td>
-                <td class="num">{% if row.avg_cost_90d is not None %}{{ row.avg_cost_90d }}{% else %}—{% endif %}</td>
+                <td class="num">{% if row.last_cost is not None %}{{ row.last_cost|money }}{% else %}—{% endif %}</td>
+                <td class="num">{% if row.avg_cost_90d is not None %}{{ row.avg_cost_90d|money }}{% else %}—{% endif %}</td>
                 <td class="num">
-                    {% if row.retail_price is not None %}{{ row.retail_price }}{% else %}—{% endif %}
-                    {% if row.retail_compare is not None %}<span class="muted"> ({{ row.retail_compare }})</span>{% endif %}
+                    {% if row.retail_price is not None %}{{ row.retail_price|money }}{% else %}—{% endif %}
+                    {% if row.retail_compare is not None %}<span class="muted"> ({{ row.retail_compare|money }})</span>{% endif %}
                 </td>
                 <td class="num">
-                    {% if row.sale_price is not None %}{{ row.sale_price }}{% else %}—{% endif %}
-                    {% if row.sale_compare is not None %}<span class="muted"> ({{ row.sale_compare }})</span>{% endif %}
+                    {% if row.sale_price is not None %}{{ row.sale_price|money }}{% else %}—{% endif %}
+                    {% if row.sale_compare is not None %}<span class="muted"> ({{ row.sale_compare|money }})</span>{% endif %}
                 </td>
                 <td class="num">{% if row.margin_pct is not None %}{{ row.margin_pct }}%{% else %}—{% endif %}</td>
                 <td class="num">{{ row.stock_qty|qty }}</td>
-                <td class="num">{% if row.estimated_earnings is not None %}{{ row.estimated_earnings }}{% else %}—{% endif %}</td>
+                <td class="num">{% if row.estimated_earnings is not None %}{{ row.estimated_earnings|money }}{% else %}—{% endif %}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -91,7 +91,7 @@
         <tfoot>
             <tr>
                 <td colspan="7">{% trans "Total est. earnings" %}</td>
-                <td class="num">{{ earnings_total }}</td>
+                <td class="num">{{ earnings_total|money }}</td>
             </tr>
         </tfoot>
         {% endif %}
@@ -105,10 +105,10 @@
         <a class="btn" style="text-decoration: none;" href="{% url 'promo_charts' promo.pk %}">{% trans "Charts" %}</a>
     </form>
     <div class="stats">
-        <div class="stat"><span>{% trans "Actual" %}</span><strong>{{ actual_sum }}</strong></div>
-        <div class="stat"><span>{% trans "Pre-period baseline" %}</span><strong>{% if baseline_sum is not None %}{{ baseline_sum }}{% else %}—{% endif %}</strong></div>
-        <div class="stat"><span>{% trans "YoY baseline" %}</span><strong>{% if yoy_sum is not None %}{{ yoy_sum }}{% else %}—{% endif %}</strong></div>
-        <div class="stat"><span>{% trans "Forecast" %}</span><strong>{% if forecast_sum is not None %}{{ forecast_sum }}{% else %}—{% endif %}</strong></div>
+        <div class="stat"><span>{% trans "Actual" %}</span><strong>{{ actual_sum|money }}</strong></div>
+        <div class="stat"><span>{% trans "Pre-period baseline" %}</span><strong>{% if baseline_sum is not None %}{{ baseline_sum|money }}{% else %}—{% endif %}</strong></div>
+        <div class="stat"><span>{% trans "YoY baseline" %}</span><strong>{% if yoy_sum is not None %}{{ yoy_sum|money }}{% else %}—{% endif %}</strong></div>
+        <div class="stat"><span>{% trans "Forecast" %}</span><strong>{% if forecast_sum is not None %}{{ forecast_sum|money }}{% else %}—{% endif %}</strong></div>
         <div class="stat">
             <span>{% trans "vs baseline" %}</span>
             <strong class="{% if lift_pre is not None and lift_pre >= 0 %}up{% elif lift_pre is not None %}down{% endif %}">
@@ -123,7 +123,7 @@
         </div>
     </div>
     {% if yoy_missing %}
-    <p class="hint">{% trans "No sales in the warehouse for the same window last year, so YoY is empty." %}</p>
+    <p class="hint">{% trans "No retail sales in the same window last year, so YoY is empty." %}</p>
     {% endif %}
     {% if days %}
     <table>
@@ -140,20 +140,20 @@
             {% for row in days %}
             <tr>
                 <td>{{ row.analysis_date }}</td>
-                <td class="num">{{ row.actual_sales }}</td>
-                <td class="num">{% if row.baseline_pre_period is not None %}{{ row.baseline_pre_period }}{% else %}—{% endif %}</td>
-                <td class="num">{% if row.baseline_yoy is not None %}{{ row.baseline_yoy }}{% else %}—{% endif %}</td>
-                <td class="num">{% if row.forecast_value is not None %}{{ row.forecast_value }}{% else %}—{% endif %}</td>
+                <td class="num">{{ row.actual_sales|money }}</td>
+                <td class="num">{% if row.baseline_pre_period is not None %}{{ row.baseline_pre_period|money }}{% else %}—{% endif %}</td>
+                <td class="num">{% if row.baseline_yoy is not None %}{{ row.baseline_yoy|money }}{% else %}—{% endif %}</td>
+                <td class="num">{% if row.forecast_value is not None %}{{ row.forecast_value|money }}{% else %}—{% endif %}</td>
             </tr>
             {% endfor %}
         </tbody>
         <tfoot>
             <tr>
                 <td>{% trans "Total" %}</td>
-                <td class="num">{{ actual_sum }}</td>
-                <td class="num">{% if baseline_sum is not None %}{{ baseline_sum }}{% else %}—{% endif %}</td>
-                <td class="num">{% if yoy_sum is not None %}{{ yoy_sum }}{% else %}—{% endif %}</td>
-                <td class="num">{% if forecast_sum is not None %}{{ forecast_sum }}{% else %}—{% endif %}</td>
+                <td class="num">{{ actual_sum|money }}</td>
+                <td class="num">{% if baseline_sum is not None %}{{ baseline_sum|money }}{% else %}—{% endif %}</td>
+                <td class="num">{% if yoy_sum is not None %}{{ yoy_sum|money }}{% else %}—{% endif %}</td>
+                <td class="num">{% if forecast_sum is not None %}{{ forecast_sum|money }}{% else %}—{% endif %}</td>
             </tr>
         </tfoot>
     </table>

@@ -29,7 +29,7 @@
         <tr>
             <td>
                 {% if row.sale_id %}
-                <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}{% if row.is_invoice %}&amp;source=invoice{% endif %}">{% if row.is_invoice %}{% trans "Invoice" %}{% else %}{% trans "Receipt" %}{% endif %} #{{ row.name }}</a>
+                <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}{% if row.sale_source and row.sale_source != 'receipt' %}&amp;source={{ row.sale_source }}{% endif %}">{% if row.is_invoice %}{% trans "Invoice" %}{% elif row.is_realized %}{% trans "Realization" %}{% else %}{% trans "Receipt" %}{% endif %} #{{ row.name }}</a>
                 {% else %}
                 {{ row.name }}
                 {% endif %}
@@ -43,7 +43,7 @@
             <td class="num">{{ row.amount|money }}</td>
             <td>
                 {% if row.sale_id %}
-                <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}{% if row.is_invoice %}&amp;source=invoice{% endif %}">{% trans "Order items" %}</a>
+                <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}{% if row.sale_source and row.sale_source != 'receipt' %}&amp;source={{ row.sale_source }}{% endif %}">{% trans "Order items" %}</a>
                 {% elif row.receipts_query %}
                 <a href="{% url 'sales_explorer' %}?{{ row.receipts_query }}">{% trans "Receipts" %}</a>
                 {% endif %}

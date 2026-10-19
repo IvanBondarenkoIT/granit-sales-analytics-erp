@@ -68,6 +68,42 @@ class CardMatchTests(TestCase):
         self.assertIsNone(miss.client)
         self.assertIsNone(miss.granit_client_id)
 
+    def test_campaign_ignores_invoice_and_realized(self):
+        from sales.models import SOURCE_INVOICE, SOURCE_REALIZED
+
+        SaleFact.objects.create(
+            sale_date=date(2026, 9, 22),
+            store=self.store,
+            client=self.client_a,
+            product=self.product,
+            quantity=Decimal("1"),
+            amount=Decimal("100.00"),
+            granit_sale_id=2,
+            granit_line_id=1,
+            source=SOURCE_INVOICE,
+        )
+        SaleFact.objects.create(
+            sale_date=date(2026, 9, 22),
+            store=self.store,
+            client=self.client_a,
+            product=self.product,
+            quantity=Decimal("1"),
+            amount=Decimal("50.00"),
+            granit_sale_id=3,
+            granit_line_id=1,
+            source=SOURCE_REALIZED,
+        )
+        campaign = Campaign.objects.create(name="TG-retail", channel=Campaign.CHANNEL_TELEGRAM, sms_sent_on=date(2026, 9, 21))
+        analyze_rows(
+            campaign,
+            [CampaignRow(granit_client_id=None, phone="557616822", card_number="2200000093516")],
+            date(2026, 9, 21),
+            date(2026, 9, 30),
+        )
+        hit = CampaignClient.objects.get(campaign=campaign, card_number="2200000093516")
+        self.assertFalse(hit.had_sales)
+        self.assertEqual(hit.sales_amount, Decimal("0"))
+
 
 class EtlCardTests(TestCase):
     def test_only_13_digit_names_become_cards(self):

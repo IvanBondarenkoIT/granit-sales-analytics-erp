@@ -70,7 +70,7 @@
         ·
         <a class="rc-badge {{ reconcile.status }}" href="{% url 'sales_reconcile_month' reconcile.key %}">
             {% trans "Reconciliation with Granit" %} {{ reconcile.month|date:"m.Y" }}:
-            {% if reconcile.status == "ok" %}{% trans "OK" %}{% elif reconcile.status == "open" %}{% trans "Month not closed" %}{% elif reconcile.status == "partial" %}{% trans "Incomplete history" %}{% else %}{% trans "difference" %} {{ reconcile.totals.diff|floatformat:"2g" }}{% if reconcile.flags %}, {% blocktrans count n=reconcile.flags|length %}{{ n }} flag{% plural %}{{ n }} flags{% endblocktrans %}{% endif %}{% endif %}
+            {% if reconcile.status == "ok" %}{% trans "OK" %}{% elif reconcile.status == "open" %}{% trans "Month not closed" %}{% elif reconcile.status == "partial" %}{% trans "Incomplete history" %}{% else %}{% trans "difference" %} {{ reconcile.totals.diff|money }}{% if reconcile.flags %}, {% blocktrans count n=reconcile.flags|length %}{{ n }} flag{% plural %}{{ n }} flags{% endblocktrans %}{% endif %}{% endif %}
         </a>
         {% else %}
         · <a href="{% url 'sales_reconcile' %}">{% trans "Reconciliation with Granit" %}</a>

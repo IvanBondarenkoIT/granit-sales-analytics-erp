@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n numbers %}
 
 {% block title %}{% trans "Reconciliation with Granit" %} · {{ row.month|date:"F Y" }}{% endblock %}
 
@@ -56,16 +56,16 @@
             <tr class="{{ s.status }}">
                 <td class="text store">
                     <a href="{% url 'sales_reconcile_docs' row.key s.store %}">{{ s.name }}</a>
-                    {% for wh in s.warehouses %}<span class="sub">{{ wh.name }}: {{ wh.amount|floatformat:"2g" }}</span>{% endfor %}
+                    {% for wh in s.warehouses %}<span class="sub">{{ wh.name }}: {{ wh.amount|money }}</span>{% endfor %}
                 </td>
-                <td>{{ s.granit_total|floatformat:"2g" }}</td>
-                <td>{{ s.granit_goods|floatformat:"2g" }}</td>
-                <td class="{% if not s.granit_services %}muted{% endif %}">{{ s.granit_services|floatformat:"2g" }}</td>
-                <td class="{% if s.leftover %}neg{% else %}muted{% endif %}">{{ s.leftover|floatformat:"2g" }}</td>
-                <td>{{ s.ours_goods|floatformat:"2g" }}{% if s.diff_goods %}<span class="sub {% if s.diff_goods < 0 %}neg{% else %}pos{% endif %}">{{ s.diff_goods|floatformat:"2g" }}</span>{% endif %}</td>
-                <td class="{% if not s.ours_services %}muted{% endif %}">{{ s.ours_services|floatformat:"2g" }}{% if s.diff_services %}<span class="sub {% if s.diff_services < 0 %}neg{% else %}pos{% endif %}">{{ s.diff_services|floatformat:"2g" }}</span>{% endif %}</td>
-                <td class="{% if s.diff < 0 %}neg{% elif s.diff > 0 %}pos{% else %}muted{% endif %}">{{ s.diff|floatformat:"2g" }}</td>
-                <td class="{% if not s.pending %}muted{% endif %}">{{ s.pending|default:0|floatformat:"2g" }}</td>
+                <td>{{ s.granit_total|money }}</td>
+                <td>{{ s.granit_goods|money }}</td>
+                <td class="{% if not s.granit_services %}muted{% endif %}">{{ s.granit_services|money }}</td>
+                <td class="{% if s.leftover %}neg{% else %}muted{% endif %}">{{ s.leftover|money }}</td>
+                <td>{{ s.ours_goods|money }}{% if s.diff_goods %}<span class="sub {% if s.diff_goods < 0 %}neg{% else %}pos{% endif %}">{{ s.diff_goods|money }}</span>{% endif %}</td>
+                <td class="{% if not s.ours_services %}muted{% endif %}">{{ s.ours_services|money }}{% if s.diff_services %}<span class="sub {% if s.diff_services < 0 %}neg{% else %}pos{% endif %}">{{ s.diff_services|money }}</span>{% endif %}</td>
+                <td class="{% if s.diff < 0 %}neg{% elif s.diff > 0 %}pos{% else %}muted{% endif %}">{{ s.diff|money }}</td>
+                <td class="{% if not s.pending %}muted{% endif %}">{{ s.pending|default:0|money }}</td>
                 <td>{% include "sales/_reconcile_status.html" with status=s.status %}</td>
             </tr>
             {% endfor %}
@@ -73,14 +73,14 @@
         <tfoot>
             <tr>
                 <td>{% trans "Total" %}</td>
-                <td>{{ data.totals.granit_total|floatformat:"2g" }}</td>
-                <td>{{ data.totals.granit_goods|floatformat:"2g" }}</td>
-                <td>{{ data.totals.granit_services|floatformat:"2g" }}</td>
-                <td>{{ data.totals.leftover|floatformat:"2g" }}</td>
-                <td>{{ data.totals.ours_goods|floatformat:"2g" }}</td>
-                <td>{{ data.totals.ours_services|floatformat:"2g" }}</td>
-                <td>{{ data.totals.diff|floatformat:"2g" }}</td>
-                <td>{{ data.totals.pending|default:0|floatformat:"2g" }}</td>
+                <td>{{ data.totals.granit_total|money }}</td>
+                <td>{{ data.totals.granit_goods|money }}</td>
+                <td>{{ data.totals.granit_services|money }}</td>
+                <td>{{ data.totals.leftover|money }}</td>
+                <td>{{ data.totals.ours_goods|money }}</td>
+                <td>{{ data.totals.ours_services|money }}</td>
+                <td>{{ data.totals.diff|money }}</td>
+                <td>{{ data.totals.pending|default:0|money }}</td>
                 <td></td>
             </tr>
         </tfoot>
@@ -94,8 +94,8 @@
             {% for item in data.services %}
             <tr>
                 <td>{{ item.name }}{% if item.new %} <span class="pill new">{% trans "new" %}</span>{% endif %}</td>
-                <td>{{ item.granit|floatformat:"2g" }}</td>
-                <td>{{ item.ours|floatformat:"2g" }}</td>
+                <td>{{ item.granit|money }}</td>
+                <td>{{ item.ours|money }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -108,7 +108,7 @@
         <thead><tr><th>{% trans "Document type" %}</th><th>{% trans "Documents" %}</th><th>{% trans "Amount" %}</th></tr></thead>
         <tbody>
             {% for t in data.other_types %}
-            <tr><td>TYP {{ t.typ }}</td><td>{{ t.docs }}</td><td>{{ t.amount|floatformat:"2g" }}</td></tr>
+            <tr><td>TYP {{ t.typ }}</td><td>{{ t.docs }}</td><td>{{ t.amount|money }}</td></tr>
             {% endfor %}
         </tbody>
     </table>

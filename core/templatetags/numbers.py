@@ -1,4 +1,4 @@
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 
 from django import template
 from django.utils.formats import number_format
@@ -7,6 +7,17 @@ register = template.Library()
 
 QTY_STEP = Decimal("0.001")
 MONEY_STEP = Decimal("0.01")
+
+
+def format_money(value) -> str:
+    """Amount rounded to 2 decimals for templates and Python callers (charts)."""
+    if value is None or value == "":
+        return ""
+    try:
+        number = Decimal(str(value)).quantize(MONEY_STEP, rounding=ROUND_HALF_UP)
+    except (InvalidOperation, ValueError):
+        return str(value)
+    return number_format(number, decimal_pos=2, use_l10n=True)
 
 
 @register.filter
@@ -25,10 +36,4 @@ def qty(value):
 @register.filter
 def money(value):
     """Amount rounded to 2 decimals (amounts are stored unrounded, like Granit lines)."""
-    if value is None or value == "":
-        return ""
-    try:
-        number = Decimal(str(value)).quantize(MONEY_STEP)
-    except (InvalidOperation, ValueError):
-        return value
-    return number_format(number, decimal_pos=2, use_l10n=True)
+    return format_money(value)

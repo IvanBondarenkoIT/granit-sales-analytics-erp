@@ -74,7 +74,7 @@ def _style_metric_cell(cell, header: str) -> None:
     if header.endswith(" qty") or header in {"qty", "total_qty"}:
         cell.number_format = QTY_FORMAT
     elif header.endswith(" amt") or header in {"amount", "total_amount"}:
-        cell.number_format = "#,##0"
+        cell.number_format = "#,##0.00"
     elif header == "group_id" and cell.value not in ("", None):
         cell.number_format = "0"
 

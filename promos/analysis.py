@@ -55,9 +55,10 @@ def _daily_totals(product_ids: list[int], date_from: date, date_to: date) -> dic
 
 
 def _warehouse_span() -> tuple[date | None, date | None]:
-    dates = SaleFact.objects.order_by("sale_date").values_list("sale_date", flat=True)
+    """Retail history bounds (promo lift is cash-register only)."""
+    dates = SaleFact.objects.retail().order_by("sale_date").values_list("sale_date", flat=True)
     first = dates.first()
-    last = SaleFact.objects.order_by("-sale_date").values_list("sale_date", flat=True).first()
+    last = SaleFact.objects.retail().order_by("-sale_date").values_list("sale_date", flat=True).first()
     return first, last
 
 

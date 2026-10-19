@@ -9,7 +9,15 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 
 from core.models import Product, ProductGroup, ProductParameterValue, Store
-from sales.models import INVOICE_SOURCES, SCOPE_ALL, SCOPE_RETAIL, SCOPES, SOURCE_RECEIPT, SaleFact
+from sales.models import (
+    INVOICE_SOURCES,
+    SCOPE_ALL,
+    SCOPE_RETAIL,
+    SCOPES,
+    SOURCE_RECEIPT,
+    SOURCE_REALIZED,
+    SaleFact,
+)
 
 ROW_LIMIT = 300
 GROUP_BY_OPTIONS = ("product", "group", "param", "store", "client", "day", "receipt")
@@ -107,6 +115,8 @@ def _label_rows(group_by: str, rows: list[dict], base_params: dict) -> list[dict
     for row in rows:
         sale_id = None
         is_invoice = False
+        is_realized = False
+        sale_source = None
         receipts_params = dict(base_params)
         receipts_params["group_by"] = "receipt"
         if group_by == "product":
@@ -142,7 +152,9 @@ def _label_rows(group_by: str, rows: list[dict], base_params: dict) -> list[dict
             name = sale_id
             secondary = row.get("sale_date")
             receipts_params = None
-            is_invoice = row.get("source") in INVOICE_SOURCES
+            sale_source = row.get("source") or SOURCE_RECEIPT
+            is_invoice = sale_source in INVOICE_SOURCES
+            is_realized = sale_source == SOURCE_REALIZED
         else:
             name = row.get("sale_date")
             secondary = ""
@@ -158,6 +170,8 @@ def _label_rows(group_by: str, rows: list[dict], base_params: dict) -> list[dict
                 "client_granit_id": row.get("client__granit_id"),
                 "sale_id": sale_id,
                 "is_invoice": is_invoice,
+                "is_realized": is_realized,
+                "sale_source": sale_source,
                 "receipts_query": _encode_params(receipts_params) if receipts_params else "",
                 "qty": row.get("qty") or Decimal("0"),
                 "amount": row.get("amount") or Decimal("0"),
@@ -266,7 +280,7 @@ def _explorer_context(request) -> dict:
             "store": _("Store"),
             "client": _("Client"),
             "day": _("Day"),
-            "receipt": _("Receipt"),
+            "receipt": _("Document"),
         }[group_by],
         "show_secondary": group_by in {"product", "client", "receipt"},
         "secondary_heading": {
@@ -281,7 +295,7 @@ def _explorer_context(request) -> dict:
             ("store", _("Store")),
             ("client", _("Client")),
             ("day", _("Day")),
-            ("receipt", _("Receipt")),
+            ("receipt", _("Document")),
         ],
         "sort_choices": [
             ("amount", _("Amount")),
@@ -298,8 +312,12 @@ def sales_explorer(request):
 
 
 def sales_receipt(request, sale_id: int):
-    source = _choice(request.GET.get("source"), (SOURCE_RECEIPT, *INVOICE_SOURCES), SOURCE_RECEIPT)
-    sources = INVOICE_SOURCES if source in INVOICE_SOURCES else (SOURCE_RECEIPT,)
+    source = _choice(
+        request.GET.get("source"),
+        (SOURCE_RECEIPT, SOURCE_REALIZED, *INVOICE_SOURCES),
+        SOURCE_RECEIPT,
+    )
+    sources = INVOICE_SOURCES if source in INVOICE_SOURCES else (source,)
     lines = list(
         SaleFact.objects.filter(granit_sale_id=sale_id, source__in=sources)
         .select_related("product", "product__group", "store", "client")
@@ -315,6 +333,8 @@ def sales_receipt(request, sale_id: int):
         {
             "sale_id": sale_id,
             "is_invoice": source in INVOICE_SOURCES,
+            "is_realized": source == SOURCE_REALIZED,
+            "doc_source": source,
             "sale_date": first.sale_date,
             "store": first.store,
             "client": first.client,

@@ -28,7 +28,10 @@ BAR_VALUE_W = 190
 def fmt_money(value) -> str:
     if value is None:
         return "—"
-    return f"{float(value):,.0f}".replace(",", "\u00a0")
+    from core.templatetags.numbers import format_money
+
+    text = format_money(value)
+    return text or "—"
 
 
 def fmt_signed(value) -> str:

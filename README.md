@@ -253,6 +253,15 @@ Server needs the Woo/Sheets variables from `.env.example` and an image built wit
 
 Local demo without Woo/Sheets: `python manage.py seed_promo_demo`.
 
+### One-off: Blaser −10% certificate redemption
+
+Retail packs in groups **11077** (250 g) and **16279** (1 kg). The command estimates the list price per SKU, flags lines near **90%** of that price as certificate use, and writes Excel (clients once vs more than once, coffee-maker model + date if any, SMS/TG-ready sheets). Coffee makers are taken from **receipts + invoices** (not `realized`, to avoid double count). Phones stay under `data/local/` (gitignored).
+
+```bash
+docker compose exec web python manage.py analyze_blaser_cert --from 2025-10-15 --to 2026-10-16
+# → data/local/blaser_cert_2025-10-15_2026-10-16.xlsx
+```
+
 ### Reconciliation with Granit
 
 The Granit report «Реализация товара по складам» equals the header sum (`DGVDT.SUMMA`) of sales documents (TYP 0) by **realization date** (`REALDATE`). Every header sum is goods lines (`GDDDT`) plus service lines (`GDDDTDDU`, catalog `HBGDDDU`: coffee machine repair, rental, delivery, training…). So:
@@ -296,10 +305,13 @@ List, group, sort, and filter sales by:
 - Product, Product Group, Parameter
 - Client, Store
 - Date ranges
+- Same **Retail / All warehouses** switch as the matrix (Retail = cash receipts by receipt date; All = realized + invoices + services by realization date)
+
+Group-by «Document» opens the matching fact source: receipt, realization, or invoice (do not open a cash receipt when the total came from realization).
 
 Built with Django + HTMX for fast, interactive filtering without frontend framework complexity.
 
-**Status:** Ready (STAGE 4) — period slice, HTMX filters, group by product / group / production / store / client / day.
+**Status:** Ready (STAGE 4) — period slice, HTMX filters, group by product / group / production / store / client / day / document.
 
 ### 2b. Super-group matrix
 

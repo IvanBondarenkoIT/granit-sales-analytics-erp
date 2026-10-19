@@ -10,7 +10,15 @@ from core.models import Product, ProductGroup, Store
 from sales.excel_matrix import matrix_to_xlsx
 from sales.management.commands.seed_supergroups import ensure_catalog
 from sales.matrix import build_matrix
-from sales.models import SCOPE_ALL, SOURCE_INVOICE, SOURCE_REALIZED, SOURCE_SERVICE, SaleFact, SuperGroup, SuperGroupMember
+from sales.models import (
+    SCOPE_ALL,
+    SOURCE_INVOICE,
+    SOURCE_REALIZED,
+    SOURCE_SERVICE,
+    SaleFact,
+    SuperGroup,
+    SuperGroupMember,
+)
 from sales.supergroups import load_seed_config, resolve_supergroup_key
 
 
@@ -117,6 +125,9 @@ class MatrixBalanceTests(TestCase):
         qty_cell = sg.cell(2, 3)
         self.assertTrue(sg.cell(1, 3).value.endswith(" qty"))
         self.assertEqual(qty_cell.number_format, "#,##0.00#")
+        amt_header = next(c for c in sg[1] if c.value and str(c.value).endswith(" amt"))
+        amt_cell = sg.cell(2, amt_header.column)
+        self.assertEqual(amt_cell.number_format, "#,##0.00")
         sales = wb["Продажи"]
         self.assertEqual(sales["A1"].value, "group_id")
         # last row is ИТОГО
@@ -212,7 +223,7 @@ class SeedAndViewTests(TestCase):
 
 
 class ScopeTests(TestCase):
-    """Retail = cash-register receipts only; all = receipts + sales invoices from every warehouse."""
+    """Retail = receipt by receipt date; all = realized + invoice + service by realization date."""
 
     def setUp(self):
         self.user = get_user_model().objects.create_user("scope-viewer", password="test-pass-123")
@@ -278,11 +289,36 @@ class ScopeTests(TestCase):
         self.assertEqual(invoice.context["total_amount"], Decimal("600.00"))
         self.assertTrue(invoice.context["is_invoice"])
 
+    def test_realized_drill_down_from_all_scope(self):
+        SaleFact.objects.filter(source=SOURCE_REALIZED, granit_sale_id=5).update(amount=Decimal("29.670330"))
+        explorer = self.client.get(
+            reverse("sales_explorer"), {**self.period, "group_by": "receipt", "scope": "all"}
+        )
+        self.assertContains(explorer, "source=realized")
+        page = self.client.get(reverse("sales_receipt", args=[5]), {"source": "realized"})
+        self.assertEqual(page.context["total_amount"], Decimal("29.670330"))
+        self.assertTrue(page.context["is_realized"])
+        self.assertContains(page, "29,67")
+
     def test_promo_analysis_stays_retail(self):
-        from promos.analysis import _daily_totals
+        from promos.analysis import _daily_totals, _warehouse_span
 
         totals = _daily_totals([self.bean.id], date(2026, 8, 14), date(2026, 8, 14))
         self.assertEqual(totals, {date(2026, 8, 14): Decimal("30.00")})
+        # Only retail bounds: invoice/realized on another day must not widen the span.
+        SaleFact.objects.create(
+            store=self.horeca,
+            product=self.bean,
+            source=SOURCE_INVOICE,
+            sale_date=date(2026, 1, 1),
+            quantity=Decimal("1"),
+            amount=Decimal("10"),
+            granit_sale_id=99,
+            granit_line_id=1,
+        )
+        first, last = _warehouse_span()
+        self.assertEqual(first, date(2026, 8, 14))
+        self.assertEqual(last, date(2026, 8, 14))
 
 
 class ReconcilePageTests(TestCase):
@@ -372,3 +408,91 @@ class ReconcilePageTests(TestCase):
             response = self.client.post(url, {"next": "https://evil.example/"})
             refresh.assert_called_once()
         self.assertEqual(response["Location"], reverse("sales_reconcile"))
+
+
+class BlaserCertTests(TestCase):
+    def setUp(self):
+        from core.models import Client
+        from sales.blaser_cert import BLASER_GROUP_IDS
+
+        self.store = Store.objects.create(granit_id=10, name="Mall")
+        self.g250 = ProductGroup.objects.create(granit_id=BLASER_GROUP_IDS[0], name="Blaser 250g")
+        self.g1kg = ProductGroup.objects.create(granit_id=BLASER_GROUP_IDS[1], name="Blaser 1kg")
+        self.g_maker = ProductGroup.objects.create(granit_id=21270, name="Delonghi coffee makers")
+        self.bean = Product.objects.create(granit_id=501, name="Blend 250", group=self.g250)
+        self.maker = Product.objects.create(granit_id=601, name="Magnifica S", group=self.g_maker)
+        makers = SuperGroup.objects.create(key="coffee_makers", title="coffee makers", color="AABBCC")
+        SuperGroupMember.objects.create(super_group=makers, product_group=self.g_maker)
+        self.alice = Client.objects.create(granit_id=1001, name="Alice", phone="+995555000001", card_number="2200000093516")
+        self.bob = Client.objects.create(granit_id=1002, name="Bob", phone="+995555000002")
+        self.cara = Client.objects.create(granit_id=1003, name="Cara")
+
+        def sale(day, client, product, qty, amount, sale_id, line_id):
+            SaleFact.objects.create(
+                sale_date=day,
+                store=self.store,
+                client=client,
+                product=product,
+                quantity=Decimal(qty),
+                amount=Decimal(amount),
+                granit_sale_id=sale_id,
+                granit_line_id=line_id,
+            )
+
+        # Full price 50 dominates; 45 = 10% off.
+        for i, day in enumerate([date(2025, 11, 1), date(2025, 11, 2), date(2025, 11, 3), date(2025, 11, 4)]):
+            sale(day, self.cara, self.bean, "1", "50.00", 10 + i, 1)
+        sale(date(2025, 12, 1), self.alice, self.bean, "1", "45.00", 20, 1)
+        sale(date(2026, 1, 10), self.alice, self.bean, "2", "90.00", 21, 1)  # second visit at 10%
+        sale(date(2025, 12, 15), self.bob, self.bean, "1", "45.00", 22, 1)  # once
+        sale(date(2025, 12, 2), self.alice, self.bean, "1", "40.00", 23, 1)  # other price
+        sale(date(2025, 10, 20), self.alice, self.maker, "1", "1200.00", 30, 1)
+        # Invoice machine for Bob (must count in machine_cross / enrichment).
+        SaleFact.objects.create(
+            sale_date=date(2025, 11, 5),
+            source=SOURCE_INVOICE,
+            store=self.store,
+            client=self.bob,
+            product=self.maker,
+            quantity=Decimal("1"),
+            amount=Decimal("1500.00"),
+            granit_sale_id=31,
+            granit_line_id=1,
+        )
+
+    def test_calibrate_and_classify(self):
+        from sales.blaser_cert import calibrate_full_price, classify_price
+
+        full = calibrate_full_price([Decimal("50")] * 5 + [Decimal("45")] * 3)
+        self.assertEqual(full, Decimal("50.00"))
+        self.assertEqual(classify_price(Decimal("50.00"), full), "full")
+        self.assertEqual(classify_price(Decimal("45.00"), full), "promo_10")
+        self.assertEqual(classify_price(Decimal("40.00"), full), "other")
+
+    def test_report_once_multi_and_machine(self):
+        from sales.blaser_cert import build_report, write_report_xlsx
+        from openpyxl import load_workbook
+        from pathlib import Path
+        import tempfile
+
+        report = build_report(date(2025, 10, 15), date(2026, 10, 16))
+        self.assertEqual(report.summary["promo_clients"], 2)
+        self.assertEqual(report.summary["visits_once"], 1)
+        self.assertEqual(report.summary["visits_multi"], 1)
+        by_id = {r.granit_id: r for r in report.clients}
+        self.assertEqual(by_id[1001].visits, 2)
+        self.assertEqual(by_id[1001].machine_count, 1)
+        self.assertIn("Magnifica S", by_id[1001].machines)
+        self.assertEqual(by_id[1002].visits, 1)
+        self.assertEqual(by_id[1002].machine_count, 1)
+        self.assertIn("Magnifica S", by_id[1002].machines)
+        self.assertEqual(report.summary["machine_buyers_in_window"], 2)
+        self.assertEqual(report.summary["machine_buyers_used_promo"], 2)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = write_report_xlsx(report, Path(tmp) / "out.xlsx")
+            wb = load_workbook(path)
+            self.assertIn("summary", wb.sheetnames)
+            self.assertIn("clients", wb.sheetnames)
+            self.assertIn("sms_ready", wb.sheetnames)
+            self.assertGreaterEqual(wb["sms_ready"].max_row, 3)

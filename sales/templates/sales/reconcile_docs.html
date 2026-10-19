@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n numbers %}
 
 {% block title %}{% trans "Reconciliation with Granit" %} · {{ store.name }}{% endblock %}
 
@@ -45,13 +45,13 @@
                 </td>
                 <td class="text">{% for d in r.docs %}<span class="sub">{{ d.doc_date|date:"d.m.Y" }}</span>{% empty %}<span class="muted">—</span>{% endfor %}</td>
                 <td class="text">{% for d in r.docs %}<span class="sub">{{ d.real_date|date:"d.m.Y" }}</span>{% empty %}<span class="muted">—</span>{% endfor %}</td>
-                <td>{{ r.granit|floatformat:"2g" }}</td>
-                <td>{{ r.goods|floatformat:"2g" }}</td>
-                <td class="{% if not r.services %}muted{% endif %}">{{ r.services|floatformat:"2g" }}</td>
-                <td class="{% if r.leftover %}neg{% else %}muted{% endif %}">{{ r.leftover|floatformat:"2g" }}</td>
-                <td>{{ r.ours|floatformat:"2g" }}</td>
+                <td>{{ r.granit|money }}</td>
+                <td>{{ r.goods|money }}</td>
+                <td class="{% if not r.services %}muted{% endif %}">{{ r.services|money }}</td>
+                <td class="{% if r.leftover %}neg{% else %}muted{% endif %}">{{ r.leftover|money }}</td>
+                <td>{{ r.ours|money }}</td>
                 <td class="text">{% for d in r.ours_dates %}<span class="sub">{{ d|date:"d.m.Y" }}</span>{% empty %}<span class="muted">{% trans "not loaded" %}</span>{% endfor %}</td>
-                <td class="{% if r.diff < 0 %}neg{% elif r.diff > 0 %}pos{% else %}muted{% endif %}">{{ r.diff|floatformat:"2g" }}</td>
+                <td class="{% if r.diff < 0 %}neg{% elif r.diff > 0 %}pos{% else %}muted{% endif %}">{{ r.diff|money }}</td>
             </tr>
             {% endfor %}
         </tbody>
