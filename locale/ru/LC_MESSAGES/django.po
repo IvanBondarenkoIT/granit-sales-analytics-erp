@@ -916,6 +916,9 @@ msgstr "Итого ориент. заработок"
 msgid "no site link"
 msgstr "нет связи с сайтом"
 
+msgid "mapping to wp-id %(wp_id)s, product missing in Woo sync"
+msgstr "маппинг на wp-id %(wp_id)s, товара нет в Woo sync"
+
 msgid "Catalog sync is already running."
 msgstr "Синхронизация каталога уже идёт."
 

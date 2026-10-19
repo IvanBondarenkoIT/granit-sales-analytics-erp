@@ -29,6 +29,7 @@ class PromoPriceRow:
     margin_pct: Decimal | None
     estimated_earnings: Decimal | None
     has_site_link: bool
+    mapped_wp_product_id: str | None = None  # Sheets mapping even if SiteProduct missing
 
 
 def _pct_diff(a: Decimal | None, b: Decimal | None) -> bool:
@@ -133,6 +134,7 @@ def build_promo_price_rows(promo: Promo) -> list[PromoPriceRow]:
                 margin_pct=margin,
                 estimated_earnings=earnings,
                 has_site_link=bool(site),
+                mapped_wp_product_id=wp_id,
             )
         )
     return rows

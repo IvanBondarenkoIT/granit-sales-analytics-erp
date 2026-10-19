@@ -192,6 +192,30 @@ class PromoPricingTests(TestCase):
         self.assertContains(response, "1702")
         self.assertContains(response, "904")
 
+    def test_stale_mapping_hint_when_site_product_missing(self):
+        SiteProduct.objects.all().delete()
+        rows = build_promo_price_rows(self.promo)
+        self.assertEqual(len(rows), 1)
+        row = rows[0]
+        self.assertFalse(row.has_site_link)
+        self.assertEqual(row.mapped_wp_product_id, "6219")
+        response = self.client.get(
+            reverse("promo_detail", args=[self.promo.pk]),
+            HTTP_ACCEPT_LANGUAGE="en",
+        )
+        self.assertContains(response, "6219")
+        self.assertContains(response, "product missing in Woo sync")
+
+    def test_no_mapping_shows_generic_hint(self):
+        GranitWpMapping.objects.all().delete()
+        SiteProduct.objects.all().delete()
+        rows = build_promo_price_rows(self.promo)
+        self.assertIsNone(rows[0].mapped_wp_product_id)
+        response = self.client.get(
+            reverse("promo_detail", args=[self.promo.pk]),
+            HTTP_ACCEPT_LANGUAGE="en",
+        )
+        self.assertContains(response, "no site link")
 
 
 class PromoPickerTests(TestCase):

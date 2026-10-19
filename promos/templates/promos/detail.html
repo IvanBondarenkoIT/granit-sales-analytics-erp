@@ -68,7 +68,13 @@
                     {% if row.site_name and row.site_name != row.product.name %}
                     <div class="muted">{{ row.site_name }}</div>
                     {% elif not row.has_site_link %}
-                    <div class="muted">{% trans "no site link" %}</div>
+                    <div class="muted">
+                        {% if row.mapped_wp_product_id %}
+                        {% blocktrans with wp_id=row.mapped_wp_product_id %}mapping to wp-id {{ wp_id }}, product missing in Woo sync{% endblocktrans %}
+                        {% else %}
+                        {% trans "no site link" %}
+                        {% endif %}
+                    </div>
                     {% endif %}
                 </td>
                 <td class="num">{% if row.last_cost is not None %}{{ row.last_cost|money }}{% else %}—{% endif %}</td>

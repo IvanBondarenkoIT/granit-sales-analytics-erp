@@ -385,3 +385,36 @@ class ReconcileTests(TestCase):
         self.assertEqual(docs["checked"], 1)
         row = docs["rows"][0]
         self.assertEqual((row["granit"], row["ours"], row["leftover"], row["diff"]), (150.0, 140.0, 10.0, -10.0))
+
+class WpMappingGapsTests(TestCase):
+    def test_report_splits_orphan_mapping_and_unmapped_site(self):
+        from core.models import GranitWpMapping, Product, SiteProduct
+        from etl.wp_mapping_report import build_mapping_gaps_report, write_mapping_gaps_xlsx
+        from pathlib import Path
+        import tempfile
+
+        Product.objects.create(granit_id=26704, name="Opera BK")
+        GranitWpMapping.objects.create(wp_product_id="7212", granit_id=26704)
+        SiteProduct.objects.create(wp_product_id="8704", name="EC9555.BK", sku="EC9555.BK")
+        GranitWpMapping.objects.create(wp_product_id="7832", granit_id=26910)
+        SiteProduct.objects.create(wp_product_id="7832", name="EC9555.M")
+
+        report = build_mapping_gaps_report()
+        orphan_ids = {r.wp_product_id for r in report.mapping_without_site}
+        unmapped_ids = {r.wp_product_id for r in report.site_without_mapping}
+        self.assertIn("7212", orphan_ids)
+        self.assertNotIn("7832", orphan_ids)
+        self.assertIn("8704", unmapped_ids)
+        self.assertNotIn("7832", unmapped_ids)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = write_mapping_gaps_xlsx(report, Path(tmp) / "gaps.xlsx")
+            self.assertTrue(path.exists())
+
+
+class SheetsHeaderTests(SimpleTestCase):
+    def test_header_column_indexes(self):
+        from etl.sheets import _header_column_indexes
+
+        wp_idx, granit_idx = _header_column_indexes(["wp-id", "name", "granit_id"])
+        self.assertEqual((wp_idx, granit_idx), (0, 2))

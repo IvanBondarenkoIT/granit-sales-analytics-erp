@@ -99,11 +99,7 @@ def _service_account_info() -> dict[str, Any]:
     raise ValueError("Set GOOGLE_SERVICE_ACCOUNT_JSON_PATH or GOOGLE_SERVICE_ACCOUNT_JSON_BASE64")
 
 
-def fetch_granit_mapping_rows() -> list[dict[str, str]]:
-    """Read mapping tab via gspread. Raises ImportError if google libs missing."""
-    import gspread
-    from google.oauth2.service_account import Credentials
-
+def _granit_sheet_meta() -> tuple[str, str]:
     url = (getattr(settings, "GOOGLE_SHEETS_URL", None) or os.getenv("GOOGLE_SHEETS_URL") or "").strip()
     tab = (
         getattr(settings, "GOOGLE_SHEETS_TAB_GRANIT", None)
@@ -112,12 +108,69 @@ def fetch_granit_mapping_rows() -> list[dict[str, str]]:
     ).strip() or "granit"
     if not url:
         raise ValueError("GOOGLE_SHEETS_URL is not set")
+    return url, tab
+
+
+def _open_granit_worksheet(*, readonly: bool = True, insecure_ssl: bool = False):
+    import gspread
+    from google.oauth2.service_account import Credentials
+
+    url, tab = _granit_sheet_meta()
+    scope = (
+        "https://www.googleapis.com/auth/spreadsheets.readonly"
+        if readonly
+        else "https://www.googleapis.com/auth/spreadsheets"
+    )
     creds = Credentials.from_service_account_info(
         _service_account_info(),
-        scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"],
+        scopes=[scope],
     )
+    if insecure_ssl:
+        # Corporate MITM / missing CA chain — only for explicit operator opt-in.
+        import google.auth.transport.requests as ga_requests
+        import requests
+        import urllib3
+
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        _orig_request = requests.Session.request
+
+        def _insecure_request(self, method, url, *args, **kwargs):  # noqa: ANN001
+            kwargs["verify"] = False
+            return _orig_request(self, method, url, *args, **kwargs)
+
+        requests.Session.request = _insecure_request  # type: ignore[method-assign]
+        try:
+            session = ga_requests.AuthorizedSession(creds)
+            session.verify = False
+            client = gspread.Client(auth=creds, session=session)
+            return client.open_by_url(url).worksheet(tab)
+        finally:
+            requests.Session.request = _orig_request  # type: ignore[method-assign]
     client = gspread.authorize(creds)
-    ws = client.open_by_url(url).worksheet(tab)
+    return client.open_by_url(url).worksheet(tab)
+
+
+def _header_column_indexes(headers: list[str]) -> tuple[int, int]:
+    """Return 0-based indexes of wp-id and granit_id columns."""
+    norm_map = {_norm_header(h): i for i, h in enumerate(headers) if str(h).strip()}
+    wp_idx = None
+    for cand in ("wp-id", "wp_id", "wpid", "wp id"):
+        if _norm_header(cand) in norm_map:
+            wp_idx = norm_map[_norm_header(cand)]
+            break
+    granit_idx = None
+    for cand in ("granit_id", "granitid", "granit id"):
+        if _norm_header(cand) in norm_map:
+            granit_idx = norm_map[_norm_header(cand)]
+            break
+    if wp_idx is None or granit_idx is None:
+        raise ValueError(f"granit sheet must have granit_id and wp-id columns; got: {headers}")
+    return wp_idx, granit_idx
+
+
+def fetch_granit_mapping_rows() -> list[dict[str, str]]:
+    """Read mapping tab via gspread. Raises ImportError if google libs missing."""
+    ws = _open_granit_worksheet(readonly=True)
     values = ws.get_all_values()
     if not values:
         return []
@@ -133,3 +186,43 @@ def fetch_granit_mapping_rows() -> list[dict[str, str]]:
             row[header] = str(line[i] if i < len(line) else "").strip()
         rows.append(row)
     return rows
+
+
+def set_granit_sheet_wp_id(
+    granit_id: int, wp_product_id: str, *, insecure_ssl: bool = False
+) -> dict[str, Any]:
+    """
+    Update (or append) the granit sheet row so granit_id maps to wp_product_id.
+    Requires Sheets write access for the service account.
+    """
+    wp_product_id = _norm_id(wp_product_id)
+    if not wp_product_id:
+        raise ValueError("wp_product_id is empty")
+    ws = _open_granit_worksheet(readonly=False, insecure_ssl=insecure_ssl)
+    values = ws.get_all_values()
+    if not values:
+        raise ValueError("granit sheet is empty")
+    headers = [str(h).strip() for h in values[0]]
+    wp_idx, granit_idx = _header_column_indexes(headers)
+    target = str(int(granit_id))
+    updated_rows: list[int] = []
+    for row_num, line in enumerate(values[1:], start=2):  # 1-based sheet rows
+        cell = line[granit_idx] if granit_idx < len(line) else ""
+        if _norm_id(cell) != target:
+            continue
+        # gspread uses 1-based column index
+        ws.update_cell(row_num, wp_idx + 1, wp_product_id)
+        updated_rows.append(row_num)
+    if updated_rows:
+        return {"action": "updated", "rows": updated_rows, "granit_id": granit_id, "wp_product_id": wp_product_id}
+    # Append a new mapping row with only the two known columns filled.
+    new_line = [""] * len(headers)
+    new_line[wp_idx] = wp_product_id
+    new_line[granit_idx] = target
+    ws.append_row(new_line, value_input_option="USER_ENTERED")
+    return {
+        "action": "appended",
+        "rows": [len(values) + 1],
+        "granit_id": granit_id,
+        "wp_product_id": wp_product_id,
+    }

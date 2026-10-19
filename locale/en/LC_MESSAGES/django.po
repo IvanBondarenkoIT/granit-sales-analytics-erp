@@ -922,6 +922,9 @@ msgstr "Total est. earnings"
 msgid "no site link"
 msgstr "no site link"
 
+msgid "mapping to wp-id %(wp_id)s, product missing in Woo sync"
+msgstr "mapping to wp-id %(wp_id)s, product missing in Woo sync"
+
 msgid "Catalog sync is already running."
 msgstr "Catalog sync is already running."
 
