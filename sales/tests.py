@@ -16,6 +16,7 @@ from sales.models import (
     SOURCE_REALIZED,
     SOURCE_SERVICE,
     SaleFact,
+    StockSnapshot,
     SuperGroup,
     SuperGroupMember,
 )
@@ -299,6 +300,83 @@ class ScopeTests(TestCase):
         self.assertEqual(page.context["total_amount"], Decimal("29.670330"))
         self.assertTrue(page.context["is_realized"])
         self.assertContains(page, "29,67")
+
+    def test_explorer_shows_stock_as_of_period_end(self):
+        from core.models import StoreWarehouseLink
+
+        shop_wh = Store.objects.create(
+            granit_id=130, name="Batumi WH", kind=Store.KIND_WAREHOUSE
+        )
+        office = Store.objects.create(
+            granit_id=141, name="OFIS GEORGIA", kind=Store.KIND_WAREHOUSE
+        )
+        StoreWarehouseLink.objects.create(warehouse=shop_wh, receipt_group=self.shop)
+        StockSnapshot.objects.create(
+            snapshot_date=date(2026, 8, 14),
+            store=shop_wh,
+            product=self.bean,
+            quantity=Decimal("40"),
+        )
+        StockSnapshot.objects.create(
+            snapshot_date=date(2026, 8, 14),
+            store=office,
+            product=self.bean,
+            quantity=Decimal("2.5"),
+        )
+        # Older day must not win.
+        StockSnapshot.objects.create(
+            snapshot_date=date(2026, 8, 10),
+            store=shop_wh,
+            product=self.bean,
+            quantity=Decimal("1"),
+        )
+
+        retail = self.client.get(
+            reverse("sales_explorer"),
+            {**self.period, "group_by": "product"},
+            HTTP_ACCEPT_LANGUAGE="en",
+        )
+        self.assertTrue(retail.context["show_stock"])
+        self.assertEqual(retail.context["rows"][0]["stock_qty"], Decimal("40"))
+        self.assertContains(
+            retail,
+            "Stock is remainder as of the period end date for the selected store filter",
+        )
+
+        all_scope = self.client.get(
+            reverse("sales_explorer"),
+            {**self.period, "group_by": "product", "scope": "all"},
+        )
+        self.assertEqual(all_scope.context["rows"][0]["stock_qty"], Decimal("42.5"))
+
+        SaleFact.objects.create(
+            sale_date=date(2026, 8, 14),
+            store=office,
+            product=self.bean,
+            source=SOURCE_INVOICE,
+            quantity=Decimal("1"),
+            amount=Decimal("100"),
+            granit_sale_id=50,
+            granit_line_id=1,
+        )
+        office_only = self.client.get(
+            reverse("sales_explorer"),
+            {**self.period, "group_by": "product", "scope": "all", "store": "141"},
+        )
+        self.assertEqual(len(office_only.context["rows"]), 1)
+        self.assertEqual(office_only.context["rows"][0]["stock_qty"], Decimal("2.5"))
+
+        shop_group = self.client.get(
+            reverse("sales_explorer"),
+            {**self.period, "group_by": "product", "store": "33"},
+        )
+        self.assertEqual(shop_group.context["rows"][0]["stock_qty"], Decimal("40"))
+
+        by_group = self.client.get(
+            reverse("sales_explorer"),
+            {**self.period, "group_by": "group"},
+        )
+        self.assertFalse(by_group.context["show_stock"])
 
     def test_promo_analysis_stays_retail(self):
         from promos.analysis import _daily_totals, _warehouse_span

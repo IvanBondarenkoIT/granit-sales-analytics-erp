@@ -166,6 +166,9 @@ ETL_SALES_STORE_FIELD = os.getenv("ETL_SALES_STORE_FIELD", "STORGRPID").strip() 
 ETL_PRODUCT_PARAM_ID = int(os.getenv("ETL_PRODUCT_PARAM_ID", "2"))
 ETL_RELOAD_MONTHS = int(os.getenv("ETL_RELOAD_MONTHS", "2"))
 RECONCILE_TOLERANCE = float(os.getenv("RECONCILE_TOLERANCE", "1"))
+# Optional Granit company id for stock as-of (GddDt_MoveGoodsAll). Else read from STORLIST.
+_our_orgn = os.getenv("OURORGNID", "").strip()
+OURORGNID = int(_our_orgn) if _our_orgn else None
 COMPANY_LEDGER_STORE_ID = 0
 
 GOOGLE_SHEETS_URL = os.getenv("GOOGLE_SHEETS_URL", "").strip()

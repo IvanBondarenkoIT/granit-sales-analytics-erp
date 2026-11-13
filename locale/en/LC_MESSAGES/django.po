@@ -756,6 +756,12 @@ msgstr "Charts"
 msgid "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
 msgstr "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
 
+msgid "Stock is company remainder as of the period end date."
+msgstr "Stock is company remainder as of the period end date."
+
+msgid "Stock is remainder as of the period end date for the selected store filter (Retail = shop warehouses, All warehouses = company)."
+msgstr "Stock is remainder as of the period end date for the selected store filter (Retail = shop warehouses, All warehouses = company)."
+
 msgid "Sales"
 msgstr "Sales"
 

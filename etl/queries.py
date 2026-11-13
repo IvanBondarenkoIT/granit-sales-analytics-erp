@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+from datetime import date
 
 from django.conf import settings
 
@@ -230,6 +231,7 @@ def sql_reconcile_documents(warehouse_ids: list[int]) -> tuple[str, list[int]]:
 
 
 def sql_stock_chunk(ids: list[int]) -> tuple[str, list[int]]:
+    """Current ledger stock (SUM GDDKT). Prefer sql_stock_as_of_chunk for dated snapshots."""
     placeholders = ",".join(["?"] * len(ids))
     sql = f"""
         SELECT K.GDSKEY AS PRODUCT_ID,
@@ -240,6 +242,28 @@ def sql_stock_chunk(ids: list[int]) -> tuple[str, list[int]]:
         GROUP BY K.GDSKEY
     """
     return sql, ids
+
+
+def sql_our_orgn_id() -> tuple[str, list]:
+    return "SELECT FIRST 1 OURORGNID FROM STORLIST ORDER BY ID", []
+
+
+def sql_stock_as_of_chunk(
+    orgn_id: int, as_of: date, ids: list[int]
+) -> tuple[str, list]:
+    """Granit report stock on as_of per warehouse: Sum(QEND) from MoveGoodsAll."""
+    placeholders = ",".join(["?"] * len(ids))
+    sql = f"""
+        SELECT P.GID AS PRODUCT_ID,
+               P.STOR AS WAREHOUSE_ID,
+               COALESCE(SUM(P.QEND), 0) AS CURRENT_STOCK
+        FROM GddDt_MoveGoodsAll(?, CAST(? AS DATE), CAST(? AS DATE)) P
+        WHERE P.GID IN ({placeholders})
+          AND P.STOR IS NOT NULL
+        GROUP BY P.GID, P.STOR
+    """
+    edate = as_of.isoformat() if hasattr(as_of, "isoformat") else as_of
+    return sql, [orgn_id, edate, edate, *ids]
 
 
 def sql_last_cost_chunk(ids: list[int]) -> tuple[str, list[int]]:

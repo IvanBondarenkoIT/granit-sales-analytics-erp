@@ -21,6 +21,7 @@ from core.models import (
     SiteCategory,
     SiteProduct,
     Store,
+    StoreWarehouseLink,
 )
 from etl.models import ETLRun, ETLWatermark
 from etl.proxy import query_rows
@@ -32,6 +33,7 @@ from etl.queries import (
     sql_clients_by_ids,
     sql_invoices_day,
     sql_last_cost_chunk,
+    sql_our_orgn_id,
     sql_product_groups,
     sql_product_parameters,
     sql_products,
@@ -39,7 +41,7 @@ from etl.queries import (
     sql_sales_day,
     sql_service_catalog,
     sql_services_day,
-    sql_stock_chunk,
+    sql_stock_as_of_chunk,
     sql_stores,
     sql_warehouse_groups,
     sql_warehouses,
@@ -557,22 +559,94 @@ def load_sales_range(date_from: date, date_to: date, progress=None) -> dict[str,
     return {"days": days, "rows": total}
 
 
+def resolve_our_orgn_id() -> int:
+    """Company OrgnID for GddDt_MoveGoodsAll (env OURORGNID or STORLIST)."""
+    configured = getattr(settings, "OURORGNID", None)
+    if configured:
+        return int(configured)
+    rows = query_rows(*sql_our_orgn_id())
+    if not rows:
+        raise ValueError("OURORGNID not found; set OURORGNID in settings/.env")
+    value = rows[0].get("OURORGNID")
+    if value is None:
+        raise ValueError("OURORGNID not found; set OURORGNID in settings/.env")
+    return int(value)
+
+
+def sync_store_warehouse_links() -> dict[int, Store]:
+    """Ensure Store rows for every STORLIST warehouse; refresh StoreWarehouseLink from STORGRPREF.
+
+    Returns warehouse granit_id → Store (kind=warehouse). Skips ids that collide with receipt groups.
+    """
+    group_by_stor: dict[int, int] = {}
+    for row in query_rows(sql_warehouse_groups()):
+        stor_id, grp_id = _as_int(row.get("STORID")), _as_int(row.get("GRPID"))
+        if stor_id is None or grp_id is None:
+            continue
+        group_by_stor[stor_id] = min(grp_id, group_by_stor.get(stor_id, grp_id))
+
+    group_ids = set(
+        Store.objects.filter(kind=Store.KIND_GROUP).values_list("granit_id", flat=True)
+    )
+    warehouses: dict[int, Store] = {}
+    for row in query_rows(sql_warehouses()):
+        stor_id = _as_int(row.get("ID"))
+        if stor_id is None:
+            continue
+        if stor_id in group_ids:
+            continue
+        store, _ = Store.objects.update_or_create(
+            granit_id=stor_id,
+            defaults={
+                "name": _as_str(row.get("NAME"), 200) or f"#{stor_id}",
+                "kind": Store.KIND_WAREHOUSE,
+            },
+        )
+        warehouses[stor_id] = store
+
+    links: list[StoreWarehouseLink] = []
+    for stor_id, grp_id in group_by_stor.items():
+        warehouse = warehouses.get(stor_id)
+        if warehouse is None:
+            continue
+        receipt_group = Store.objects.filter(
+            granit_id=grp_id, kind=Store.KIND_GROUP
+        ).first()
+        if receipt_group is None:
+            continue
+        links.append(
+            StoreWarehouseLink(warehouse=warehouse, receipt_group=receipt_group)
+        )
+
+    with transaction.atomic():
+        StoreWarehouseLink.objects.all().delete()
+        StoreWarehouseLink.objects.bulk_create(links, batch_size=500)
+    return warehouses
+
+
 def load_stock(snapshot_date: date | None = None) -> dict[str, int]:
+    """Store per-warehouse stock as-of snapshot_date via Granit MoveGoodsAll (QEND)."""
     snapshot_date = snapshot_date or (date.today() - timedelta(days=1))
-    store = company_ledger_store()
     product_ids = list(Product.objects.values_list("granit_id", flat=True))
     if not product_ids:
-        return {"rows": 0, "active": 0}
+        return {"rows": 0, "active": 0, "links": 0}
 
-    stock_by_id: dict[int, Decimal] = {}
+    warehouses = sync_store_warehouse_links()
+    orgn_id = resolve_our_orgn_id()
+    # (product_id, warehouse_id) → qty
+    stock_pairs: dict[tuple[int, int], Decimal] = {}
+    totals_by_product: dict[int, Decimal] = {}
     for i in range(0, len(product_ids), STOCK_CHUNK):
         chunk = product_ids[i : i + STOCK_CHUNK]
-        sql, params = sql_stock_chunk(chunk)
+        sql, params = sql_stock_as_of_chunk(orgn_id, snapshot_date, chunk)
         for row in query_rows(sql, params):
             pid = _as_int(row.get("PRODUCT_ID"))
-            if pid is None:
+            wid = _as_int(row.get("WAREHOUSE_ID"))
+            if pid is None or wid is None:
                 continue
-            stock_by_id[pid] = _as_decimal(row.get("CURRENT_STOCK"))
+            qty = _as_decimal(row.get("CURRENT_STOCK"))
+            stock_pairs[(pid, wid)] = qty
+            totals_by_product[pid] = totals_by_product.get(pid, Decimal("0")) + qty
 
     window_start = snapshot_date - timedelta(days=365)
     sold_ids = set(
@@ -581,17 +655,23 @@ def load_stock(snapshot_date: date | None = None) -> dict[str, int]:
         )
     )
 
-    snapshots: list[StockSnapshot] = []
     products = {p.granit_id: p for p in Product.objects.filter(granit_id__in=product_ids)}
     active_count = 0
     for pid, product in products.items():
-        qty = stock_by_id.get(pid, Decimal("0"))
+        qty = totals_by_product.get(pid, Decimal("0"))
         is_active = qty != 0 or pid in sold_ids
         if product.is_active != is_active:
             product.is_active = is_active
             product.save(update_fields=["is_active", "updated_at"])
         if is_active:
             active_count += 1
+
+    snapshots: list[StockSnapshot] = []
+    for (pid, wid), qty in stock_pairs.items():
+        product = products.get(pid)
+        store = warehouses.get(wid)
+        if product is None or store is None:
+            continue
         if qty == 0 and pid not in sold_ids:
             continue
         snapshots.append(
@@ -603,11 +683,18 @@ def load_stock(snapshot_date: date | None = None) -> dict[str, int]:
             )
         )
 
+    ledger = company_ledger_store()
     with transaction.atomic():
-        StockSnapshot.objects.filter(snapshot_date=snapshot_date, store=store).delete()
+        StockSnapshot.objects.filter(snapshot_date=snapshot_date).delete()
         StockSnapshot.objects.bulk_create(snapshots, batch_size=1000)
     set_watermark("stock", snapshot_date)
-    return {"rows": len(snapshots), "active": active_count}
+    return {
+        "rows": len(snapshots),
+        "active": active_count,
+        "links": StoreWarehouseLink.objects.count(),
+        "warehouses": len(warehouses),
+        "ledger_cleared": ledger.granit_id,
+    }
 
 
 def nightly_reload_range(today: date | None = None, months: int | None = None) -> tuple[date, date]:

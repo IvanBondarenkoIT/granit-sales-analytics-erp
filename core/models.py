@@ -24,6 +24,32 @@ class Store(models.Model):
         return f"{self.name} (ID: {self.granit_id})"
 
 
+class StoreWarehouseLink(models.Model):
+    """STORLIST warehouse belonging to a retail receipt group (STORGRPREF)."""
+
+    warehouse = models.ForeignKey(
+        Store,
+        on_delete=models.CASCADE,
+        related_name="group_links",
+        limit_choices_to={"kind": Store.KIND_WAREHOUSE},
+    )
+    receipt_group = models.ForeignKey(
+        Store,
+        on_delete=models.CASCADE,
+        related_name="warehouse_links",
+        limit_choices_to={"kind": Store.KIND_GROUP},
+    )
+    synced_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "dim_store_warehouse_link"
+        unique_together = [["warehouse", "receipt_group"]]
+        ordering = ["receipt_group", "warehouse"]
+
+    def __str__(self):
+        return f"{self.warehouse} → {self.receipt_group}"
+
+
 class Client(models.Model):
     """Client dimension - Granit customers."""
     granit_id = models.IntegerField(unique=True, help_text="Client ID from Granit ERP")

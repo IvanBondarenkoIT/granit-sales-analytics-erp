@@ -14,10 +14,14 @@ from etl.pipeline import (
     catalog_sync_running,
     last_catalog_run,
     load_sales_day,
+    load_stock,
     load_woo_catalog,
     nightly_reload_range,
+    resolve_our_orgn_id,
     run_catalog_sync,
 )
+from etl.queries import sql_stock_as_of_chunk
+from sales.models import StockSnapshot
 from etl.woo import _fetch_pages, parse_woo_category, parse_woo_product
 from etl.queries import sql_invoices_day, sql_realizations_day, sql_sales_day, sql_services_day
 from sales.models import (
@@ -143,6 +147,62 @@ class LoadSalesDayTests(TestCase):
         mall_invoice = SaleFact.objects.get(source=SOURCE_INVOICE, granit_sale_id=2)
         self.assertEqual(mall_invoice.store.granit_id, 33)
         self.assertEqual(SaleFact.objects.retail().count(), 1)
+
+
+class StockAsOfTests(TestCase):
+    def test_sql_stock_as_of_chunk_uses_movegoodsall(self):
+        sql, params = sql_stock_as_of_chunk(12978, date(2026, 8, 14), [20575, 20628])
+        self.assertIn("GddDt_MoveGoodsAll", sql)
+        self.assertIn("SUM(P.QEND)", sql)
+        self.assertIn("P.STOR", sql)
+        self.assertIn("GROUP BY P.GID, P.STOR", sql)
+        self.assertEqual(params[:3], [12978, "2026-08-14", "2026-08-14"])
+        self.assertEqual(params[3:], [20575, 20628])
+
+    @override_settings(OURORGNID=12978)
+    def test_resolve_our_orgn_id_from_settings(self):
+        self.assertEqual(resolve_our_orgn_id(), 12978)
+
+    @override_settings(OURORGNID=12978)
+    @patch("etl.pipeline.query_rows")
+    def test_load_stock_writes_per_warehouse_snapshots(self, mock_query):
+        from core.models import Product, Store, StoreWarehouseLink
+
+        product = Product.objects.create(granit_id=20575, name="Bean 250 g")
+        Store.objects.create(granit_id=33, name="BatumiMall", kind=Store.KIND_GROUP)
+
+        def fake_query(sql, params=None):
+            if "FROM STORGRPREF" in sql:
+                return [{"STORID": 130, "GRPID": 33}]
+            if "FROM STORLIST" in sql and "OURORGNID" not in sql:
+                return [
+                    {"ID": 130, "NAME": "Batumi WH"},
+                    {"ID": 141, "NAME": "OFIS GEORGIA"},
+                ]
+            if "GddDt_MoveGoodsAll" in sql:
+                self.assertEqual(params[:3], [12978, "2026-08-14", "2026-08-14"])
+                return [
+                    {"PRODUCT_ID": 20575, "WAREHOUSE_ID": 130, "CURRENT_STOCK": 10},
+                    {"PRODUCT_ID": 20575, "WAREHOUSE_ID": 141, "CURRENT_STOCK": 2.5},
+                ]
+            raise AssertionError(f"unexpected SQL: {sql[:80]}")
+
+        mock_query.side_effect = fake_query
+        stats = load_stock(date(2026, 8, 14))
+        self.assertEqual(stats["rows"], 2)
+        self.assertEqual(StoreWarehouseLink.objects.count(), 1)
+        self.assertEqual(
+            StoreWarehouseLink.objects.get().warehouse.granit_id, 130
+        )
+        by_store = {
+            s.store.granit_id: s.quantity
+            for s in StockSnapshot.objects.filter(product=product)
+        }
+        self.assertEqual(by_store[130], Decimal("10"))
+        self.assertEqual(by_store[141], Decimal("2.5"))
+        self.assertFalse(
+            StockSnapshot.objects.filter(store__granit_id=0).exists()
+        )
 
 
 class NightlyReloadRangeTests(TestCase):

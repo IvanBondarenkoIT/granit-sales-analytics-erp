@@ -750,6 +750,12 @@ msgstr "Графики"
 msgid "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
 msgstr "Кол-во: кг для весового товара (0,25 = 250 г), шт. для штучного."
 
+msgid "Stock is company remainder as of the period end date."
+msgstr "Остаток — по компании на дату конца периода."
+
+msgid "Stock is remainder as of the period end date for the selected store filter (Retail = shop warehouses, All warehouses = company)."
+msgstr "Остаток на дату конца периода с учётом фильтра склада (Розница = склады магазинов, Все склады = компания)."
+
 msgid "Sales"
 msgstr "Продажи"
 

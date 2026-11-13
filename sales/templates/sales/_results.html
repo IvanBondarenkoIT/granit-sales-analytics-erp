@@ -5,6 +5,7 @@
     <span>{% trans "Amount" %}: <strong>{{ total_amount|money }}</strong></span>
 </div>
 <p class="hint">{% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}
+    {% if show_stock %}{% trans "Stock is remainder as of the period end date for the selected store filter (Retail = shop warehouses, All warehouses = company)." %}{% endif %}
     {% if scope_all %}{% trans "All warehouses = the Granit report «Sales by warehouses»: receipts as realized by warehouse documents plus sales invoices with their services (office, HoReCa, service centres), by realization date. Receipts Granit has not realized yet are only in Retail; transfers and write-offs are not included." %}{% endif %}</p>
 {% if truncated %}
 <p class="hint">{% blocktrans with shown=row_limit total=row_count %}Showing first {{ shown }} of {{ total }} rows.{% endblocktrans %}</p>
@@ -19,6 +20,7 @@
             <th>{% trans "Store" %}</th>
             <th>{% trans "Client" %}</th>
             {% endif %}
+            {% if show_stock %}<th class="num">{% trans "Stock" %}</th>{% endif %}
             <th class="num">{% trans "Qty" %}</th>
             <th class="num">{% trans "Amount" %}</th>
             <th></th>
@@ -39,6 +41,9 @@
             <td>{{ row.store_name }}</td>
             <td>{% if row.client_granit_id %}{{ row.client_name|default:row.client_granit_id }}{% else %}—{% endif %}</td>
             {% endif %}
+            {% if show_stock %}
+            <td class="num">{% if row.stock_qty is not None %}{{ row.stock_qty|qty }}{% else %}—{% endif %}</td>
+            {% endif %}
             <td class="num">{{ row.qty|qty }}</td>
             <td class="num">{{ row.amount|money }}</td>
             <td>
@@ -56,6 +61,7 @@
             <td>{% trans "Total" %}</td>
             {% if show_secondary %}<td></td>{% endif %}
             {% if group_by == "receipt" %}<td></td><td></td>{% endif %}
+            {% if show_stock %}<td></td>{% endif %}
             <td class="num">{{ total_qty|qty }}</td>
             <td class="num">{{ total_amount|money }}</td>
             <td></td>

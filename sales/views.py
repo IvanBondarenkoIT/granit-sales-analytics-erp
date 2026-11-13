@@ -8,7 +8,7 @@ from django.http import Http404
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 
-from core.models import Product, ProductGroup, ProductParameterValue, Store
+from core.models import Product, ProductGroup, ProductParameterValue, Store, StoreWarehouseLink
 from sales.models import (
     INVOICE_SOURCES,
     SCOPE_ALL,
@@ -17,6 +17,7 @@ from sales.models import (
     SOURCE_RECEIPT,
     SOURCE_REALIZED,
     SaleFact,
+    StockSnapshot,
 )
 
 ROW_LIMIT = 300
@@ -110,13 +111,112 @@ def _apply_filters(qs, *, date_from, date_to, store_id, group_id, product_id, pa
     return qs
 
 
-def _label_rows(group_by: str, rows: list[dict], base_params: dict) -> list[dict]:
+def _stock_warehouse_store_ids(store_id: int | None, scope: str) -> list[int] | None:
+    """PK list of warehouse Stores to include in stock, or None = all warehouses / legacy.
+
+    None means no store filter on StockSnapshot (all non-ledger rows preferred).
+    Empty list means no matching warehouses (show empty stock).
+    """
+    if store_id is not None:
+        store = Store.objects.filter(granit_id=store_id).first()
+        if store is None:
+            return []
+        if store.kind == Store.KIND_WAREHOUSE:
+            return [store.pk]
+        # Receipt group → warehouses linked via STORGRPREF
+        return list(
+            StoreWarehouseLink.objects.filter(receipt_group=store).values_list(
+                "warehouse_id", flat=True
+            )
+        )
+    if scope == SCOPE_ALL:
+        return None  # every warehouse snapshot
+    # Retail: only warehouses linked to a receipt group
+    return list(
+        StoreWarehouseLink.objects.values_list("warehouse_id", flat=True).distinct()
+    )
+
+
+def _stock_qty_by_granit_id(
+    granit_ids: list[int],
+    as_of: date,
+    *,
+    store_id: int | None = None,
+    scope: str = SCOPE_RETAIL,
+) -> dict[int, Decimal]:
+    """Stock from StockSnapshot on as_of (or nearest <=), filtered by store / scope."""
+    if not granit_ids:
+        return {}
+    warehouse_ids = _stock_warehouse_store_ids(store_id, scope)
+    if warehouse_ids is not None and len(warehouse_ids) == 0:
+        return {}
+
+    base = StockSnapshot.objects.filter(snapshot_date__lte=as_of)
+    if warehouse_ids is not None:
+        scoped = base.filter(store_id__in=warehouse_ids)
+    else:
+        # All warehouses: prefer per-warehouse rows; fall back to company ledger (granit_id=0)
+        scoped = base.exclude(store__granit_id=0)
+        if not scoped.exists():
+            scoped = base.filter(store__granit_id=0)
+
+    snap_date = scoped.order_by("-snapshot_date").values_list("snapshot_date", flat=True).first()
+    if snap_date is None and warehouse_ids is not None:
+        # Per-warehouse empty for date — try legacy company ledger for compatibility
+        snap_date = (
+            base.filter(store__granit_id=0)
+            .order_by("-snapshot_date")
+            .values_list("snapshot_date", flat=True)
+            .first()
+        )
+        if snap_date is None:
+            return {}
+        rows = (
+            StockSnapshot.objects.filter(
+                snapshot_date=snap_date,
+                store__granit_id=0,
+                product__granit_id__in=granit_ids,
+            )
+            .values("product__granit_id")
+            .annotate(qty=Sum("quantity"))
+        )
+        return {r["product__granit_id"]: r["qty"] or Decimal("0") for r in rows}
+    if snap_date is None:
+        return {}
+
+    qs = StockSnapshot.objects.filter(
+        snapshot_date=snap_date,
+        product__granit_id__in=granit_ids,
+    )
+    if warehouse_ids is not None:
+        qs = qs.filter(store_id__in=warehouse_ids)
+    else:
+        qs = qs.exclude(store__granit_id=0)
+        if not qs.exists():
+            qs = StockSnapshot.objects.filter(
+                snapshot_date=snap_date,
+                store__granit_id=0,
+                product__granit_id__in=granit_ids,
+            )
+    return {
+        r["product__granit_id"]: r["qty"] or Decimal("0")
+        for r in qs.values("product__granit_id").annotate(qty=Sum("quantity"))
+    }
+
+
+def _label_rows(
+    group_by: str,
+    rows: list[dict],
+    base_params: dict,
+    stock_by_granit: dict[int, Decimal] | None = None,
+) -> list[dict]:
     labeled = []
     for row in rows:
         sale_id = None
         is_invoice = False
         is_realized = False
         sale_source = None
+        stock_qty = None
         receipts_params = dict(base_params)
         receipts_params["group_by"] = "receipt"
         if group_by == "product":
@@ -124,6 +224,8 @@ def _label_rows(group_by: str, rows: list[dict], base_params: dict) -> list[dict
             secondary = row.get("product__group__name") or "—"
             if row.get("product__granit_id") is not None:
                 receipts_params["product"] = row["product__granit_id"]
+                if stock_by_granit is not None:
+                    stock_qty = stock_by_granit.get(row["product__granit_id"])
         elif group_by == "group":
             name = row.get("product__group__name") or "—"
             secondary = ""
@@ -175,6 +277,7 @@ def _label_rows(group_by: str, rows: list[dict], base_params: dict) -> list[dict
                 "receipts_query": _encode_params(receipts_params) if receipts_params else "",
                 "qty": row.get("qty") or Decimal("0"),
                 "amount": row.get("amount") or Decimal("0"),
+                "stock_qty": stock_qty,
             }
         )
     return labeled
@@ -237,7 +340,19 @@ def _explorer_context(request) -> dict:
         "scope": scope if scope == SCOPE_ALL else None,
     }
     total_rows = aggregated.count()
-    rows = _label_rows(group_by, list(aggregated[:ROW_LIMIT]), base_params)
+    page_rows = list(aggregated[:ROW_LIMIT])
+    stock_by_granit = None
+    show_stock = group_by == "product"
+    if show_stock:
+        granit_ids = [
+            row["product__granit_id"]
+            for row in page_rows
+            if row.get("product__granit_id") is not None
+        ]
+        stock_by_granit = _stock_qty_by_granit_id(
+            granit_ids, date_to, store_id=store_id, scope=scope
+        )
+    rows = _label_rows(group_by, page_rows, base_params, stock_by_granit=stock_by_granit)
     totals = qs.aggregate(qty=Sum("quantity"), amount=Sum("amount"))
 
     products_qs = Product.objects.order_by("name")
@@ -271,6 +386,7 @@ def _explorer_context(request) -> dict:
         "row_count": total_rows,
         "row_limit": ROW_LIMIT,
         "truncated": total_rows > ROW_LIMIT,
+        "show_stock": show_stock,
         "total_qty": totals["qty"] or Decimal("0"),
         "total_amount": totals["amount"] or Decimal("0"),
         "name_heading": {

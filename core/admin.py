@@ -11,6 +11,7 @@ from .models import (
     SiteCategory,
     SiteProduct,
     Store,
+    StoreWarehouseLink,
 )
 
 
@@ -19,6 +20,13 @@ class StoreAdmin(admin.ModelAdmin):
     list_display = ["granit_id", "name", "kind", "created_at"]
     search_fields = ["name", "granit_id"]
     ordering = ["name"]
+
+
+@admin.register(StoreWarehouseLink)
+class StoreWarehouseLinkAdmin(admin.ModelAdmin):
+    list_display = ["warehouse", "receipt_group", "synced_at"]
+    search_fields = ["warehouse__name", "receipt_group__name", "warehouse__granit_id"]
+    raw_id_fields = ["warehouse", "receipt_group"]
 
 
 @admin.register(Client)
