@@ -10,10 +10,11 @@ from django.urls import include, path
 from django.views.i18n import set_language
 
 from core.forms import StyledAuthenticationForm
-from core.views import health, home, register
+from core.views import health, home, more, register
 
 urlpatterns = [
     path("", home, name="home"),
+    path("more/", more, name="more"),
     path("health", health, name="health"),
     path(
         "accounts/login/",

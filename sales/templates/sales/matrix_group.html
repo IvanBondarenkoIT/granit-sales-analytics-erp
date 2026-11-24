@@ -2,6 +2,8 @@
 {% load i18n numbers %}
 
 {% block title %}{{ group.name }}{% endblock %}
+{% block page_title %}{{ group.name }}{% endblock %}
+{% block back_url %}{% url 'sales_matrix' %}?{{ matrix_query }}{% endblock %}
 
 {% block extra_css %}
         table { margin: 1rem 0; }
@@ -40,12 +42,12 @@
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'sales_matrix' %}?{{ matrix_query }}">← {% trans "Sales by super-groups" %}</a>
+    <p class="page-back"><a href="{% url 'sales_matrix' %}?{{ matrix_query }}">← {% trans "Sales by super-groups" %}</a>
        {% if current_sg %}
        · <a href="{% url 'sales_matrix_sg' current_sg.pk %}?{{ period_query }}">{% trans "Members" %}: {{ current_sg.display_title }}</a>
        {% endif %}
     </p>
-    <h1>{{ group.name }} <small>({{ group.granit_id }})</small></h1>
+    <h1 class="page-h1">{{ group.name }} <small>({{ group.granit_id }})</small></h1>
     {% if group.parent_path %}<p class="hint" style="color:#555">{{ group.parent_path }}</p>{% endif %}
     <form class="scope-row" method="get">
         <input type="hidden" name="date_from" value="{{ date_from|date:'Y-m-d' }}">

@@ -2,6 +2,8 @@
 {% load i18n %}
 
 {% block title %}{% trans "New campaign" %}{% endblock %}
+{% block page_title %}{% trans "New campaign" %}{% endblock %}
+{% block back_url %}{% url 'campaign_list' %}{% endblock %}
 
 {% block extra_css %}
         form { background: #fff; padding: 1rem; max-width: 640px; }
@@ -14,7 +16,8 @@
 
 {% block content %}
 <div class="container">
-    <h1>{% trans "New campaign" %}</h1>
+    <p class="page-back"><a href="{% url 'campaign_list' %}">← {% trans "All campaigns" %}</a></p>
+    <h1 class="page-h1">{% trans "New campaign" %}</h1>
     <p class="hint">{% trans "Each mailing is a separate campaign. Saving here does not change older blasts." %}</p>
     <p class="hint">{% trans "Telegram bot: choose that channel and upload the CSV export (card number, phone). Clients are matched by loyalty card." %}</p>
     {% if local_file_exists %}

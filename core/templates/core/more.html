@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "More" %} — {% trans "Granit Sales Analytics ERP" %}{% endblock %}
+{% block page_title %}{% trans "More" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-h1">{% trans "More" %}</h1>
+
+    <ul class="more-list">
+        <li>
+            <a href="{% url 'sales_reconcile' %}">
+                {% include "partials/icon.html" with name="reconcile" %}
+                <span class="more-label">{% trans "Reconciliation with Granit" %}</span>
+                {% include "partials/icon.html" with name="chevron" %}
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'home' %}">
+                {% include "partials/icon.html" with name="home" %}
+                <span class="more-label">{% trans "Home" %}</span>
+                {% include "partials/icon.html" with name="chevron" %}
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'promo_create' %}">
+                {% include "partials/icon.html" with name="plus" %}
+                <span class="more-label">{% trans "New promo" %}</span>
+                {% include "partials/icon.html" with name="chevron" %}
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'campaign_create' %}">
+                {% include "partials/icon.html" with name="plus" %}
+                <span class="more-label">{% trans "New campaign" %}</span>
+                {% include "partials/icon.html" with name="chevron" %}
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'sales_matrix_edit' %}">
+                {% include "partials/icon.html" with name="edit" %}
+                <span class="more-label">{% trans "Edit super-groups" %}</span>
+                {% include "partials/icon.html" with name="chevron" %}
+            </a>
+        </li>
+        {% if user.is_staff %}
+        <li>
+            <a href="{% url 'admin:index' %}">
+                {% include "partials/icon.html" with name="admin" %}
+                <span class="more-label">{% trans "Django admin" %}</span>
+                {% include "partials/icon.html" with name="chevron" %}
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+
+    <section class="more-profile" id="profile">
+        <h2>{% trans "Profile" %}</h2>
+        <p><strong>{{ user.username }}</strong></p>
+
+        <form class="lang-switch" action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+            <label for="more-language">{% trans "Language" %}</label>
+            <select name="language" id="more-language" onchange="this.form.next.value=location.pathname+location.search; this.form.submit()">
+                {% get_current_language as CURRENT_LANGUAGE %}
+                {% get_available_languages as AVAILABLE_LANGUAGES %}
+                {% get_language_info_list for AVAILABLE_LANGUAGES as languages %}
+                {% for language in languages %}
+                    <option value="{{ language.code }}"{% if language.code == CURRENT_LANGUAGE %} selected{% endif %}>
+                        {{ language.name_local }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+
+        <form method="post" action="{% url 'logout' %}" style="margin:0">
+            {% csrf_token %}
+            <button class="logout-btn" type="submit">{% trans "Log out" %}</button>
+        </form>
+    </section>
+</div>
+{% endblock %}

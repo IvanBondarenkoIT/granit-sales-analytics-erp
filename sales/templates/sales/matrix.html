@@ -2,6 +2,7 @@
 {% load i18n numbers %}
 
 {% block title %}{% trans "Sales by super-groups" %}{% endblock %}
+{% block page_title %}{% trans "Sales by super-groups" %}{% endblock %}
 
 {% block extra_css %}
         .matrix-wrap { overflow-x: auto; background: #fff; }
@@ -26,7 +27,7 @@
 
 {% block content %}
 <div class="container" style="max-width: 100%;">
-    <h1>{% trans "Sales by super-groups" %}</h1>
+    <h1 class="page-h1">{% trans "Sales by super-groups" %}</h1>
     <p class="hint">{% trans "Rows are super-groups, columns are stores with sales in the period. Cell = qty / amount. Totals must match all sales." %}
         {% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}</p>
     {% if scope_all %}

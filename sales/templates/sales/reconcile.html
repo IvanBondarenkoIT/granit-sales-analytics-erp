@@ -2,13 +2,14 @@
 {% load i18n numbers %}
 
 {% block title %}{% trans "Reconciliation with Granit" %}{% endblock %}
+{% block page_title %}{% trans "Reconciliation with Granit" %}{% endblock %}
 
 {% block extra_css %}{% include "sales/_reconcile_style.html" %}{% endblock %}
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'sales_matrix' %}">{% trans "Super-groups" %}</a></p>
-    <h1>{% trans "Reconciliation with Granit" %}</h1>
+    <p class="page-back"><a href="{% url 'sales_matrix' %}">{% trans "Super-groups" %}</a></p>
+    <h1 class="page-h1">{% trans "Reconciliation with Granit" %}</h1>
     <p class="rc-hint">
         {% trans "Granit side: sales documents by realization date, the same as the Granit report «Sales by warehouses» (amount incl. VAT). Each total is split into goods lines, service lines and a leftover; the leftover must be zero, otherwise Granit has a kind of lines we do not load yet." %}
     </p>

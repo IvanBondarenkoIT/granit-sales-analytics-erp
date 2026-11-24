@@ -2,13 +2,15 @@
 {% load i18n numbers %}
 
 {% block title %}{% trans "Reconciliation with Granit" %} · {{ row.month|date:"F Y" }}{% endblock %}
+{% block page_title %}{{ row.month|date:"F Y" }}{% endblock %}
+{% block back_url %}{% url 'sales_reconcile' %}{% endblock %}
 
 {% block extra_css %}{% include "sales/_reconcile_style.html" %}{% endblock %}
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'sales_reconcile' %}">{% trans "Reconciliation with Granit" %}</a></p>
-    <h1>{{ row.month|date:"F Y" }} {% include "sales/_reconcile_status.html" with status=row.status %}</h1>
+    <p class="page-back"><a href="{% url 'sales_reconcile' %}">{% trans "Reconciliation with Granit" %}</a></p>
+    <h1 class="page-h1">{{ row.month|date:"F Y" }} {% include "sales/_reconcile_status.html" with status=row.status %}</h1>
     <p class="rc-hint">{% trans "Click a store to see the documents that differ. «Amount incl. VAT» per warehouse is the line of the Granit report." %}
         {% trans "«Not realized yet»: receipts of the month without a warehouse document in Granit; they are in Retail but not in All warehouses." %}</p>
 

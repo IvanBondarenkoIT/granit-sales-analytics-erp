@@ -2,6 +2,7 @@
 {% load i18n %}
 
 {% block title %}{% trans "Sales Explorer" %}{% endblock %}
+{% block page_title %}{% trans "Sales Explorer" %}{% endblock %}
 
 {% block extra_css %}
         .filters {
@@ -20,7 +21,7 @@
 
 {% block content %}
 <div class="container">
-    <h1>{% trans "Sales Explorer" %}</h1>
+    <h1 class="page-h1">{% trans "Sales Explorer" %}</h1>
     <p class="hint">{% trans "Slice sales for a period, then open the receipts and the full order." %}</p>
     {% include "sales/_explorer.html" %}
 </div>

@@ -2,6 +2,8 @@
 {% load i18n numbers %}
 
 {% block title %}{% trans "What they bought" %} — {{ campaign.name }}{% endblock %}
+{% block page_title %}{% trans "What they bought" %}{% endblock %}
+{% block back_url %}{% url 'campaign_detail' campaign.pk %}{% if filter_query %}?{{ filter_query|slice:'1:' }}{% endif %}{% endblock %}
 
 {% block extra_css %}
         table { margin-top: 1rem; }
@@ -12,8 +14,8 @@
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'campaign_detail' campaign.pk %}{% if filter_query %}?{{ filter_query|slice:'1:' }}{% endif %}">← {{ campaign.name }}</a></p>
-    <h1>{% trans "What they bought" %}</h1>
+    <p class="page-back"><a href="{% url 'campaign_detail' campaign.pk %}{% if filter_query %}?{{ filter_query|slice:'1:' }}{% endif %}">← {{ campaign.name }}</a></p>
+    <h1 class="page-h1">{% trans "What they bought" %}</h1>
     <p>{% trans "Products bought by this campaign list in the analysis window." %}</p>
     {% include "campaigns/_catalog_filter.html" %}
     <table>

@@ -2,16 +2,18 @@
 {% load i18n numbers %}
 
 {% block title %}{% trans "Reconciliation with Granit" %} · {{ store.name }}{% endblock %}
+{% block page_title %}{{ store.name }}{% endblock %}
+{% block back_url %}{% url 'sales_reconcile_month' row.key %}{% endblock %}
 
 {% block extra_css %}{% include "sales/_reconcile_style.html" %}{% endblock %}
 
 {% block content %}
 <div class="container">
-    <p>
+    <p class="page-back">
         <a href="{% url 'sales_reconcile' %}">{% trans "Reconciliation with Granit" %}</a> ·
         <a href="{% url 'sales_reconcile_month' row.key %}">{{ row.month|date:"F Y" }}</a>
     </p>
-    <h1>{{ store.name }} · {{ row.month|date:"F Y" }}</h1>
+    <h1 class="page-h1">{{ store.name }} · {{ row.month|date:"F Y" }}</h1>
     <p class="rc-hint">
         {% trans "Documents where Granit and our sales disagree. Receipt documents are compared through the receipt: one receipt can be split into several warehouse documents." %}
     </p>

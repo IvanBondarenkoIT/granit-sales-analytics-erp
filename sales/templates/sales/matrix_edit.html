@@ -2,6 +2,8 @@
 {% load i18n %}
 
 {% block title %}{% trans "Edit super-groups" %}{% endblock %}
+{% block page_title %}{% trans "Edit super-groups" %}{% endblock %}
+{% block back_url %}{% url 'sales_matrix' %}?{{ period_query }}{% endblock %}
 
 {% block extra_css %}
         table.sg-edit {
@@ -102,8 +104,8 @@
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'sales_matrix' %}?{{ period_query }}">← {% trans "Sales by super-groups" %}</a></p>
-    <h1>{% trans "Edit super-groups" %}</h1>
+    <p class="page-back"><a href="{% url 'sales_matrix' %}?{{ period_query }}">← {% trans "Sales by super-groups" %}</a></p>
+    <h1 class="page-h1">{% trans "Edit super-groups" %}</h1>
     <p class="hint">{% trans "Changes are shared for all users. One product group belongs to at most one super-group." %}</p>
 
     <table class="sg-edit">

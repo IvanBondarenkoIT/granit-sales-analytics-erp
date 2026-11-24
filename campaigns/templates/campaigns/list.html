@@ -2,6 +2,7 @@
 {% load i18n %}
 
 {% block title %}{% trans "Campaign Analysis" %}{% endblock %}
+{% block page_title %}{% trans "Campaigns" %}{% endblock %}
 
 {% block extra_css %}
         .page-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; }
@@ -12,7 +13,7 @@
 {% block content %}
 <div class="container">
     <div class="page-head">
-        <h1>{% trans "Campaign Analysis" %}</h1>
+        <h1 class="page-h1">{% trans "Campaign Analysis" %}</h1>
         <a class="btn" href="{% url 'campaign_create' %}">{% trans "New campaign" %}</a>
     </div>
     {% if campaigns %}

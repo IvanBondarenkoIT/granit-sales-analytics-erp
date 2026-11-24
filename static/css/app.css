@@ -65,8 +65,17 @@ h2 {
 }
 
 /* —— Layout shell —— */
+body.has-mobile-shell {
+  padding-bottom: var(--nav-pad-bottom);
+}
+
+/* Desktop topbar/footer: hidden on phone, shown ≥900px */
+.topbar,
+footer {
+  display: none;
+}
+
 .topbar {
-  display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 0.75rem;
@@ -93,6 +102,112 @@ h2 {
   color: var(--brand-dark);
   font-weight: 600;
   border-bottom: 2px solid var(--brand);
+}
+
+.app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: var(--tap) 1fr var(--tap);
+  align-items: center;
+  gap: 0.35rem;
+  height: calc(var(--bar-h) + var(--safe-top));
+  padding: var(--safe-top) 0.5rem 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-sizing: border-box;
+}
+
+.app-bar-back,
+.app-bar-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap);
+  height: var(--tap);
+  color: var(--brand-dark);
+  text-decoration: none;
+  border-radius: 999px;
+}
+
+.app-bar-back:not([href]),
+.app-bar-back[href=""] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.app-bar-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-bar-avatar {
+  background: linear-gradient(135deg, var(--brand) 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: var(--nav-pad-bottom);
+  padding: 0 0 var(--safe-bottom);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  box-sizing: border-box;
+}
+
+.bottom-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-height: var(--nav-h);
+  padding: 0.25rem 0.15rem;
+  color: #556;
+  text-decoration: none;
+  font-size: 0.68rem;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bottom-nav a svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.bottom-nav a.active {
+  color: var(--brand-dark);
+  font-weight: 600;
+}
+
+.bottom-nav a span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.page-back,
+.page-h1 {
+  display: none;
 }
 
 .flash {
@@ -172,6 +287,78 @@ footer a {
   color: var(--brand-mid);
 }
 
+/* More page */
+.more-list {
+  list-style: none;
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 0 0 1.25rem;
+}
+
+.more-list a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  padding: 0.65rem 1rem;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.more-list a:last-child {
+  border-bottom: 0;
+}
+
+.more-list a svg:first-child {
+  width: 22px;
+  height: 22px;
+  color: var(--brand-dark);
+  flex-shrink: 0;
+}
+
+.more-list a .more-label {
+  flex: 1;
+}
+
+.more-list a svg:last-child {
+  width: 18px;
+  height: 18px;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.more-profile {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.more-profile h2 {
+  margin-top: 0;
+}
+
+.more-profile .lang-switch {
+  display: flex;
+  width: 100%;
+  margin: 0.75rem 0;
+}
+
+.more-profile .lang-switch select {
+  flex: 1;
+}
+
+.more-profile .logout-btn {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  background: #f8f8fb;
+}
+
 /* —— Forms —— */
 .select-filter {
   width: 100%;
@@ -185,7 +372,7 @@ footer a {
 input,
 select,
 textarea {
-  font-size: 16px !important;
+  font-size: 16px;
   line-height: 1.25;
 }
 
@@ -416,12 +603,34 @@ body.auth-body {
 }
 
 @media (min-width: 900px) {
-  .container {
-    padding: 2rem;
+  body.has-mobile-shell {
+    padding-bottom: 0;
+  }
+
+  .app-bar,
+  .bottom-nav {
+    display: none;
   }
 
   .topbar {
+    display: flex;
     padding: calc(1rem + var(--safe-top)) 2rem 0;
+  }
+
+  footer {
+    display: block;
+  }
+
+  .page-back {
+    display: block;
+  }
+
+  .page-h1 {
+    display: block;
+  }
+
+  .container {
+    padding: 2rem;
   }
 
   .flash {
@@ -434,6 +643,41 @@ body.auth-body {
 
   h2 {
     font-size: 1.25rem;
+  }
+
+  /* Desktop density: restore compact fields/buttons */
+  .select-filter,
+  .lang-switch,
+  .lang-switch select,
+  .logout-btn,
+  input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]),
+  select,
+  textarea,
+  .btn,
+  .btn-secondary,
+  .btn-link,
+  label:has(> input[type="checkbox"]),
+  label:has(> input[type="radio"]) {
+    min-height: unset;
+  }
+
+  .btn,
+  .btn-secondary {
+    padding: 0.4rem 0.85rem;
+  }
+
+  .btn-link {
+    padding: 0.2rem 0.15rem;
+  }
+
+  .select-filter {
+    padding: 0.35rem 0.5rem;
+  }
+
+  input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]),
+  select,
+  textarea {
+    font-size: inherit;
   }
 }
 

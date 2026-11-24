@@ -2,6 +2,8 @@
 {% load i18n numbers %}
 
 {% block title %}{{ sg.display_title }}{% endblock %}
+{% block page_title %}{{ sg.display_title }}{% endblock %}
+{% block back_url %}{% url 'sales_matrix' %}?{{ matrix_query }}{% endblock %}
 
 {% block extra_css %}
         table { margin: 1rem 0; }
@@ -13,9 +15,9 @@
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'sales_matrix' %}?{{ matrix_query }}">← {% trans "Sales by super-groups" %}</a>
+    <p class="page-back"><a href="{% url 'sales_matrix' %}?{{ matrix_query }}">← {% trans "Sales by super-groups" %}</a>
        · <a href="{% url 'sales_matrix_edit' %}?{{ matrix_query }}">{% trans "Edit super-groups" %}</a></p>
-    <h1><span class="swatch" style="background:#{{ sg.color }}"></span> {{ sg.display_title }}</h1>
+    <h1 class="page-h1"><span class="swatch" style="background:#{{ sg.color }}"></span> {{ sg.display_title }}</h1>
     {% if sg.is_catchall %}
     <p>{% trans "Remainder: product groups (and products without a group) not assigned to any super-group." %}</p>
     {% endif %}

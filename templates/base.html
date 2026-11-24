@@ -11,7 +11,21 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <style>{% block extra_css %}{% endblock %}</style>
 </head>
-<body>
+<body class="has-mobile-shell">
+    <header class="app-bar">
+        <a class="app-bar-back" href="{% block back_url %}{% endblock %}" aria-label="{% trans "Back" %}">
+            {% include "partials/icon.html" with name="back" %}
+        </a>
+        <p class="app-bar-title">{% block page_title %}{% trans "Granit Sales Analytics ERP" %}{% endblock %}</p>
+        {% if user.is_authenticated %}
+        <a class="app-bar-avatar" href="{% url 'more' %}#profile" title="{% trans "Profile" %}" aria-label="{% trans "Profile" %}">
+            {{ user.username|slice:":2"|upper }}
+        </a>
+        {% else %}
+        <span class="app-bar-back" aria-hidden="true"></span>
+        {% endif %}
+    </header>
+
     <div class="topbar">
         <nav class="nav">
             <a href="{% url 'home' %}"{% if request.path == '/' %} class="active"{% endif %}>{% trans "Home" %}</a>
@@ -55,6 +69,30 @@
     {% endif %}
 
     {% block content %}{% endblock %}
+
+    <nav class="bottom-nav" aria-label="{% trans "Main" %}">
+        <a href="{% url 'sales_explorer' %}"{% if request.path == '/sales/' or '/sales/orders/' in request.path %} class="active"{% endif %}>
+            {% include "partials/icon.html" with name="sales" %}
+            <span>{% trans "Sales" %}</span>
+        </a>
+        <a href="{% url 'sales_matrix' %}"{% if '/sales/matrix' in request.path %} class="active"{% endif %}>
+            {% include "partials/icon.html" with name="matrix" %}
+            <span>{% trans "Super-groups" %}</span>
+        </a>
+        <a href="{% url 'promo_list' %}"{% if '/promos/' in request.path %} class="active"{% endif %}>
+            {% include "partials/icon.html" with name="promos" %}
+            <span>{% trans "Promos" %}</span>
+        </a>
+        <a href="{% url 'campaign_list' %}"{% if '/campaigns/' in request.path %} class="active"{% endif %}>
+            {% include "partials/icon.html" with name="campaigns" %}
+            <span>{% trans "Campaigns" %}</span>
+        </a>
+        <a href="{% url 'more' %}"{% if '/more/' in request.path %} class="active"{% endif %}>
+            {% include "partials/icon.html" with name="more" %}
+            <span>{% trans "More" %}</span>
+        </a>
+    </nav>
+
     <script src="{% static 'vendor/htmx-1.9.12.min.js' %}"></script>
     <script src="{% static 'js/app.js' %}"></script>
     {% block extra_js %}{% endblock %}
@@ -62,8 +100,10 @@
     <footer>
         <p>
             {% trans "Granit Sales Analytics ERP" %}
+            {% if user.is_staff %}
             |
             <a href="{% url 'admin:index' %}">{% trans "Admin Panel" %}</a>
+            {% endif %}
         </p>
     </footer>
 </body>
