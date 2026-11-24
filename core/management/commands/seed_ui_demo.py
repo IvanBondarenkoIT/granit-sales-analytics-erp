@@ -42,6 +42,8 @@ from sales.models import (
 
 SEED = 20261124
 DEFAULT_PASSWORD = "demo-pass-123"
+# Compose service name + local loopback only. Anything else needs --allow-host.
+SAFE_DB_HOSTS = {"db", "localhost", "127.0.0.1", "::1", ""}
 
 
 def _db_has_business_data() -> bool:
@@ -100,16 +102,39 @@ class Command(BaseCommand):
             default=DEFAULT_PASSWORD,
             help=f"Password for demo_staff / demo_user (default: {DEFAULT_PASSWORD})",
         )
+        parser.add_argument(
+            "--allow-host",
+            default=None,
+            metavar="HOST",
+            help=(
+                "Allow seeding against this DB HOST when it is not a local/compose host "
+                f"(safe defaults include: db, localhost, 127.0.0.1)"
+            ),
+        )
 
     def handle(self, *args, **options):
         if not settings.DEBUG:
             raise CommandError("seed_ui_demo refuses to run when DEBUG=False")
+
+        db = settings.DATABASES["default"]
+        host = str(db.get("HOST") or "")
+        name = db.get("NAME")
+        allow_host = options.get("allow_host")
+        if host not in SAFE_DB_HOSTS and host != allow_host:
+            raise CommandError(
+                "seed_ui_demo refuses non-local DB host "
+                f"{host!r} (database={name!r}). "
+                f"Allowed hosts: {sorted(SAFE_DB_HOSTS)!r}. "
+                f"Pass --allow-host {host} only if you intentionally target that server."
+            )
+
         if _db_has_business_data() and not options["force"]:
             raise CommandError(
                 "Database already has business data. Use --force to wipe and re-seed "
-                "(local only; never against production)."
+                f"(local only; current target host={host!r} name={name!r})."
             )
 
+        self.stdout.write(f"Seeding UI demo into host={host!r} name={name!r}…")
         with transaction.atomic():
             if options["force"] and _db_has_business_data():
                 self.stdout.write("Wiping existing business data (--force)…")

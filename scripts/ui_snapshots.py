@@ -87,6 +87,7 @@ class PageResult:
     external_requests: list[str] = field(default_factory=list)
     screenshot: str = ""
     error: str | None = None
+    expected_error: str | None = None
 
 
 class SnapshotRunner:
@@ -190,7 +191,8 @@ class SnapshotRunner:
                             job=job,
                             console_errors=console_errors,
                             failed_requests=failed,
-                            external_requests=list(dict.fromkeys(external)),
+                            # Pass the live list; _capture copies after the page has loaded.
+                            external_requests=external,
                         )
                     context.close()
             browser.close()
@@ -226,6 +228,7 @@ class SnapshotRunner:
             "externalRequests": r.external_requests,
             "screenshot": r.screenshot,
             "error": r.error,
+            "expectedError": r.expected_error,
         }
 
     def _url(self, path: str) -> str:
@@ -381,6 +384,7 @@ class SnapshotRunner:
                 {
                     "key": "reconcile_docs",
                     "path": f"/sales/reconcile/{ids['reconcile_month']}/store/{ids['reconcile_store']}/",
+                    "expected_error": "needs Granit proxy",
                 }
             )
         if ids.get("campaign_id"):
@@ -420,7 +424,13 @@ class SnapshotRunner:
     ) -> None:
         key = f"{job['key']}__{user}__{viewport}"
         path = job["path"]
-        result = PageResult(key=key, path=path, user=user, viewport=viewport)
+        result = PageResult(
+            key=key,
+            path=path,
+            user=user,
+            viewport=viewport,
+            expected_error=job.get("expected_error"),
+        )
         try:
             if job.get("anonymous"):
                 # Open in a throwaway context would be cleaner; for simplicity navigate and
@@ -501,6 +511,7 @@ class SnapshotRunner:
             result.small_font_inputs = int(metrics["smallFontInputs"])
             result.console_errors = list(console_errors)
             result.failed_requests = list(failed_requests)
+            # Copy after navigation so request listener has filled the list.
             result.external_requests = sorted(set(external_requests))[:30]
 
             shot_name = f"{_safe_name(key)}.png"
@@ -509,12 +520,23 @@ class SnapshotRunner:
             result.screenshot = f"screenshots/{shot_name}"
         except Exception as exc:  # noqa: BLE001
             result.error = str(exc)
-            print(f"ERROR {key}: {exc}", file=sys.stderr)
+            if result.expected_error:
+                print(f"EXPECTED ({result.expected_error}) {key}: {exc}", file=sys.stderr)
+            else:
+                print(f"ERROR {key}: {exc}", file=sys.stderr)
         self.results.append(result)
-        flag = "HSCROLL" if result.has_hscroll else "ok"
+        if result.expected_error:
+            flag = "SKIP"
+        elif result.has_hscroll:
+            flag = "HSCROLL"
+        else:
+            flag = "ok"
+        ext_n = len(result.external_requests)
         print(
             f"[{flag}] {key} scroll={result.scroll_width}/{result.inner_width} "
-            f"tap<{44}={result.small_tap_count} font<{16}={result.small_font_inputs}"
+            f"tap<{44}={result.small_tap_count} font<{16}={result.small_font_inputs} "
+            f"ext={ext_n}"
+            + (f" expected={result.expected_error}" if result.expected_error else "")
         )
 
 
@@ -543,9 +565,17 @@ def _build_compare(current: dict[str, Any], other_name: str, out_dir: Path) -> P
         b = cur_idx.get(key)
         if not a or not b:
             continue
-        if a.get("viewport") != "mobile" and b.get("viewport") != "mobile":
-            # Still show all; highlight mobile worsenings in table.
-            pass
+        # Pages that need Granit proxy (or other known gaps) stay out of the
+        # regression highlight summary so they do not look like UI regressions.
+        if a.get("expectedError") or b.get("expectedError"):
+            rows_html.append(
+                "<tr class='skip'><td>{key}</td>"
+                "<td colspan='3'>skipped ({reason})</td></tr>".format(
+                    key=key,
+                    reason=b.get("expectedError") or a.get("expectedError"),
+                )
+            )
+            continue
 
         def worse(old_v, new_v, higher_is_worse=True):
             if old_v is None or new_v is None:
@@ -595,12 +625,14 @@ body {{ font-family: system-ui, sans-serif; margin: 1rem 1.5rem; }}
 table {{ border-collapse: collapse; width: 100%; margin-bottom: 2rem; }}
 th, td {{ border: 1px solid #ccc; padding: 0.35rem 0.5rem; font-size: 13px; }}
 tr.bad {{ background: #ffe8e8; }}
+tr.skip {{ background: #f3f3f3; color: #666; }}
 .pair {{ display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }}
 img {{ max-width: 100%; border: 1px solid #ddd; }}
 section {{ margin-bottom: 1.5rem; }}
 </style></head><body>
 <h1>Compare {other_name} → {current.get('name')}</h1>
-<p>Red rows: horizontal scroll / small taps / small fonts got worse.</p>
+<p>Red rows: horizontal scroll / small taps / small fonts got worse.
+Grey rows: expected gaps (e.g. needs Granit proxy) — excluded from regression summary.</p>
 <table><thead><tr>
 <th>Page</th><th>scrollWidth</th><th>taps &lt; 44px</th><th>inputs font &lt; 16px</th>
 </tr></thead><tbody>
