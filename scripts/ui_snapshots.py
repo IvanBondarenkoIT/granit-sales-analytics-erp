@@ -357,6 +357,7 @@ class SnapshotRunner:
             {"key": "login", "path": "/accounts/login/", "anonymous": True},
             {"key": "register", "path": "/accounts/register/", "anonymous": True},
             {"key": "home", "path": "/"},
+            {"key": "more", "path": "/more/"},
             {"key": "sales_default", "path": "/sales/"},
             {"key": "sales_by_receipt", "path": "/sales/?group_by=receipt"},
             {"key": "sales_scope_all", "path": "/sales/?scope=all"},

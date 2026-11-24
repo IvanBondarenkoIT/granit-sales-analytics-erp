@@ -6,17 +6,194 @@
 
 {% block extra_css %}
         .filters {
+            margin: 0.75rem 0 1rem;
+        }
+        .filter-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+        }
+        .filter-summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: var(--tap);
+            padding: 0.65rem 0.85rem;
+            font-size: 0.95rem;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .filter-summary::-webkit-details-marker { display: none; }
+        .filter-summary::after {
+            content: "▾";
+            margin-left: auto;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        .filter-panel[open] > .filter-summary::after { content: "▴"; }
+        .filter-summary-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-width: 0;
+        }
+        .filter-fields {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 0.75rem 1rem;
-            background: #fff;
-            padding: 1rem;
-            margin: 1rem 0;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            padding: 0 0.85rem 0.85rem;
             align-items: end;
         }
-        .filters label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.9rem; color: #444; }
-        .filters input, .filters select { padding: 0.4rem; font: inherit; font-size: 16px; min-height: 44px; }
-        .filters .actions { display: flex; gap: 0.75rem; align-items: center; }
+        .filters label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+            color: #444;
+        }
+        .filters input,
+        .filters select {
+            padding: 0.4rem;
+            font: inherit;
+            font-size: 16px;
+            min-height: var(--tap);
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .explorer-chips {
+            display: flex;
+            gap: 0.65rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 0.25rem;
+            margin-bottom: 0.65rem;
+        }
+        .explorer-chips label {
+            flex: 1 1 0;
+            min-width: 8.5rem;
+        }
+        .filters .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        .filters .actions .btn,
+        .filters .actions .btn-secondary {
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 0.9rem;
+            text-decoration: none;
+        }
+        .hint-period { font-size: 0.9rem; }
+        .stats-tiles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin: 0 0 0.85rem;
+        }
+        .stats-tiles .stat {
+            padding: 0.65rem 0.5rem;
+            text-align: center;
+        }
+        .stats-tiles .stat span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+        .stats-tiles .stat strong {
+            font-size: 1.1rem;
+            margin-top: 0.15rem;
+        }
+        .hint-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin: 0 0 0.85rem;
+            padding: 0 0.75rem;
+        }
+        .hint-panel > summary {
+            list-style: none;
+            cursor: pointer;
+            min-height: var(--tap);
+            display: flex;
+            align-items: center;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .hint-panel > summary::-webkit-details-marker { display: none; }
+        .hint-panel > summary::after {
+            content: "▾";
+            margin-left: auto;
+            color: var(--muted);
+        }
+        .hint-panel[open] > summary::after { content: "▴"; }
+        .hint-panel .hint { margin: 0 0 0.75rem; font-size: 0.9rem; }
+        @media (min-width: 600px) {
+            .filter-fields {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 900px) {
+            .filter-panel {
+                border: 0;
+                background: var(--surface);
+                padding: 0;
+            }
+            .filter-summary { display: none; }
+            .filter-fields {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 0.75rem 1rem;
+                padding: 1rem;
+                margin: 0;
+            }
+            /* Keep fields visible even if <details> lacks [open] (JS sets it). */
+            .filter-panel:not([open]) > .filter-fields {
+                display: grid;
+            }
+            .explorer-chips {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 0.75rem 1rem;
+                overflow: visible;
+                padding: 0 1rem;
+                margin: 0;
+                background: var(--surface);
+            }
+            .explorer-chips label { min-width: 0; }
+            .filters .actions {
+                padding: 0 1rem 1rem;
+                background: var(--surface);
+                margin: 0;
+            }
+            .stats-tiles {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1.5rem;
+            }
+            .stats-tiles .stat {
+                background: transparent;
+                padding: 0;
+                text-align: left;
+            }
+            .stats-tiles .stat span {
+                display: inline;
+                font-size: inherit;
+                color: inherit;
+            }
+            .stats-tiles .stat span::after { content: ": "; }
+            .stats-tiles .stat strong {
+                display: inline;
+                font-size: inherit;
+                color: inherit;
+            }
+        }
 {% endblock %}
 
 {% block content %}
@@ -25,4 +202,53 @@
     <p class="hint">{% trans "Slice sales for a period, then open the receipts and the full order." %}</p>
     {% include "sales/_explorer.html" %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  var KEY = "explorer-filters-open";
+  var MQ = window.matchMedia("(min-width: 900px)");
+
+  function panel() {
+    return document.getElementById("explorer-filter-panel");
+  }
+
+  function restore() {
+    var el = panel();
+    if (!el) return;
+    if (MQ.matches) {
+      el.open = true;
+      return;
+    }
+    try {
+      el.open = sessionStorage.getItem(KEY) === "1";
+    } catch (err) {
+      el.open = false;
+    }
+  }
+
+  function onToggle(ev) {
+    var el = ev.target;
+    if (!el || el.id !== "explorer-filter-panel") return;
+    if (MQ.matches) return;
+    try {
+      sessionStorage.setItem(KEY, el.open ? "1" : "0");
+    } catch (err) { /* private mode */ }
+  }
+
+  document.body.addEventListener("toggle", onToggle, true);
+  document.body.addEventListener("htmx:afterSwap", function (ev) {
+    var t = ev.detail && ev.detail.target;
+    if (t && (t.id === "sales-explorer" || (t.querySelector && t.querySelector("#explorer-filter-panel")))) {
+      restore();
+    } else {
+      restore();
+    }
+  });
+  if (MQ.addEventListener) MQ.addEventListener("change", restore);
+  else if (MQ.addListener) MQ.addListener(restore);
+  restore();
+})();
+</script>
 {% endblock %}

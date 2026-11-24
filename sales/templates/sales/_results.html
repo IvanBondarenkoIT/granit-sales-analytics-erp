@@ -1,17 +1,29 @@
 {% load i18n numbers %}
-<div class="stats">
-    <span>{% trans "Rows" %}: <strong>{{ row_count }}</strong></span>
-    <span>{% trans "Qty" %}: <strong>{{ total_qty|qty }}</strong></span>
-    <span>{% trans "Amount" %}: <strong>{{ total_amount|money }}</strong></span>
+<div class="stats stats-tiles">
+    <div class="stat">
+        <span>{% trans "Rows" %}</span>
+        <strong>{{ row_count }}</strong>
+    </div>
+    <div class="stat">
+        <span>{% trans "Qty" %}</span>
+        <strong>{{ total_qty|qty }}</strong>
+    </div>
+    <div class="stat">
+        <span>{% trans "Amount" %}</span>
+        <strong>{{ total_amount|money }}</strong>
+    </div>
 </div>
-<p class="hint">{% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}
-    {% if show_stock %}{% trans "Stock is remainder as of the period end date for the selected store filter (Retail = shop warehouses, All warehouses = company)." %}{% endif %}
-    {% if scope_all %}{% trans "All warehouses = the Granit report «Sales by warehouses»: receipts as realized by warehouse documents plus sales invoices with their services (office, HoReCa, service centres), by realization date. Receipts Granit has not realized yet are only in Retail; transfers and write-offs are not included." %}{% endif %}</p>
+<details class="hint-panel">
+    <summary>{% trans "How it's calculated" %}</summary>
+    <p class="hint">{% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}
+        {% if show_stock %}{% trans "Stock is remainder as of the period end date for the selected store filter (Retail = shop warehouses, All warehouses = company)." %}{% endif %}
+        {% if scope_all %}{% trans "All warehouses = the Granit report «Sales by warehouses»: receipts as realized by warehouse documents plus sales invoices with their services (office, HoReCa, service centres), by realization date. Receipts Granit has not realized yet are only in Retail; transfers and write-offs are not included." %}{% endif %}</p>
+</details>
 {% if truncated %}
 <p class="hint">{% blocktrans with shown=row_limit total=row_count %}Showing first {{ shown }} of {{ total }} rows.{% endblocktrans %}</p>
 {% endif %}
 {% if rows %}
-<table>
+<table class="table-cards table-cards--compact">
     <thead>
         <tr>
             <th>{{ name_heading }}</th>
@@ -29,28 +41,28 @@
     <tbody>
         {% for row in rows %}
         <tr>
-            <td>
+            <td class="tc-primary" data-label="{{ name_heading }}">
                 {% if row.sale_id %}
                 <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}{% if row.sale_source and row.sale_source != 'receipt' %}&amp;source={{ row.sale_source }}{% endif %}">{% if row.is_invoice %}{% trans "Invoice" %}{% elif row.is_realized %}{% trans "Realization" %}{% else %}{% trans "Receipt" %}{% endif %} #{{ row.name }}</a>
                 {% else %}
                 {{ row.name }}
                 {% endif %}
             </td>
-            {% if show_secondary %}<td>{{ row.secondary }}</td>{% endif %}
+            {% if show_secondary %}<td class="tc-meta" data-label="{{ secondary_heading }}">{{ row.secondary }}</td>{% endif %}
             {% if group_by == "receipt" %}
-            <td>{{ row.store_name }}</td>
-            <td>{% if row.client_granit_id %}{{ row.client_name|default:row.client_granit_id }}{% else %}—{% endif %}</td>
+            <td class="tc-meta" data-label="{% trans 'Store' %}">{{ row.store_name }}</td>
+            <td class="tc-meta" data-label="{% trans 'Client' %}">{% if row.client_granit_id %}{{ row.client_name|default:row.client_granit_id }}{% else %}—{% endif %}</td>
             {% endif %}
             {% if show_stock %}
-            <td class="num">{% if row.stock_qty is not None %}{{ row.stock_qty|qty }}{% else %}—{% endif %}</td>
+            <td class="num tc-stock" data-label="{% trans 'Stock' %}">{% if row.stock_qty is not None %}{{ row.stock_qty|qty }}{% else %}—{% endif %}</td>
             {% endif %}
-            <td class="num">{{ row.qty|qty }}</td>
-            <td class="num">{{ row.amount|money }}</td>
-            <td>
+            <td class="num tc-qty" data-label="{% trans 'Qty' %}">{{ row.qty|qty }}</td>
+            <td class="num tc-amount" data-label="{% trans 'Amount' %}">{{ row.amount|money }}</td>
+            <td class="tc-action">
                 {% if row.sale_id %}
-                <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}{% if row.sale_source and row.sale_source != 'receipt' %}&amp;source={{ row.sale_source }}{% endif %}">{% trans "Order items" %}</a>
+                <a class="btn btn-secondary" href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}{% if row.sale_source and row.sale_source != 'receipt' %}&amp;source={{ row.sale_source }}{% endif %}">{% trans "Order items" %}</a>
                 {% elif row.receipts_query %}
-                <a href="{% url 'sales_explorer' %}?{{ row.receipts_query }}">{% trans "Receipts" %}</a>
+                <a class="btn btn-secondary" href="{% url 'sales_explorer' %}?{{ row.receipts_query }}">{% trans "Receipts" %}</a>
                 {% endif %}
             </td>
         </tr>
@@ -58,13 +70,13 @@
     </tbody>
     <tfoot>
         <tr>
-            <td>{% trans "Total" %}</td>
-            {% if show_secondary %}<td></td>{% endif %}
-            {% if group_by == "receipt" %}<td></td><td></td>{% endif %}
-            {% if show_stock %}<td></td>{% endif %}
-            <td class="num">{{ total_qty|qty }}</td>
-            <td class="num">{{ total_amount|money }}</td>
-            <td></td>
+            <td class="tc-primary" data-label="">{% trans "Total" %}</td>
+            {% if show_secondary %}<td class="tc-meta" data-label=""></td>{% endif %}
+            {% if group_by == "receipt" %}<td class="tc-meta" data-label=""></td><td class="tc-meta" data-label=""></td>{% endif %}
+            {% if show_stock %}<td class="num tc-stock" data-label=""></td>{% endif %}
+            <td class="num tc-qty" data-label="{% trans 'Qty' %}">{{ total_qty|qty }}</td>
+            <td class="num tc-amount" data-label="{% trans 'Amount' %}">{{ total_amount|money }}</td>
+            <td class="tc-action"></td>
         </tr>
     </tfoot>
 </table>
