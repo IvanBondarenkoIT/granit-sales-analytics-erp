@@ -1,0 +1,2 @@
+# Local / CI helper tools — not installed into the production Docker image.
+playwright>=1.40,<2

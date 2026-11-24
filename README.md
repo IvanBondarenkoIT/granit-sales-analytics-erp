@@ -112,6 +112,18 @@ docker compose exec web python manage.py createsuperuser
 - Register: http://localhost:8000/accounts/register/ (controlled by `ALLOW_REGISTRATION`, default on)
 - Django Admin: http://localhost:8000/admin (staff/superuser)
 
+### UI screenshots
+
+For mobile-first work, seed local demo data and capture Playwright screenshots (Chromium; not in the Docker image):
+
+```bash
+docker compose up -d
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py seed_ui_demo   # --force to wipe & re-seed; users demo_staff / demo_user
+pip install -r requirements-dev.txt && playwright install chromium
+python scripts/ui_snapshots.py --name baseline          # → artifacts/ui/<name>/ (gitignored)
+```
+
 ### Translations (i18n)
 
 - Languages: `ru` (default), `en`
