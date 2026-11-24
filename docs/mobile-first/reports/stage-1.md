@@ -1,7 +1,7 @@
 # Отчёт: этап 1 — фундамент
 
 - Ветка: `feature/mobile-1-foundation`
-- Коммит: *(см. STATUS после коммита)*
+- Коммит: `17866f4`
 - Дата: 2026-11-24
 - Итог: готово к ревью
 
@@ -17,7 +17,38 @@
 ## Изменённые файлы
 
 ```text
-(см. git diff --stat main...HEAD после коммита)
+ .gitignore                                         |   3 +
+ campaigns/templates/campaigns/client_purchases.html|   6 +-
+ campaigns/templates/campaigns/create.html          |   9 +-
+ campaigns/templates/campaigns/detail.html          |  15 +-
+ campaigns/templates/campaigns/list.html            |   5 -
+ campaigns/templates/campaigns/purchases.html       |   5 +-
+ core/forms.py                                      |   2 +
+ docs/mobile-first/STATUS.md                        |   2 +-
+ docs/mobile-first/reports/stage-1.md               |  92 +++++
+ granitanalytics/settings.py                        |   1 +
+ promos/forms.py                                    |   1 +
+ promos/templates/promos/charts.html                |   8 +-
+ promos/templates/promos/create.html                |  22 +-
+ promos/templates/promos/detail.html                |  13 +-
+ promos/templates/promos/list.html                  |   9 +-
+ sales/templates/sales/_explorer.html               |   8 +-
+ sales/templates/sales/_reconcile_style.html        |   6 +-
+ sales/templates/sales/explorer.html                |  14 +-
+ sales/templates/sales/matrix.html                  |   9 +-
+ sales/templates/sales/matrix_edit.html             |  50 +--
+ sales/templates/sales/matrix_group.html            |   9 +-
+ sales/templates/sales/matrix_sg.html               |   9 +-
+ sales/templates/sales/receipt.html                 |   5 +-
+ static/css/app.css                                 | 444 +++++++++++++++++++++
+ static/icons/icon-192.png                          | Bin
+ static/icons/icon-512.png                          | Bin
+ static/js/app.js                                   |  19 +
+ static/manifest.webmanifest                        |  23 ++
+ static/vendor/htmx-1.9.12.min.js                   |   1 +
+ templates/base.html                                | 100 +----
+ templates/registration/auth_base.html              |  49 +--
+ 31 files changed, 669 insertions(+), 270 deletions(-)
 ```
 
 ## Проверки
