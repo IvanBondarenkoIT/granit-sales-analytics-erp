@@ -6,7 +6,7 @@
 |---|------|--------|-------|--------|-----------|------------------|-------|-------|
 | 0 | Демо-данные, скрипт скриншотов, сверка контракта | [stage-0](prompts/stage-0-baseline.md) | feature/mobile-0-baseline | done | 2026-11-24 | df7ffcd | [stage-0.md](reports/stage-0.md) | [stage-0](reviews/stage-0.md) |
 | 1 | Фундамент: static/app.css, htmx локально, поля 16px, тап-зоны, safe-area | [stage-1](prompts/stage-1-foundation.md) | feature/mobile-1-foundation | done | 2026-11-24 | 97c371a | [stage-1.md](reports/stage-1.md) | [stage-1](reviews/stage-1.md) |
-| 2 | Каркас: плашка, нижнее меню, «Ещё», главная | [stage-2](prompts/stage-2-shell.md) | feature/mobile-2-shell | review | 2026-11-24 | c9c6fbc | [stage-2.md](reports/stage-2.md) | |
+| 2 | Каркас: плашка, нижнее меню, «Ещё», главная | [stage-2](prompts/stage-2-shell.md) | feature/mobile-2-shell | review | 2026-11-24 | 2fa4297 | [stage-2.md](reports/stage-2.md) | |
 | 3 | Обозреватель продаж и чек, паттерн `.table-cards` | [stage-3](prompts/stage-3-explorer.md) | feature/mobile-3-explorer | todo | | | | |
 | 4 | Супергруппы (матрица, детализация, редактор) | [stage-4](prompts/stage-4-matrix.md) | feature/mobile-4-matrix | todo | | | | |
 | 5 | Сверка с Гранитом | [stage-5](prompts/stage-5-reconcile.md) | feature/mobile-5-reconcile | todo | | | | |
