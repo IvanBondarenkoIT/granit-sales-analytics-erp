@@ -4,15 +4,10 @@
 {% block title %}{% if promo %}{% trans "Edit promo" %}{% else %}{% trans "New promo" %}{% endif %}{% endblock %}
 
 {% block extra_css %}
-        .promo-form { background: #fff; padding: 2rem; max-width: 960px; }
+        .promo-form { background: #fff; padding: 1rem; max-width: 960px; }
         .promo-form label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; }
-        .promo-form input[type=text], .promo-form input[type=date], .promo-form input[type=number], .promo-form textarea { width: 100%; padding: 0.5rem; }
+        .promo-form input[type=text], .promo-form input[type=date], .promo-form input[type=number], .promo-form input[type=search], .promo-form textarea { width: 100%; padding: 0.5rem; font-size: 16px; min-height: 44px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 1rem; }
-        .hint, .help, .muted { color: #777; font-size: 0.85rem; }
-        .help { margin: 0.2rem 0 0; }
-        .btn { background: #667eea; color: #fff; border: 0; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; }
-        .btn-secondary { background: #eef0ff; color: #3f4bb8; border: 1px solid #c7ccf5; padding: 0.55rem 1rem; border-radius: 6px; cursor: pointer; }
-        .btn-link { background: none; border: 0; color: #667eea; cursor: pointer; padding: 0; text-decoration: underline; font-size: 0.85rem; }
         .errors { color: #b91c1c; }
         .section { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; }
         .section h2 { font-size: 1.1rem; margin: 0 0 0.5rem; display: flex; gap: 0.5rem; align-items: baseline; }
@@ -35,10 +30,10 @@
         .picker-head, .picker-foot { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-bottom: 1px solid #eee; }
         .picker-foot { border-top: 1px solid #eee; border-bottom: 0; justify-content: flex-end; }
         .picker-head h2 { margin: 0; font-size: 1.1rem; flex: 1; }
-        .picker-close { background: none; border: 0; font-size: 1.5rem; cursor: pointer; line-height: 1; }
+        .picker-close { background: none; border: 0; font-size: 1.5rem; cursor: pointer; line-height: 1; min-width: 44px; min-height: 44px; }
         .picker-filter { display: flex; gap: 0.75rem; align-items: center; padding: 0.5rem 1rem; border-bottom: 1px solid #eee; }
-        .picker-filter input[type=search] { flex: 1; padding: 0.45rem; }
-        .picker-filter label { font-size: 0.85rem; color: #555; white-space: nowrap; }
+        .picker-filter input[type=search] { flex: 1; padding: 0.5rem; font-size: 16px; min-height: 44px; }
+        .picker-filter label { font-size: 0.85rem; color: #555; white-space: nowrap; min-height: 44px; display: inline-flex; align-items: center; }
         .picker-body { flex: 1; display: grid; grid-template-columns: 300px 1fr; min-height: 0; }
         .picker-tree { overflow: auto; border-right: 1px solid #eee; padding: 0.5rem; }
         .picker-results { overflow: auto; padding: 0.5rem 1rem; }
@@ -49,9 +44,9 @@
         li.open > .tree-children { display: block; }
         .tree li.muted { display: block; }
         .tree-toggle, .tree-spacer { display: inline-block; width: 1.3rem; }
-        .tree-toggle { background: none; border: 0; cursor: pointer; color: #666; padding: 0.2rem 0; }
+        .tree-toggle { background: none; border: 0; cursor: pointer; color: #666; padding: 0.2rem 0; min-height: 44px; min-width: 44px; }
         li.open > .tree-toggle { transform: rotate(90deg); }
-        .tree-node { background: none; border: 0; cursor: pointer; padding: 0.2rem 0.3rem; text-align: left; border-radius: 4px; font-size: 0.9rem; }
+        .tree-node { background: none; border: 0; cursor: pointer; padding: 0.5rem 0.3rem; text-align: left; border-radius: 4px; font-size: 0.9rem; min-height: 44px; }
         .tree-node:hover { background: #f3f4f6; }
         .tree-node.active { background: #667eea; color: #fff; }
         .tree-node.active .muted { color: #e0e3ff; }
@@ -181,6 +176,7 @@
     <form class="picker-filter" id="granit-filter" onsubmit="return false">
         <input type="hidden" name="group" value="">
         <input type="search" name="q" placeholder="{% trans 'Search by name or Granit ID' %}" autocomplete="off"
+               enterkeyhint="search"
                hx-get="{% url 'picker_granit_products' %}" hx-target="#granit-results"
                hx-include="#granit-filter" hx-trigger="input changed delay:300ms, search, refresh">
         <label><input type="checkbox" name="inactive" value="1"
@@ -212,6 +208,7 @@
     <form class="picker-filter" id="site-filter" onsubmit="return false">
         <input type="hidden" name="category" value="">
         <input type="search" name="q" placeholder="{% trans 'Search website products' %}" autocomplete="off"
+               enterkeyhint="search"
                hx-get="{% url 'picker_site_products' %}" hx-target="#site-results"
                hx-include="#site-filter" hx-trigger="input changed delay:300ms, search, refresh">
         <span class="muted">{% trans "Only products linked to Granit can be added." %}</span>
@@ -235,7 +232,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://unpkg.com/htmx.org@1.9.12"></script>
 <script>
 (function () {
     const removeLabel = "{{ _('Remove')|escapejs }}";

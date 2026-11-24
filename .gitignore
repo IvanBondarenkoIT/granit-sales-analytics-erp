@@ -28,6 +28,9 @@ credentials.json
 data/local/
 media/
 
+# Collected static (collectstatic)
+staticfiles/
+
 # UI screenshot runs (scripts/ui_snapshots.py)
 artifacts/
 *.xlsx

@@ -4,13 +4,11 @@
 {% block title %}{% trans "Order items" %} — {{ row.client.name|default:row.granit_client_id }}{% endblock %}
 
 {% block extra_css %}
-        table { width: 100%; border-collapse: collapse; background: #fff; margin: 0.5rem 0 1.5rem; }
-        th, td { text-align: left; padding: 0.55rem; border-bottom: 1px solid #eee; }
+        table { margin: 0.5rem 0 1.5rem; }
         .order { background: #fff; padding: 1rem 1rem 0.25rem; margin-bottom: 1rem; }
         .order h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
-        .empty { background: #fff; padding: 1.5rem; color: #666; }
         .catalog-filter { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; background: #fff; padding: 1rem; margin: 1rem 0; }
-        .catalog-filter select { min-width: 220px; padding: 0.35rem; }
+        .catalog-filter select { min-width: 220px; padding: 0.5rem; font-size: 16px; min-height: 44px; }
         .filter-hint { color: #555; margin: 0 0 1rem; }
 {% endblock %}
 

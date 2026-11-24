@@ -36,6 +36,7 @@ class PromoForm(forms.Form):
         max_value=365,
         initial=14,
         help_text=_("Average daily sales in this window (days without sales count as zero) is the pre-period baseline."),
+        widget=forms.NumberInput(attrs={"inputmode": "numeric"}),
     )
     excel_file = forms.FileField(
         label=_("Promo table (Excel)"),

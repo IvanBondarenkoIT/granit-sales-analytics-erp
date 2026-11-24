@@ -34,7 +34,7 @@
         </label>
         <label>
             {% trans "Product group" %}
-            <input type="search" class="select-filter" data-select="select[name=group]" placeholder="{% trans 'Filter groups' %}" autocomplete="off">
+            <input type="search" class="select-filter" data-select="select[name=group]" placeholder="{% trans 'Filter groups' %}" autocomplete="off" enterkeyhint="search">
             <select name="group" onchange="this.form.product.value='';">
                 <option value="">{% trans "All groups" %}</option>
                 {% for g in groups %}
@@ -44,7 +44,7 @@
         </label>
         <label>
             {% trans "Product" %}
-            <input type="search" class="select-filter" data-select="select[name=product]" placeholder="{% trans 'Filter products' %}" autocomplete="off">
+            <input type="search" class="select-filter" data-select="select[name=product]" placeholder="{% trans 'Filter products' %}" autocomplete="off" enterkeyhint="search">
             <select name="product">
                 <option value="">{% trans "All products" %}</option>
                 {% for p in products %}
@@ -63,11 +63,11 @@
         </label>
         <label>
             {% trans "Client ID" %}
-            <input type="number" name="client" value="{{ client_id }}" placeholder="{% trans 'Granit client id' %}">
+            <input type="number" name="client" value="{{ client_id }}" placeholder="{% trans 'Granit client id' %}" inputmode="numeric">
         </label>
         <label>
             {% trans "Search" %}
-            <input type="search" name="q" value="{{ q }}" placeholder="{% trans 'Product name' %}">
+            <input type="search" name="q" value="{{ q }}" placeholder="{% trans 'Product name' %}" enterkeyhint="search">
         </label>
         <label>
             {% trans "Group by" %}

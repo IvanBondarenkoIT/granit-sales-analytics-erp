@@ -4,10 +4,9 @@
 {% block title %}{% trans "What they bought" %} — {{ campaign.name }}{% endblock %}
 
 {% block extra_css %}
-        table { width: 100%; border-collapse: collapse; background: #fff; margin-top: 1rem; }
-        th, td { text-align: left; padding: 0.6rem; border-bottom: 1px solid #eee; }
+        table { margin-top: 1rem; }
         .catalog-filter { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; background: #fff; padding: 1rem; margin: 1rem 0; }
-        .catalog-filter select { min-width: 220px; padding: 0.35rem; }
+        .catalog-filter select { min-width: 220px; padding: 0.5rem; font-size: 16px; min-height: 44px; }
         .filter-hint { color: #555; margin: 0 0 1rem; }
 {% endblock %}
 

@@ -4,21 +4,14 @@
 {% block title %}{{ campaign.name }}{% endblock %}
 
 {% block extra_css %}
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-        .stat { background: #fff; padding: 1rem; }
-        .stat strong { display: block; font-size: 1.6rem; color: #667eea; }
-        .filters a { margin-right: 0.75rem; }
+        .stat strong { font-size: 1.6rem; }
+        .filters a { margin-right: 0.75rem; min-height: 44px; display: inline-flex; align-items: center; }
         .catalog-filter { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; background: #fff; padding: 1rem; margin: 1rem 0; }
-        .catalog-filter select { min-width: 220px; padding: 0.35rem; }
+        .catalog-filter select { min-width: 220px; padding: 0.5rem; font-size: 16px; min-height: 44px; }
         .filter-hint { color: #555; margin: 0 0 1rem; }
-        table { width: 100%; border-collapse: collapse; background: #fff; margin-top: 1rem; }
-        th, td { text-align: left; padding: 0.6rem; border-bottom: 1px solid #eee; }
-        td.num, th.num { text-align: right; }
-        tfoot td { font-weight: 600; }
+        table { margin-top: 1rem; }
         .yes { color: #047857; font-weight: 600; }
         .no { color: #92400e; }
-        .empty { background: #fff; padding: 1.5rem; color: #666; }
-        .hint { color: #555; margin: 0.75rem 0; }
 {% endblock %}
 
 {% block content %}

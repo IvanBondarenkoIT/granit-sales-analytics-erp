@@ -4,10 +4,7 @@
 {% block title %}{% if is_invoice %}{% trans "Invoice" %}{% elif is_realized %}{% trans "Realization" %}{% else %}{% trans "Receipt" %}{% endif %} #{{ sale_id }}{% endblock %}
 
 {% block extra_css %}
-        table { width: 100%; border-collapse: collapse; background: #fff; margin: 0.75rem 0 1.5rem; }
-        th, td { text-align: left; padding: 0.55rem; border-bottom: 1px solid #eee; }
-        td.num, th.num { text-align: right; }
-        tfoot td { font-weight: 600; }
+        .order table { margin: 0.75rem 0 1.5rem; }
         .order { background: #fff; padding: 1rem 1rem 0.25rem; }
         .order h1 { font-size: 1.4rem; margin-bottom: 0.5rem; }
         .hit { background: #eef2ff; }
