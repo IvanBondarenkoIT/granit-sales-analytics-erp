@@ -27,6 +27,9 @@ credentials.json
 # Local data (phones, campaign Excel) — never publish
 data/local/
 media/
+
+# UI screenshot runs (scripts/ui_snapshots.py)
+artifacts/
 *.xlsx
 !docs/**/*.xlsx
 *.csv
