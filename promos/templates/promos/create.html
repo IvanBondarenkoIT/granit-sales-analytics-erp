@@ -2,6 +2,8 @@
 {% load i18n %}
 
 {% block title %}{% if promo %}{% trans "Edit promo" %}{% else %}{% trans "New promo" %}{% endif %}{% endblock %}
+{% block page_title %}{% if promo %}{% trans "Edit promo" %}{% else %}{% trans "New promo" %}{% endif %}{% endblock %}
+{% block back_url %}{% url 'promo_list' %}{% endblock %}
 
 {% block extra_css %}
         .promo-form { background: #fff; padding: 1rem; max-width: 960px; }
@@ -64,8 +66,8 @@
 
 {% block content %}
 <div class="container">
-    <p>{% if promo %}<a href="{% url 'promo_detail' promo.pk %}">{% trans "Back to promo" %}</a>{% else %}<a href="{% url 'promo_list' %}">{% trans "All promos" %}</a>{% endif %}</p>
-    <h1>{% if promo %}{% trans "Edit promo" %}: {{ promo.name }}{% else %}{% trans "New promo" %}{% endif %}</h1>
+    <p class="page-back">{% if promo %}<a href="{% url 'promo_detail' promo.pk %}">{% trans "Back to promo" %}</a>{% else %}<a href="{% url 'promo_list' %}">{% trans "All promos" %}</a>{% endif %}</p>
+    <h1 class="page-h1">{% if promo %}{% trans "Edit promo" %}: {{ promo.name }}{% else %}{% trans "New promo" %}{% endif %}</h1>
     {% include "promos/_catalog_status.html" %}
 
     <form method="post" enctype="multipart/form-data" class="promo-form" id="promo-form">

@@ -486,7 +486,9 @@ class SnapshotRunner:
                         }
                     }
                     let smallFonts = 0;
+                    const skipTypes = new Set(['hidden', 'checkbox', 'radio', 'color', 'file']);
                     for (const el of document.querySelectorAll('input, select, textarea')) {
+                        if (el.tagName === 'INPUT' && skipTypes.has((el.type || '').toLowerCase())) continue;
                         const fs = parseFloat(getComputedStyle(el).fontSize || '0');
                         if (fs && fs < 16) smallFonts += 1;
                     }

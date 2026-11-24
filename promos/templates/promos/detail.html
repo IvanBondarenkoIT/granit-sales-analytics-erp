@@ -2,6 +2,8 @@
 {% load i18n numbers %}
 
 {% block title %}{{ promo.name }}{% endblock %}
+{% block page_title %}{{ promo.name }}{% endblock %}
+{% block back_url %}{% url 'promo_list' %}{% endblock %}
 
 {% block extra_css %}
         table { margin-top: 1rem; }
@@ -11,8 +13,8 @@
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'promo_list' %}">{% trans "All promos" %}</a> · <a href="{% url 'promo_edit' promo.pk %}">{% trans "Edit promo" %}</a></p>
-    <h1>{{ promo.name }}</h1>
+    <p class="page-back"><a href="{% url 'promo_list' %}">{% trans "All promos" %}</a> · <a href="{% url 'promo_edit' promo.pk %}">{% trans "Edit promo" %}</a></p>
+    <h1 class="page-h1">{{ promo.name }}</h1>
     <p>
         {% trans "Period" %}: <strong>{{ promo.start_date }} — {{ promo.end_date }}</strong>
         · {% trans "Baseline days" %}: {{ promo.pre_period_days }}

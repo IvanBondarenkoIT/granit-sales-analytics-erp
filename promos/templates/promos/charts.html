@@ -2,6 +2,8 @@
 {% load i18n l10n %}
 
 {% block title %}{% trans "Charts" %} — {{ promo.name }}{% endblock %}
+{% block page_title %}{% trans "Charts" %}{% endblock %}
+{% block back_url %}{% url 'promo_detail' promo.pk %}{% endblock %}
 
 {% block extra_css %}
         .stat span { color: #555; font-size: 0.9rem; }
@@ -22,8 +24,8 @@
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'promo_detail' promo.pk %}">← {{ promo.name }}</a></p>
-    <h1>{% trans "Charts" %}: {{ promo.name }}</h1>
+    <p class="page-back"><a href="{% url 'promo_detail' promo.pk %}">← {{ promo.name }}</a></p>
+    <h1 class="page-h1">{% trans "Charts" %}: {{ promo.name }}</h1>
     <p class="hint">{{ promo.start_date }} — {{ promo.end_date }} · {% trans "Baseline days" %}: {{ promo.pre_period_days }}</p>
 
     {% if charts.empty %}

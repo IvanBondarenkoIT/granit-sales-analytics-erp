@@ -21,28 +21,37 @@ def home(request):
                 "description": _("Upload Excel, analyze customer purchase lift"),
                 "status": _("Stage 3 — Ready"),
                 "url": "campaign_list",
+                "icon": "campaigns",
             },
             {
                 "name": _("Sales Explorer"),
                 "description": _("Filter and explore sales by product, client, store, period"),
                 "status": _("Stage 4 — Ready"),
                 "url": "sales_explorer",
+                "icon": "sales",
             },
             {
                 "name": _("Sales by super-groups"),
                 "description": _("Matrix of super-groups × stores; edit shared membership"),
                 "status": _("Stage 4b — Local"),
                 "url": "sales_matrix",
+                "icon": "matrix",
             },
             {
                 "name": _("Promotion Effectiveness"),
                 "description": _("Compare promo results vs baseline and YoY"),
                 "status": _("Stage 5 — Ready"),
                 "url": "promo_list",
+                "icon": "promos",
             },
         ],
     }
     return render(request, "core/home.html", context)
+
+
+def more(request):
+    """Secondary navigation and profile (language, logout)."""
+    return render(request, "core/more.html")
 
 
 @login_not_required

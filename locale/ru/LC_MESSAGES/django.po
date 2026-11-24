@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: granit-sales-analytics-erp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 10:26+0000\n"
+"POT-Creation-Date: 2026-11-24 20:12+0400\n"
 "PO-Revision-Date: 2026-09-22 16:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
@@ -11,554 +11,57 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+#: .\campaigns\analysis.py:136
 msgid "Excel has no client rows"
 msgstr ""
 
+#: .\campaigns\analysis.py:158 .\campaigns\views.py:108
+msgid "CSV has no card rows"
+msgstr "В CSV нет строк с номерами карт"
+
+#: .\campaigns\forms.py:11
 msgid "Campaign name"
 msgstr "Название кампании"
 
+#: .\campaigns\forms.py:13
 msgid "Give each blast its own name so lists stay separate."
 msgstr "У каждой рассылки своё имя, чтобы списки не смешивались."
 
-msgid "SMS sent on"
-msgstr "Дата рассылки SMS"
-
-msgid "Date this mailing went out. Analysis starts on this day."
-msgstr "День отправки этой рассылки. Анализ начинается с этой даты."
-
-msgid "Analysis to (exclusive)"
-msgstr "Анализ до (не включая)"
-
-msgid "Excel file"
-msgstr "Файл Excel"
-
-msgid "Client list for this blast only (customer_id + phone)."
-msgstr "Список клиентов только этой рассылки (customer_id + phone)."
-
-msgid "Use saved local SMS list"
-msgstr "Взять сохранённый локальный список SMS"
-
-msgid "Only for the 18 Sep 2026 blast already stored on this machine."
-msgstr "Только для рассылки 18 сентября 2026, уже лежащей на этой машине."
-
-msgid "Notes"
-msgstr "Заметки"
-
-msgid "Analysis end must be after the SMS send date."
-msgstr "Дата окончания должна быть позже даты рассылки."
-
-msgid "Upload an Excel file or use the saved local list."
-msgstr "Загрузите Excel или используйте сохранённый локальный список."
-
-msgid "Product group"
-msgstr "Группа товара"
-
-msgid "All groups"
-msgstr "Все группы"
-
-msgid "Product"
-msgstr "Товар"
-
-msgid "All products"
-msgstr "Все товары"
-
-msgid "Apply"
-msgstr "Применить"
-
-msgid "Reset filters"
-msgstr "Сбросить фильтры"
-
-msgid "Bought and amounts are limited to the selected group or product."
-msgstr "Купили и суммы считаются только по выбранной группе или товару."
-
-msgid "Order items"
-msgstr "Состав заказа"
-
-msgid "Client ID"
-msgstr "ID клиента"
-
-msgid "Period"
-msgstr "Период"
-
-msgid "No matching sales for this filter."
-msgstr "Нет продаж по выбранному фильтру."
-
-msgid "No sales in this campaign window."
-msgstr "В окне этой кампании продаж нет."
-
-msgid "Receipt"
-msgstr "Чек"
-
-msgid "Amount"
-msgstr "Сумма"
-
-msgid "Group"
-msgstr "Группа"
-
-msgid "Qty"
-msgstr "Кол-во"
-
-msgid "New campaign"
-msgstr "Новая кампания"
-
-msgid ""
-"Each mailing is a separate campaign. Saving here does not change older "
-"blasts."
-msgstr "Каждая рассылка — отдельная кампания. Сохранение не меняет старые."
-
-msgid ""
-"A local list for the 18 Sep 2026 blast is on this machine (not in git). "
-"Leave the checkbox off for a new list."
-msgstr ""
-"Локальный список рассылки 18.09.2026 есть на этой машине (не в git). Для "
-"нового списка галочку не ставьте."
-
-msgid "Create campaign"
-msgstr "Создать кампанию"
-
-msgid "All campaigns"
-msgstr "Все кампании"
-
-msgid "Recalculate this campaign until"
-msgstr "Пересчитать эту кампанию до"
-
-msgid "Recalculate"
-msgstr "Пересчитать"
-
-msgid "Clients"
-msgstr "Клиенты"
-
-msgid "Bought"
-msgstr "Купили"
-
-msgid "Did not buy"
-msgstr "Не купили"
-
-msgid "Share bought"
-msgstr "Доля купивших"
-
-msgid "Not matched to ERP"
-msgstr "Не сошлись с ERP"
-
-msgid "All"
-msgstr "Все"
-
-msgid "What they bought"
-msgstr "Что купили"
-
-#, python-format
-msgid "Showing first %(shown)s of %(total)s rows."
-msgstr "Показаны первые %(shown)s из %(total)s строк."
-
-#, python-format
-msgid "Amount of all matching rows: %(amount)s"
-msgstr "Сумма всех подходящих строк: %(amount)s"
-
-msgid "Name"
-msgstr "Имя"
-
-msgid "Yes"
-msgstr "Да"
-
-msgid "No"
-msgstr "Нет"
-
-msgid "No clients in this list."
-msgstr "В этом списке нет клиентов."
-
-msgid "SMS Campaign Analysis"
-msgstr "Анализ SMS-кампаний"
-
-msgid "No campaigns yet."
-msgstr "Кампаний пока нет."
-
-msgid "Products bought by this campaign list in the analysis window."
-msgstr "Товары, которые купили клиенты этого списка в окне анализа."
-
-msgid "New campaign saved separately from previous blasts."
-msgstr "Новая кампания сохранена отдельно от прошлых рассылок."
-
-#, python-format
-msgid "SMS %(date)s"
-msgstr "SMS %(date)s"
-
-msgid "Invalid end date."
-msgstr "Неверная дата окончания."
-
-msgid "This campaign was recalculated. Other blasts were not changed."
-msgstr "Эта кампания пересчитана. Другие рассылки не менялись."
-
-msgid ""
-"Decision ERP for Granit: SMS Campaigns, Sales Analytics, Promo Effectiveness"
-msgstr ""
-"Decision ERP для Granit: SMS-кампании, аналитика продаж, эффективность акций"
-
-msgid "Open"
-msgstr "Открыть"
-
-msgid "MVP: SMS, sales explorer, promos"
-msgstr "MVP: SMS, обзор продаж, акции"
-
-msgid "SMS campaign lift: Excel list, bought / not bought, order items"
-msgstr "SMS: Excel-список, купили / не купили, состав заказа"
-
-msgid "Sales explorer: period slice, filters, receipts"
-msgstr "Обзор продаж: срез за период, фильтры, чеки"
-
-msgid "Promos: daily actual vs pre-period, YoY, and seasonal forecast"
-msgstr "Акции: дневной факт против базы до акции, YoY и сезонного прогноза"
-
-msgid "UI languages: Russian and English with a language switcher"
-msgstr "Языки UI: русский и английский с переключателем"
-
-msgid "Architecture: alt Debian (pg-core + UI), analytics.dimkava.ge"
-msgstr "Архитектура: alt Debian (pg-core + UI), analytics.dimkava.ge"
-
-msgid "Granit Sales Analytics ERP"
-msgstr "Granit Sales Analytics ERP"
-
-msgid "Upload Excel, analyze customer purchase lift"
-msgstr "Загрузка Excel и анализ прироста покупок клиентов"
-
-msgid "Stage 3 — Ready"
-msgstr "Этап 3 — готов"
-
-msgid "Sales Explorer"
-msgstr "Обзор продаж"
-
-msgid "Filter and explore sales by product, client, store, period"
-msgstr "Фильтры и срезы продаж по товару, клиенту, магазину, периоду"
-
-msgid "Stage 4 — Ready"
-msgstr "Этап 4 — готов"
-
-msgid "Promotion Effectiveness"
-msgstr "Эффективность акций"
-
-msgid "Compare promo results vs baseline and YoY"
-msgstr "Сравнение результатов акции с базой и YoY"
-
-msgid "Stage 5 — Ready"
-msgstr "Этап 5 — готов"
-
-msgid "Each promo needs a name, start date, and end date."
-msgstr "У каждой акции должны быть название, дата начала и дата окончания."
-
-msgid "Promo end must be on or after the start date."
-msgstr "Дата окончания не раньше даты начала."
-
-#, python-format
-msgid "Unknown product group ID: %(id)s"
-msgstr "Неизвестная группа товара ID: %(id)s"
-
-#, python-format
-msgid "Unknown product ID: %(id)s"
-msgstr "Неизвестный товар ID: %(id)s"
-
-msgid "Each promo row needs group_id or product_id."
-msgstr "В каждой строке акции нужен group_id или product_id."
-
-msgid "Promo name"
-msgstr "Название акции"
-
-msgid "Used when the file has no name column, or for a manual promo."
-msgstr "Нужно, если в файле нет колонки name, или для акции вручную."
-
-msgid "Promo start"
-msgstr "Начало акции"
-
-msgid "Fills empty start_date cells in the file."
-msgstr "Подставляет пустые start_date в файле."
-
-msgid "Promo end"
-msgstr "Конец акции"
-
-msgid "The end date is included. Fills empty end_date cells in the file."
-msgstr "Конечная дата входит в период. Подставляет пустые end_date в файле."
-
-msgid "Baseline days before promo"
-msgstr "Дней базы до акции"
-
-msgid ""
-"Average daily sales in this window (days without sales count as zero) is the "
-"pre-period baseline."
-msgstr ""
-"Средние продажи в день за это окно (дни без продаж считаются нулём) — база до "
-"акции."
-
-msgid "Promo table (Excel)"
-msgstr "Таблица акций (Excel)"
-
-msgid ""
-"Columns: name, start_date, end_date, group_id, product_id. group_id and "
-"product_id are Granit IDs."
-msgstr ""
-"Колонки: name, start_date, end_date, group_id, product_id. group_id и "
-"product_id — ID из Granit."
-
-msgid "Use example promo file"
-msgstr "Взять пример файла акций"
-
-msgid ""
-"Local example with Candies group and Ballerina SKU (not required in git)."
-msgstr ""
-"Локальный пример: группа Candies и товар Ballerina (в git не обязателен)."
-
-msgid "Product groups"
-msgstr "Группы товара"
-
-msgid "Products"
-msgstr "Товары"
-
-msgid ""
-"Optional if you upload a file. The list narrows to the selected groups."
-msgstr ""
-"Не обязательно, если загружаете файл. Список сужается по выбранным группам."
-
-msgid "Upload a promo table or select at least one product group or product."
-msgstr "Загрузите таблицу акций или выберите группу либо товар."
-
-msgid "Enter a promo name or upload a table."
-msgstr "Укажите название акции или загрузите таблицу."
-
-msgid "Enter promo dates or upload a table."
-msgstr "Укажите даты акции или загрузите таблицу."
-
-msgid "Example promo file is not on this machine."
-msgstr "Примера файла акций на этой машине нет."
-
-msgid "New promo"
-msgstr "Новая акция"
-
-msgid "All promos"
-msgstr "Все акции"
-
-msgid ""
-"Start with dates and an Excel table. You can also pick groups or products by"
-" hand below."
-msgstr ""
-"Сначала даты и таблица Excel. Группы и товары можно выбрать вручную ниже."
-
-msgid "Or select groups and products by hand"
-msgstr "Или выберите группы и товары вручную"
-
-msgid "Filter groups"
-msgstr "Поиск группы"
-
-msgid "Download example promo file"
-msgstr "Скачать пример файла акций"
-
-msgid "Save and analyze"
-msgstr "Сохранить и посчитать"
-
-msgid "Baseline days"
-msgstr "Дни базы"
-
-msgid "Targets"
-msgstr "Цели"
-
-msgid "Open in Sales Explorer"
-msgstr "Открыть в обзоре продаж"
-
-msgid "Actual"
-msgstr "Факт"
-
-msgid "Pre-period baseline"
-msgstr "База до акции"
-
-msgid "YoY baseline"
-msgstr "База YoY"
-
-msgid "Forecast"
-msgstr "Прогноз"
-
-msgid "vs baseline"
-msgstr "к базе"
-
-msgid "vs YoY"
-msgstr "к YoY"
-
-msgid ""
-"No retail sales in the same window last year, so YoY is empty."
-msgstr "Нет розничных продаж за то же окно год назад, поэтому YoY пустой."
-
-msgid "Day"
-msgstr "День"
-
-msgid "Total"
-msgstr "Итого"
-
-msgid "No days to analyze for this promo."
-msgstr "Нет дней для расчёта этой акции."
-
-msgid "No promos yet."
-msgstr "Акций пока нет."
-
-msgid "Example promo file is not available."
-msgstr "Пример файла акций недоступен."
-
-msgid "Promo saved and calculated."
-msgstr "Акция сохранена и посчитана."
-
-#, python-format
-msgid "Saved %(count)s promos from the table."
-msgstr "Из таблицы сохранено акций: %(count)s."
-
-msgid "The promo table has no group_id or product_id rows."
-msgstr "В таблице акций нет строк с group_id или product_id."
-
-msgid "This promo was recalculated."
-msgstr "Эта акция пересчитана."
-
-msgid "Date from"
-msgstr "Дата с"
-
-msgid "Date to"
-msgstr "Дата по"
-
-msgid "Store"
-msgstr "Магазин"
-
-msgid "All stores"
-msgstr "Все магазины"
-
-msgid "Filter products"
-msgstr "Поиск товара"
-
-msgid "Production"
-msgstr "Продукция"
-
-msgid "All production types"
-msgstr "Все виды продукции"
-
-msgid "Granit client id"
-msgstr "ID клиента в Granit"
-
-msgid "Search"
-msgstr "Найти"
-
-msgid "Product name"
-msgstr "Название товара"
-
-msgid "Group by"
-msgstr "Группировка"
-
-msgid "Sort by"
-msgstr "Сортировка"
-
-msgid "The end date is included in the period."
-msgstr "Конечная дата входит в период."
-
-msgid "Rows"
-msgstr "Строки"
-
-msgid "Client"
-msgstr "Клиент"
-
-msgid "Receipts"
-msgstr "Чеки"
-
-msgid "Slice sales for a period, then open the receipts and the full order."
-msgstr "Срез за период, затем переход к чекам и полному составу заказа."
-
-msgid "Receipt not found."
-msgstr "Чек не найден."
-
-msgid "Home"
-msgstr "Главная"
-
-msgid "Log in"
-msgstr "Войти"
-
-msgid "Log out"
-msgstr "Выйти"
-
-msgid "Username"
-msgstr "Логин"
-
-msgid "Password"
-msgstr "Пароль"
-
-msgid "Sign in to open SMS, sales, and promo screens."
-msgstr "Войдите, чтобы открыть SMS, обзор продаж и акции."
-
-msgid "Please enter a correct username and password."
-msgstr "Неверный логин или пароль."
-
-msgid "Your username"
-msgstr "Ваш логин"
-
-msgid "Your password"
-msgstr "Ваш пароль"
-
-msgid "Choose a username"
-msgstr "Придумайте логин"
-
-msgid "At least 8 characters"
-msgstr "Не меньше 8 символов"
-
-msgid "Repeat password"
-msgstr "Повторите пароль"
-
-msgid "Confirm password"
-msgstr "Подтвердите пароль"
-
-msgid "Letters, digits and @/./+/-/_ only."
-msgstr "Буквы, цифры и символы @/./+/-/_."
-
-msgid "At least 8 characters. Avoid common passwords."
-msgstr "Не меньше 8 символов. Не используйте простые пароли."
-
-msgid "Enter the same password again."
-msgstr "Введите тот же пароль ещё раз."
-
-msgid "No account yet?"
-msgstr "Ещё нет аккаунта?"
-
-msgid "Create an account"
-msgstr "Создать аккаунт"
-
-msgid "Already have an account?"
-msgstr "Уже есть аккаунт?"
-
-msgid "Register to use SMS campaigns, sales explorer, and promos."
-msgstr "Регистрация для SMS, обзора продаж и акций."
-
-msgid "Account created. Welcome!"
-msgstr "Аккаунт создан. Добро пожаловать!"
-
-msgid "Registration is closed."
-msgstr "Регистрация закрыта."
-
-msgid "Language"
-msgstr "Язык"
-
-msgid "Admin Panel"
-msgstr "Админка"
-
-msgid "Campaign Analysis"
-msgstr "Анализ кампаний"
-
-msgid "Sent on"
-msgstr "Дата рассылки"
-
+#: .\campaigns\forms.py:16 .\campaigns\templates\campaigns\list.html:24
 msgid "Channel"
 msgstr "Канал"
 
+#: .\campaigns\forms.py:18 .\campaigns\templates\campaigns\detail.html:23
+#: .\campaigns\templates\campaigns\list.html:35
 msgid "SMS"
 msgstr "SMS"
 
+#: .\campaigns\forms.py:19 .\campaigns\templates\campaigns\detail.html:23
+#: .\campaigns\templates\campaigns\list.html:35
 msgid "Telegram bot"
 msgstr "Telegram-бот"
 
-msgid "Card"
-msgstr "Карта"
+#: .\campaigns\forms.py:24 .\campaigns\templates\campaigns\detail.html:24
+#: .\campaigns\templates\campaigns\list.html:23
+msgid "Sent on"
+msgstr "Дата рассылки"
 
+#: .\campaigns\forms.py:26
+msgid "Date this mailing went out. Analysis starts on this day."
+msgstr "День отправки этой рассылки. Анализ начинается с этой даты."
+
+#: .\campaigns\forms.py:29
+msgid "Analysis to (exclusive)"
+msgstr "Анализ до (не включая)"
+
+#: .\campaigns\forms.py:34
 msgid "Client list file"
 msgstr "Файл со списком клиентов"
 
+#: .\campaigns\forms.py:36
 msgid ""
 "SMS: Excel with customer_id + phone. Telegram bot: CSV with card number + "
 "phone."
@@ -566,24 +69,190 @@ msgstr ""
 "SMS: Excel с customer_id и телефоном. Telegram-бот: CSV с номером карты и "
 "телефоном."
 
+#: .\campaigns\forms.py:39
+msgid "Use saved local SMS list"
+msgstr "Взять сохранённый локальный список SMS"
+
+#: .\campaigns\forms.py:42
+msgid "Only for the 18 Sep 2026 blast already stored on this machine."
+msgstr "Только для рассылки 18 сентября 2026, уже лежащей на этой машине."
+
+#: .\campaigns\forms.py:44 .\promos\forms.py:53
+msgid "Notes"
+msgstr "Заметки"
+
+#: .\campaigns\forms.py:53 .\campaigns\views.py:225
 msgid "Analysis end must be after the send date."
 msgstr "Дата окончания должна быть позже даты рассылки."
 
+#: .\campaigns\forms.py:56
 msgid "The saved local list is for SMS only."
 msgstr "Сохранённый локальный список — только для SMS."
 
+#: .\campaigns\forms.py:58
 msgid "Upload the Telegram bot CSV file."
 msgstr "Загрузите CSV-файл Telegram-бота."
 
+#: .\campaigns\forms.py:60
 msgid "Telegram bot list must be a .csv file."
 msgstr "Список Telegram-бота должен быть файлом .csv."
 
+#: .\campaigns\forms.py:63
+msgid "Upload an Excel file or use the saved local list."
+msgstr "Загрузите Excel или используйте сохранённый локальный список."
+
+#: .\campaigns\forms.py:65
 msgid "SMS list must be an .xlsx file."
 msgstr "Список SMS должен быть файлом .xlsx."
 
-msgid "CSV has no card rows"
-msgstr "В CSV нет строк с номерами карт"
+#: .\campaigns\templates\campaigns\_catalog_filter.html:5
+#: .\sales\templates\sales\_explorer.html:36
+#: .\sales\templates\sales\matrix_sg.html:51
+#: .\sales\templates\sales\matrix_sg.html:110 .\sales\views.py:394
+#: .\sales\views.py:403 .\sales\views.py:409
+msgid "Product group"
+msgstr "Группа товара"
 
+#: .\campaigns\templates\campaigns\_catalog_filter.html:7
+#: .\promos\templates\promos\create.html:190
+#: .\sales\templates\sales\_explorer.html:39
+msgid "All groups"
+msgstr "Все группы"
+
+#: .\campaigns\templates\campaigns\_catalog_filter.html:14
+#: .\campaigns\templates\campaigns\client_purchases.html:42
+#: .\campaigns\templates\campaigns\purchases.html:24
+#: .\promos\templates\promos\detail.html:44
+#: .\sales\templates\sales\_explorer.html:46
+#: .\sales\templates\sales\matrix_group.html:92
+#: .\sales\templates\sales\receipt.html:29 .\sales\views.py:393
+#: .\sales\views.py:408
+msgid "Product"
+msgstr "Товар"
+
+#: .\campaigns\templates\campaigns\_catalog_filter.html:16
+#: .\sales\templates\sales\_explorer.html:49
+msgid "All products"
+msgstr "Все товары"
+
+#: .\campaigns\templates\campaigns\_catalog_filter.html:22
+#: .\sales\templates\sales\_explorer.html:89
+#: .\sales\templates\sales\matrix.html:53
+msgid "Apply"
+msgstr "Применить"
+
+#: .\campaigns\templates\campaigns\_catalog_filter.html:24
+#: .\sales\templates\sales\_explorer.html:90
+msgid "Reset filters"
+msgstr "Сбросить фильтры"
+
+#: .\campaigns\templates\campaigns\_catalog_filter.html:28
+msgid "Bought and amounts are limited to the selected group or product."
+msgstr "Купили и суммы считаются только по выбранной группе или товару."
+
+#: .\campaigns\templates\campaigns\client_purchases.html:4
+#: .\campaigns\templates\campaigns\client_purchases.html:5
+#: .\campaigns\templates\campaigns\client_purchases.html:20
+#: .\campaigns\templates\campaigns\detail.html:74
+#: .\sales\templates\sales\_results.html:51
+msgid "Order items"
+msgstr "Состав заказа"
+
+#: .\campaigns\templates\campaigns\client_purchases.html:22
+#: .\campaigns\templates\campaigns\detail.html:54
+#: .\sales\templates\sales\_explorer.html:65
+#: .\sales\templates\sales\receipt.html:24 .\sales\views.py:404
+msgid "Client ID"
+msgstr "ID клиента"
+
+#: .\campaigns\templates\campaigns\client_purchases.html:23
+#: .\campaigns\templates\campaigns\detail.html:55
+msgid "Card"
+msgstr "Карта"
+
+#: .\campaigns\templates\campaigns\client_purchases.html:25
+#: .\campaigns\templates\campaigns\detail.html:25
+#: .\campaigns\templates\campaigns\list.html:26
+#: .\promos\templates\promos\detail.html:19
+#: .\promos\templates\promos\list.html:33
+msgid "Period"
+msgstr "Период"
+
+#: .\campaigns\templates\campaigns\client_purchases.html:29
+#: .\campaigns\templates\campaigns\detail.html:89
+#: .\campaigns\templates\campaigns\purchases.html:39
+#: .\sales\templates\sales\_results.html:72
+msgid "No matching sales for this filter."
+msgstr "Нет продаж по выбранному фильтру."
+
+#: .\campaigns\templates\campaigns\client_purchases.html:29
+#: .\campaigns\templates\campaigns\purchases.html:39
+msgid "No sales in this campaign window."
+msgstr "В окне этой кампании продаж нет."
+
+#: .\campaigns\templates\campaigns\client_purchases.html:34
+#: .\sales\templates\sales\_results.html:34
+#: .\sales\templates\sales\receipt.html:4
+#: .\sales\templates\sales\receipt.html:5
+#: .\sales\templates\sales\receipt.html:20
+#: .\sales\templates\sales\reconcile_docs.html:45
+msgid "Receipt"
+msgstr "Чек"
+
+#: .\campaigns\templates\campaigns\client_purchases.html:37
+#: .\campaigns\templates\campaigns\client_purchases.html:45
+#: .\campaigns\templates\campaigns\detail.html:58
+#: .\campaigns\templates\campaigns\purchases.html:27
+#: .\sales\templates\sales\_results.html:5
+#: .\sales\templates\sales\_results.html:25
+#: .\sales\templates\sales\matrix.html:90
+#: .\sales\templates\sales\matrix.html:93
+#: .\sales\templates\sales\matrix_group.html:94
+#: .\sales\templates\sales\matrix_sg.html:53
+#: .\sales\templates\sales\receipt.html:32
+#: .\sales\templates\sales\reconcile_month.html:110 .\sales\views.py:417
+msgid "Amount"
+msgstr "Сумма"
+
+#: .\campaigns\templates\campaigns\client_purchases.html:43
+#: .\campaigns\templates\campaigns\purchases.html:25
+#: .\promos\templates\promos\create.html:119
+#: .\sales\templates\sales\receipt.html:30
+msgid "Group"
+msgstr "Группа"
+
+#: .\campaigns\templates\campaigns\client_purchases.html:44
+#: .\campaigns\templates\campaigns\purchases.html:26
+#: .\sales\templates\sales\_results.html:4
+#: .\sales\templates\sales\_results.html:24
+#: .\sales\templates\sales\matrix.html:89
+#: .\sales\templates\sales\matrix.html:92
+#: .\sales\templates\sales\matrix_group.html:93
+#: .\sales\templates\sales\matrix_sg.html:52
+#: .\sales\templates\sales\receipt.html:31 .\sales\views.py:418
+msgid "Qty"
+msgstr "Кол-во"
+
+#: .\campaigns\templates\campaigns\create.html:4
+#: .\campaigns\templates\campaigns\create.html:5
+#: .\campaigns\templates\campaigns\create.html:20
+#: .\campaigns\templates\campaigns\list.html:17
+#: .\core\templates\core\more.html:36
+msgid "New campaign"
+msgstr "Новая кампания"
+
+#: .\campaigns\templates\campaigns\create.html:19
+#: .\campaigns\templates\campaigns\detail.html:21
+msgid "All campaigns"
+msgstr "Все кампании"
+
+#: .\campaigns\templates\campaigns\create.html:21
+msgid ""
+"Each mailing is a separate campaign. Saving here does not change older "
+"blasts."
+msgstr "Каждая рассылка — отдельная кампания. Сохранение не меняет старые."
+
+#: .\campaigns\templates\campaigns\create.html:22
 msgid ""
 "Telegram bot: choose that channel and upload the CSV export (card number, "
 "phone). Clients are matched by loyalty card."
@@ -591,183 +260,1034 @@ msgstr ""
 "Telegram-бот: выберите этот канал и загрузите CSV-выгрузку (номер карты, "
 "телефон). Клиенты сопоставляются по бонусной карте."
 
-msgid "Sales by super-groups"
-msgstr "Продажи по супергруппам"
-
-msgid "Super-groups"
-msgstr "Супергруппы"
-
+#: .\campaigns\templates\campaigns\create.html:24
 msgid ""
-"Rows are super-groups, columns are stores with sales in the period. Cell = "
-"qty / amount. Totals must match all sales."
+"A local list for the 18 Sep 2026 blast is on this machine (not in git). "
+"Leave the checkbox off for a new list."
 msgstr ""
-"Строки — супергруппы, колонки — магазины с продажами за период. В ячейке qty"
-" / сумма. Итоги должны совпасть со всеми продажами."
+"Локальный список рассылки 18.09.2026 есть на этой машине (не в git). Для "
+"нового списка галочку не ставьте."
 
-msgid "From"
-msgstr "С"
+#: .\campaigns\templates\campaigns\create.html:35
+msgid "Create campaign"
+msgstr "Создать кампанию"
 
-msgid "To"
-msgstr "По"
+#: .\campaigns\templates\campaigns\detail.html:28
+msgid "Recalculate this campaign until"
+msgstr "Пересчитать эту кампанию до"
 
-msgid "Excel"
-msgstr "Excel"
+#: .\campaigns\templates\campaigns\detail.html:30
+#: .\promos\templates\promos\charts.html:36
+#: .\promos\templates\promos\detail.html:101
+msgid "Recalculate"
+msgstr "Пересчитать"
 
+#: .\campaigns\templates\campaigns\detail.html:33
+#: .\campaigns\templates\campaigns\list.html:27
+msgid "Clients"
+msgstr "Клиенты"
+
+#: .\campaigns\templates\campaigns\detail.html:34
+#: .\campaigns\templates\campaigns\detail.html:42
+#: .\campaigns\templates\campaigns\detail.html:57
+#: .\campaigns\templates\campaigns\list.html:28
+msgid "Bought"
+msgstr "Купили"
+
+#: .\campaigns\templates\campaigns\detail.html:35
+#: .\campaigns\templates\campaigns\detail.html:43
+msgid "Did not buy"
+msgstr "Не купили"
+
+#: .\campaigns\templates\campaigns\detail.html:36
+msgid "Share bought"
+msgstr "Доля купивших"
+
+#: .\campaigns\templates\campaigns\detail.html:37
+msgid "Not matched to ERP"
+msgstr "Не сошлись с ERP"
+
+#: .\campaigns\templates\campaigns\detail.html:41
+msgid "All"
+msgstr "Все"
+
+#: .\campaigns\templates\campaigns\detail.html:44
+#: .\campaigns\templates\campaigns\purchases.html:4
+#: .\campaigns\templates\campaigns\purchases.html:5
+#: .\campaigns\templates\campaigns\purchases.html:18
+msgid "What they bought"
+msgstr "Что купили"
+
+#: .\campaigns\templates\campaigns\detail.html:47
+#: .\sales\templates\sales\_results.html:11
+#, python-format
+msgid "Showing first %(shown)s of %(total)s rows."
+msgstr "Показаны первые %(shown)s из %(total)s строк."
+
+#: .\campaigns\templates\campaigns\detail.html:48
+#, python-format
+msgid "Amount of all matching rows: %(amount)s"
+msgstr "Сумма всех подходящих строк: %(amount)s"
+
+#: .\campaigns\templates\campaigns\detail.html:56
+#: .\campaigns\templates\campaigns\list.html:25
+#: .\promos\templates\promos\list.html:32 .\sales\views.py:419
+msgid "Name"
+msgstr "Имя"
+
+#: .\campaigns\templates\campaigns\detail.html:69
+msgid "Yes"
+msgstr "Да"
+
+#: .\campaigns\templates\campaigns\detail.html:69
+msgid "No"
+msgstr "Нет"
+
+#: .\campaigns\templates\campaigns\detail.html:82
+#: .\promos\templates\promos\detail.html:149
+#: .\sales\templates\sales\_results.html:61
+#: .\sales\templates\sales\matrix.html:84
+#: .\sales\templates\sales\matrix.html:121
+#: .\sales\templates\sales\matrix_group.html:115
+#: .\sales\templates\sales\matrix_sg.html:87
+#: .\sales\templates\sales\receipt.html:47
+#: .\sales\templates\sales\reconcile_month.html:77
+msgid "Total"
+msgstr "Итого"
+
+#: .\campaigns\templates\campaigns\detail.html:89
+msgid "No clients in this list."
+msgstr "В этом списке нет клиентов."
+
+#: .\campaigns\templates\campaigns\list.html:4
+#: .\campaigns\templates\campaigns\list.html:16 .\templates\base.html:32
+msgid "Campaign Analysis"
+msgstr "Анализ кампаний"
+
+#: .\campaigns\templates\campaigns\list.html:5 .\templates\base.html:88
+msgid "Campaigns"
+msgstr "Кампании"
+
+#: .\campaigns\templates\campaigns\list.html:45
+msgid "No campaigns yet."
+msgstr "Кампаний пока нет."
+
+#: .\campaigns\templates\campaigns\purchases.html:19
+msgid "Products bought by this campaign list in the analysis window."
+msgstr "Товары, которые купили клиенты этого списка в окне анализа."
+
+#: .\campaigns\views.py:125
+msgid "New campaign saved separately from previous blasts."
+msgstr "Новая кампания сохранена отдельно от прошлых рассылок."
+
+#: .\campaigns\views.py:130
+#, python-format
+msgid "SMS %(date)s"
+msgstr "SMS %(date)s"
+
+#: .\campaigns\views.py:221
+msgid "Invalid end date."
+msgstr "Неверная дата окончания."
+
+#: .\campaigns\views.py:237
+msgid "This campaign was recalculated. Other blasts were not changed."
+msgstr "Эта кампания пересчитана. Другие рассылки не менялись."
+
+#: .\core\forms.py:9 .\core\forms.py:33
+msgid "Username"
+msgstr "Логин"
+
+#: .\core\forms.py:15
+msgid "Your username"
+msgstr "Ваш логин"
+
+#: .\core\forms.py:20 .\core\forms.py:46
+msgid "Password"
+msgstr "Пароль"
+
+#: .\core\forms.py:25
+msgid "Your password"
+msgstr "Ваш пароль"
+
+#: .\core\forms.py:35
+msgid "Letters, digits and @/./+/-/_ only."
+msgstr "Буквы, цифры и символы @/./+/-/_."
+
+#: .\core\forms.py:41
+msgid "Choose a username"
+msgstr "Придумайте логин"
+
+#: .\core\forms.py:51
+msgid "At least 8 characters"
+msgstr "Не меньше 8 символов"
+
+#: .\core\forms.py:54
+msgid "At least 8 characters. Avoid common passwords."
+msgstr "Не меньше 8 символов. Не используйте простые пароли."
+
+#: .\core\forms.py:57
+msgid "Confirm password"
+msgstr "Подтвердите пароль"
+
+#: .\core\forms.py:62
+msgid "Repeat password"
+msgstr "Повторите пароль"
+
+#: .\core\forms.py:65
+msgid "Enter the same password again."
+msgstr "Введите тот же пароль ещё раз."
+
+#: .\core\templates\core\home.html:92
+msgid ""
+"Decision ERP for Granit: SMS Campaigns, Sales Analytics, Promo Effectiveness"
+msgstr ""
+"Decision ERP для Granit: SMS-кампании, аналитика продаж, эффективность акций"
+
+#: .\core\templates\core\home.html:114
+msgid "MVP: SMS, sales explorer, promos"
+msgstr "MVP: SMS, обзор продаж, акции"
+
+#: .\core\templates\core\home.html:116
+msgid "SMS campaign lift: Excel list, bought / not bought, order items"
+msgstr "SMS: Excel-список, купили / не купили, состав заказа"
+
+#: .\core\templates\core\home.html:117
+msgid "Sales explorer: period slice, filters, receipts"
+msgstr "Обзор продаж: срез за период, фильтры, чеки"
+
+#: .\core\templates\core\home.html:118
+msgid "Promos: daily actual vs pre-period, YoY, and seasonal forecast"
+msgstr "Акции: дневной факт против базы до акции, YoY и сезонного прогноза"
+
+#: .\core\templates\core\home.html:119
+msgid "UI languages: Russian and English with a language switcher"
+msgstr "Языки UI: русский и английский с переключателем"
+
+#: .\core\templates\core\home.html:120
+msgid "Architecture: alt Debian (pg-core + UI), analytics.dimkava.ge"
+msgstr "Архитектура: alt Debian (pg-core + UI), analytics.dimkava.ge"
+
+#: .\core\templates\core\more.html:4 .\core\templates\core\more.html:5
+#: .\core\templates\core\more.html:9 .\templates\base.html:92
+msgid "More"
+msgstr "Ещё"
+
+#: .\core\templates\core\more.html:4 .\core\views.py:17
+#: .\templates\base.html:10 .\templates\base.html:19 .\templates\base.html:102
+#: .\templates\registration\auth_base.html:10
+#: .\templates\registration\auth_base.html:151
+#: .\templates\registration\login.html:4
+#: .\templates\registration\register.html:4
+msgid "Granit Sales Analytics ERP"
+msgstr "Granit Sales Analytics ERP"
+
+#: .\core\templates\core\more.html:15 .\sales\templates\sales\matrix.html:68
+#: .\sales\templates\sales\matrix.html:72
+#: .\sales\templates\sales\reconcile.html:4
+#: .\sales\templates\sales\reconcile.html:5
+#: .\sales\templates\sales\reconcile.html:12
+#: .\sales\templates\sales\reconcile_docs.html:4
+#: .\sales\templates\sales\reconcile_docs.html:13
+#: .\sales\templates\sales\reconcile_month.html:4
+#: .\sales\templates\sales\reconcile_month.html:12
+msgid "Reconciliation with Granit"
+msgstr "Сверка с Гранитом"
+
+#: .\core\templates\core\more.html:22 .\templates\base.html:31
+msgid "Home"
+msgstr "Главная"
+
+#: .\core\templates\core\more.html:29 .\promos\templates\promos\create.html:4
+#: .\promos\templates\promos\create.html:5
+#: .\promos\templates\promos\create.html:70
+#: .\promos\templates\promos\list.html:21
+msgid "New promo"
+msgstr "Новая акция"
+
+#: .\core\templates\core\more.html:43 .\sales\templates\sales\matrix.html:55
+#: .\sales\templates\sales\matrix_edit.html:4
+#: .\sales\templates\sales\matrix_edit.html:5
+#: .\sales\templates\sales\matrix_edit.html:108
+#: .\sales\templates\sales\matrix_sg.html:19
 msgid "Edit super-groups"
 msgstr "Редактировать супергруппы"
 
-msgid "Totals match SaleFact for the period."
-msgstr "Итоги совпадают с SaleFact за период."
+#: .\core\templates\core\more.html:51
+msgid "Django admin"
+msgstr "Django-админка"
 
-msgid "Totals do not match SaleFact — check membership."
-msgstr "Итоги не совпадают с SaleFact — проверьте состав."
+#: .\core\templates\core\more.html:59 .\templates\base.html:21
+msgid "Profile"
+msgstr "Профиль"
 
-msgid "Super-group"
-msgstr "Супергруппа"
+#: .\core\templates\core\more.html:65 .\templates\base.html:48
+#: .\templates\registration\auth_base.html:129
+msgid "Language"
+msgstr "Язык"
 
-msgid "No sales in this period."
-msgstr "Нет продаж за этот период."
+#: .\core\templates\core\more.html:80 .\templates\base.html:42
+msgid "Log out"
+msgstr "Выйти"
 
-msgid "Outside super-groups"
-msgstr "Вне супергрупп"
+#: .\core\views.py:20
+msgid "SMS Campaign Analysis"
+msgstr "Анализ SMS-кампаний"
 
+#: .\core\views.py:21
+msgid "Upload Excel, analyze customer purchase lift"
+msgstr "Загрузка Excel и анализ прироста покупок клиентов"
+
+#: .\core\views.py:22
+msgid "Stage 3 — Ready"
+msgstr "Этап 3 — готов"
+
+#: .\core\views.py:27 .\sales\templates\sales\explorer.html:4
+#: .\sales\templates\sales\explorer.html:5
+#: .\sales\templates\sales\explorer.html:24
+#: .\sales\templates\sales\matrix.html:56
+#: .\sales\templates\sales\receipt.html:18 .\templates\base.html:33
+msgid "Sales Explorer"
+msgstr "Обзор продаж"
+
+#: .\core\views.py:28
+msgid "Filter and explore sales by product, client, store, period"
+msgstr "Фильтры и срезы продаж по товару, клиенту, магазину, периоду"
+
+#: .\core\views.py:29
+msgid "Stage 4 — Ready"
+msgstr "Этап 4 — готов"
+
+#: .\core\views.py:34 .\sales\templates\sales\matrix.html:4
+#: .\sales\templates\sales\matrix.html:5
+#: .\sales\templates\sales\matrix.html:30
+#: .\sales\templates\sales\matrix_edit.html:107
+#: .\sales\templates\sales\matrix_group.html:45
+#: .\sales\templates\sales\matrix_sg.html:18
+msgid "Sales by super-groups"
+msgstr "Продажи по супергруппам"
+
+#: .\core\views.py:35
+msgid "Matrix of super-groups × stores; edit shared membership"
+msgstr "Матрица супергрупп × магазины; общий редактор состава"
+
+#: .\core\views.py:36
+msgid "Stage 4b — Local"
+msgstr "Этап 4b — локально"
+
+#: .\core\views.py:41 .\promos\templates\promos\list.html:4
+#: .\promos\templates\promos\list.html:20 .\templates\base.html:36
+msgid "Promotion Effectiveness"
+msgstr "Эффективность акций"
+
+#: .\core\views.py:42
+msgid "Compare promo results vs baseline and YoY"
+msgstr "Сравнение результатов акции с базой и YoY"
+
+#: .\core\views.py:43
+msgid "Stage 5 — Ready"
+msgstr "Этап 5 — готов"
+
+#: .\core\views.py:76
+msgid "Registration is closed."
+msgstr "Регистрация закрыта."
+
+#: .\core\views.py:84
+msgid "Account created. Welcome!"
+msgstr "Аккаунт создан. Добро пожаловать!"
+
+#: .\promos\analysis.py:190
+msgid "Each promo needs a name, start date, and end date."
+msgstr "У каждой акции должны быть название, дата начала и дата окончания."
+
+#: .\promos\analysis.py:192 .\promos\forms.py:126
+msgid "Promo end must be on or after the start date."
+msgstr "Дата окончания не раньше даты начала."
+
+#: .\promos\analysis.py:213
+#, python-format
+msgid "Unknown product group ID: %(id)s"
+msgstr "Неизвестная группа товара ID: %(id)s"
+
+#: .\promos\analysis.py:222
+#, python-format
+msgid "Unknown product ID: %(id)s"
+msgstr "Неизвестный товар ID: %(id)s"
+
+#: .\promos\analysis.py:229
+msgid "Each promo row needs group_id or product_id."
+msgstr "В каждой строке акции нужен group_id или product_id."
+
+#: .\promos\forms.py:13
+msgid "Promo name"
+msgstr "Название акции"
+
+#: .\promos\forms.py:16
+msgid "Used when the file has no name column, or for a manual promo."
+msgstr "Нужно, если в файле нет колонки name, или для акции вручную."
+
+#: .\promos\forms.py:18
+msgid "Type"
+msgstr "Тип"
+
+#: .\promos\forms.py:19 .\promos\templates\promos\detail.html:25
+msgid "Format"
+msgstr "Формат"
+
+#: .\promos\forms.py:20 .\promos\templates\promos\detail.html:27
+msgid "Channels / locations"
+msgstr "Каналы, локации"
+
+#: .\promos\forms.py:22
+msgid "Promo start"
+msgstr "Начало акции"
+
+#: .\promos\forms.py:25
+msgid "Fills empty start_date cells in the file."
+msgstr "Подставляет пустые start_date в файле."
+
+#: .\promos\forms.py:28
+msgid "Promo end"
+msgstr "Конец акции"
+
+#: .\promos\forms.py:31
+msgid "The end date is included. Fills empty end_date cells in the file."
+msgstr "Конечная дата входит в период. Подставляет пустые end_date в файле."
+
+#: .\promos\forms.py:34
+msgid "Baseline days before promo"
+msgstr "Дней базы до акции"
+
+#: .\promos\forms.py:38
 msgid ""
-"Changes are shared for all users. One product group belongs to at most one "
-"super-group."
+"Average daily sales in this window (days without sales count as zero) is the "
+"pre-period baseline."
 msgstr ""
-"Изменения общие для всех пользователей. Одна группа товаров входит не больше"
-" чем в одну супергруппу."
+"Средние продажи в день за это окно (дни без продаж считаются нулём) — база "
+"до акции."
 
-msgid "Color"
-msgstr "Цвет"
+#: .\promos\forms.py:42
+msgid "Promo table (Excel)"
+msgstr "Таблица акций (Excel)"
 
-msgid "Title"
-msgstr "Название"
-
-msgid "Key"
-msgstr "Ключ"
-
-msgid "Order"
-msgstr "Порядок"
-
-msgid "Save"
-msgstr "Сохранить"
-
-msgid "Members"
-msgstr "Состав"
-
-msgid "Delete this super-group?"
-msgstr "Удалить эту супергруппу?"
-
-msgid "Delete"
-msgstr "Удалить"
-
-msgid "No super-groups yet. Seed from JSON or create below."
-msgstr "Супергрупп ещё нет. Запустите сид из JSON или создайте ниже."
-
-msgid "View remainder"
-msgstr "Смотреть остаток"
-
-msgid "New super-group"
-msgstr "Новая супергруппа"
-
-msgid "Create"
-msgstr "Создать"
-
-msgid "Key and title are required."
-msgstr "Нужны ключ и название."
-
-msgid "A super-group with this key already exists."
-msgstr "Супергруппа с таким ключом уже есть."
-
-msgid "Super-group created."
-msgstr "Супергруппа создана."
-
-msgid "Super-group updated."
-msgstr "Супергруппа обновлена."
-
-msgid "Super-group deleted; its groups are outside again."
-msgstr "Супергруппа удалена; её группы снова вне супергрупп."
-
+#: .\promos\forms.py:44
 msgid ""
-"Remainder: product groups (and products without a group) not assigned to any"
-" super-group."
+"Columns: name, start_date, end_date, group_id, product_id. group_id and "
+"product_id are Granit IDs."
 msgstr ""
-"Остаток: группы товаров (и товары без группы), не назначенные ни в одну "
-"супергруппу."
+"Колонки: name, start_date, end_date, group_id, product_id. group_id и "
+"product_id — ID из Granit."
 
-msgid "Group ID"
-msgstr "ID группы"
+#: .\promos\forms.py:47
+msgid "Use example promo file"
+msgstr "Взять пример файла акций"
 
-msgid "Remove"
-msgstr "Убрать"
+#: .\promos\forms.py:50
+msgid ""
+"Local example with Candies group and Ballerina SKU (not required in git)."
+msgstr ""
+"Локальный пример: группа Candies и товар Ballerina (в git не обязателен)."
 
-msgid "No sales for these groups in the period."
-msgstr "Нет продаж по этим группам за период."
+#: .\promos\forms.py:58 .\promos\templates\promos\create.html:101
+msgid "Promo products"
+msgstr "Товары акции"
 
-msgid "Add unassigned group"
-msgstr "Добавить группу без назначения"
+#: .\promos\forms.py:64
+msgid "Product groups"
+msgstr "Группы товара"
 
-msgid "Search groups"
-msgstr "Поиск групп"
+#: .\promos\forms.py:129
+msgid "Upload a promo table or select at least one product group or product."
+msgstr "Загрузите таблицу акций или выберите группу либо товар."
 
-msgid "Add"
-msgstr "Добавить"
+#: .\promos\forms.py:133
+msgid "Enter a promo name or upload a table."
+msgstr "Укажите название акции или загрузите таблицу."
 
-msgid "No unassigned groups with sales (or matching search)."
-msgstr "Нет свободных групп с продажами (или по поиску)."
+#: .\promos\forms.py:135
+msgid "Enter promo dates or upload a table."
+msgstr "Укажите даты акции или загрузите таблицу."
 
-msgid "Group removed from super-group."
-msgstr "Группа убрана из супергруппы."
+#: .\promos\forms.py:137
+msgid "Example promo file is not on this machine."
+msgstr "Примера файла акций на этой машине нет."
 
-msgid "Group added to super-group."
-msgstr "Группа добавлена в супергруппу."
+#: .\promos\templates\promos\_catalog_status.html:5
+msgid "Catalog sync is running..."
+msgstr "Синхронизация каталога идёт..."
 
-msgid "Super-group owner"
-msgstr "Владелец — супергруппа"
+#: .\promos\templates\promos\_catalog_status.html:7
+msgid "Catalog synced:"
+msgstr "Каталог синхронизирован:"
 
-msgid "Super-group owner updated."
-msgstr "Владелец супергруппы обновлён."
+#: .\promos\templates\promos\_catalog_status.html:8
+msgid "with errors"
+msgstr "с ошибками"
 
-msgid "Group moved to outside super-groups."
-msgstr "Группа перенесена во «Вне супергрупп»."
+#: .\promos\templates\promos\_catalog_status.html:10
+msgid "Catalog not synced yet."
+msgstr "Каталог ещё не синхронизирован."
 
-msgid "Super-group not found."
-msgstr "Супергруппа не найдена."
+#: .\promos\templates\promos\_catalog_status.html:12
+msgid "site products"
+msgstr "товаров сайта"
 
-msgid "Move up"
-msgstr "Выше"
+#: .\promos\templates\promos\_catalog_status.html:12
+msgid "links"
+msgstr "связей"
 
-msgid "Move down"
-msgstr "Ниже"
+#: .\promos\templates\promos\_catalog_status.html:18
+msgid "Sync now"
+msgstr "Синхронизировать сейчас"
 
-msgid "Order updated."
-msgstr "Порядок обновлён."
-
+#: .\promos\templates\promos\charts.html:4
+#: .\promos\templates\promos\charts.html:5
+#: .\promos\templates\promos\charts.html:28
+#: .\promos\templates\promos\detail.html:102
 msgid "Charts"
 msgstr "Графики"
 
-msgid "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
-msgstr "Кол-во: кг для весового товара (0,25 = 250 г), шт. для штучного."
+#: .\promos\templates\promos\charts.html:29
+#: .\promos\templates\promos\detail.html:20
+msgid "Baseline days"
+msgstr "Дни базы"
 
-msgid "Stock is company remainder as of the period end date."
-msgstr "Остаток — по компании на дату конца периода."
+#: .\promos\templates\promos\charts.html:33
+msgid "No analysis yet for this promo. Recalculate to build the charts."
+msgstr "Для этой акции ещё нет расчёта. Пересчитайте, чтобы построить графики."
 
-msgid "Stock is remainder as of the period end date for the selected store filter (Retail = shop warehouses, All warehouses = company)."
-msgstr "Остаток на дату конца периода с учётом фильтра склада (Розница = склады магазинов, Все склады = компания)."
+#: .\promos\templates\promos\charts.html:43
+msgid "Extra revenue vs baseline"
+msgstr "Доп. выручка к базе"
 
+#: .\promos\templates\promos\charts.html:47
+#: .\promos\templates\promos\detail.html:110
+msgid "vs baseline"
+msgstr "к базе"
+
+#: .\promos\templates\promos\charts.html:53
+#: .\promos\templates\promos\detail.html:116
+msgid "vs YoY"
+msgstr "к YoY"
+
+#: .\promos\templates\promos\charts.html:59
+msgid "Best promo day"
+msgstr "Лучший день акции"
+
+#: .\promos\templates\promos\charts.html:69
+#: .\promos\templates\promos\charts.html:77
+msgid "Sales by day"
+msgstr "Продажи по дням"
+
+#: .\promos\templates\promos\charts.html:71
+#: .\promos\templates\promos\detail.html:105
+#: .\promos\templates\promos\detail.html:130 .\promos\views.py:305
+msgid "Actual"
+msgstr "Факт"
+
+#: .\promos\templates\promos\charts.html:72 .\promos\views.py:307
+msgid "Last year"
+msgstr "Прошлый год"
+
+#: .\promos\templates\promos\charts.html:73
+#: .\promos\templates\promos\detail.html:106
+#: .\promos\templates\promos\detail.html:131 .\promos\views.py:306
+msgid "Pre-period baseline"
+msgstr "База до акции"
+
+#: .\promos\templates\promos\charts.html:74
+#: .\promos\templates\promos\detail.html:108
+#: .\promos\templates\promos\detail.html:133 .\promos\views.py:308
+msgid "Forecast"
+msgstr "Прогноз"
+
+#: .\promos\templates\promos\charts.html:75
+msgid "Promo days"
+msgstr "Дни акции"
+
+#: .\promos\templates\promos\charts.html:108
+#: .\promos\templates\promos\charts.html:109
+msgid "Promo period total"
+msgstr "Итог за период акции"
+
+#: .\promos\templates\promos\charts.html:119
+msgid "actual"
+msgstr "факт"
+
+#: .\promos\templates\promos\charts.html:122
+msgid "no data"
+msgstr "нет данных"
+
+#: .\promos\templates\promos\charts.html:130
+#: .\promos\templates\promos\charts.html:137
+msgid "Cumulative: extra revenue"
+msgstr "Накопительно: доп. выручка"
+
+#: .\promos\templates\promos\charts.html:134
+msgid "Actual, cumulative"
+msgstr "Факт, накопительно"
+
+#: .\promos\templates\promos\charts.html:135
+msgid "Baseline, cumulative"
+msgstr "База, накопительно"
+
+#: .\promos\templates\promos\charts.html:157
+msgid "No pre-period baseline, so extra revenue cannot be calculated."
+msgstr "Нет базы до акции, поэтому доп. выручку посчитать нельзя."
+
+#: .\promos\templates\promos\create.html:4
+#: .\promos\templates\promos\create.html:5
+#: .\promos\templates\promos\create.html:70
+#: .\promos\templates\promos\detail.html:16
+msgid "Edit promo"
+msgstr "Редактировать акцию"
+
+#: .\promos\templates\promos\create.html:69
+msgid "Back to promo"
+msgstr "Назад к акции"
+
+#: .\promos\templates\promos\create.html:69
+#: .\promos\templates\promos\detail.html:16
+msgid "All promos"
+msgstr "Все акции"
+
+#: .\promos\templates\promos\create.html:103
+msgid "Add from Granit"
+msgstr "Добавить из Гранита"
+
+#: .\promos\templates\promos\create.html:104
+msgid "Add from website"
+msgstr "Добавить с сайта"
+
+#: .\promos\templates\promos\create.html:105
+msgid "Clear all"
+msgstr "Очистить всё"
+
+#: .\promos\templates\promos\create.html:110
+msgid "Product (Granit)"
+msgstr "Товар (Гранит)"
+
+#: .\promos\templates\promos\create.html:112
+msgid "On website"
+msgstr "На сайте"
+
+#: .\promos\templates\promos\create.html:121
+msgid "whole group"
+msgstr "вся группа"
+
+#: .\promos\templates\promos\create.html:123
+msgid "Expand into products"
+msgstr "Раскрыть в товары"
+
+#: .\promos\templates\promos\create.html:124
+#: .\promos\templates\promos\create.html:135
+#: .\promos\templates\promos\create.html:239
+#: .\sales\templates\sales\matrix_sg.html:76
+msgid "Remove"
+msgstr "Убрать"
+
+#: .\promos\templates\promos\create.html:140
+msgid ""
+"No products yet. Use the buttons above to add from Granit or from the "
+"website."
+msgstr "Товаров пока нет. Добавьте их кнопками выше — из Гранита или с сайта."
+
+#: .\promos\templates\promos\create.html:152
+msgid "Import from file (Excel)"
+msgstr "Импорт из файла (Excel)"
+
+#: .\promos\templates\promos\create.html:155
+msgid "Download example promo file"
+msgstr "Скачать пример файла акций"
+
+#: .\promos\templates\promos\create.html:168
+msgid "Save and analyze"
+msgstr "Сохранить и посчитать"
+
+#: .\promos\templates\promos\create.html:175
+msgid "Products from Granit"
+msgstr "Товары Гранита"
+
+#: .\promos\templates\promos\create.html:176
+#: .\promos\templates\promos\create.html:208
+msgid "Close"
+msgstr "Закрыть"
+
+#: .\promos\templates\promos\create.html:180
+msgid "Search by name or Granit ID"
+msgstr "Поиск по названию или ID Гранита"
+
+#: .\promos\templates\promos\create.html:186
+msgid "show inactive"
+msgstr "показать неактивные"
+
+#: .\promos\templates\promos\create.html:194
+#: .\promos\templates\promos\create.html:224
+#: .\promos\templates\promos\picker\_rows.html:3
+msgid "Pick a group on the left or type to search."
+msgstr "Выберите группу слева или начните вводить для поиска."
+
+#: .\promos\templates\promos\create.html:199
+#: .\promos\templates\promos\create.html:229
+msgid "Add whole group / all found"
+msgstr "Добавить всю группу / все найденные"
+
+#: .\promos\templates\promos\create.html:200
+#: .\promos\templates\promos\create.html:230
+msgid "Add selected"
+msgstr "Добавить выбранные"
+
+#: .\promos\templates\promos\create.html:201
+#: .\promos\templates\promos\create.html:231
+msgid "Done"
+msgstr "Готово"
+
+#: .\promos\templates\promos\create.html:207
+msgid "Products from website"
+msgstr "Товары с сайта"
+
+#: .\promos\templates\promos\create.html:212
+msgid "Search website products"
+msgstr "Поиск товаров сайта"
+
+#: .\promos\templates\promos\create.html:216
+msgid "Only products linked to Granit can be added."
+msgstr "Добавить можно только товары, связанные с Гранитом."
+
+#: .\promos\templates\promos\create.html:220
+msgid "All categories"
+msgstr "Все категории"
+
+#: .\promos\templates\promos\create.html:240
+msgid "Added"
+msgstr "Добавлено"
+
+#: .\promos\templates\promos\detail.html:32
+msgid "Targets"
+msgstr "Цели"
+
+#: .\promos\templates\promos\detail.html:34
+#: .\sales\templates\sales\matrix_group.html:62
+msgid "Open in Sales Explorer"
+msgstr "Открыть в обзоре продаж"
+
+#: .\promos\templates\promos\detail.html:38
+msgid "Prices, stock, earnings"
+msgstr "Цены, остатки, заработок"
+
+#: .\promos\templates\promos\detail.html:39
+msgid ""
+"Costs and stock from Granit. Site prices are the promo list; sold average "
+"from Granit is shown in parentheses when it differs by more than one percent."
+msgstr ""
+"Входные цены и остаток — из Гранита. Цены акции — с сайта; средняя цена "
+"продажи по Граниту показана в скобках, если отличается больше чем на один "
+"процент."
+
+#: .\promos\templates\promos\detail.html:45
+msgid "Last cost"
+msgstr "Входная посл."
+
+#: .\promos\templates\promos\detail.html:46
+msgid "Avg cost 90d"
+msgstr "Входная ср. 90д"
+
+#: .\promos\templates\promos\detail.html:47
+msgid "Retail price"
+msgstr "Розничная"
+
+#: .\promos\templates\promos\detail.html:48
+msgid "Sale price"
+msgstr "Скидочная"
+
+#: .\promos\templates\promos\detail.html:49
+msgid "Margin"
+msgstr "Маржа"
+
+#: .\promos\templates\promos\detail.html:50
+#: .\sales\templates\sales\_results.html:23
+msgid "Stock"
+msgstr "Остаток"
+
+#: .\promos\templates\promos\detail.html:51
+#: .\promos\templates\promos\list.html:35
+msgid "Est. earnings"
+msgstr "Ориент. заработок"
+
+#: .\promos\templates\promos\detail.html:64
+#, python-format
+msgid "mapping to wp-id %(wp_id)s, product missing in Woo sync"
+msgstr "маппинг на wp-id %(wp_id)s, товара нет в Woo sync"
+
+#: .\promos\templates\promos\detail.html:66
+msgid "no site link"
+msgstr "нет связи с сайтом"
+
+#: .\promos\templates\promos\detail.html:90
+msgid "Total est. earnings"
+msgstr "Итого ориент. заработок"
+
+#: .\promos\templates\promos\detail.html:107
+#: .\promos\templates\promos\detail.html:132
+msgid "YoY baseline"
+msgstr "База YoY"
+
+#: .\promos\templates\promos\detail.html:123
+msgid "No retail sales in the same window last year, so YoY is empty."
+msgstr "Нет розничных продаж за то же окно год назад, поэтому YoY пустой."
+
+#: .\promos\templates\promos\detail.html:129 .\sales\views.py:398
+#: .\sales\views.py:405 .\sales\views.py:413
+msgid "Day"
+msgstr "День"
+
+#: .\promos\templates\promos\detail.html:158
+msgid "No days to analyze for this promo."
+msgstr "Нет дней для расчёта этой акции."
+
+#: .\promos\templates\promos\list.html:5 .\templates\base.html:84
+msgid "Promos"
+msgstr "Акции"
+
+#: .\promos\templates\promos\list.html:25
+msgid "Active"
+msgstr "Активные"
+
+#: .\promos\templates\promos\list.html:26
+msgid "Passed"
+msgstr "Прошедшие"
+
+#: .\promos\templates\promos\list.html:34
+msgid "SKU"
+msgstr "SKU"
+
+#: .\promos\templates\promos\list.html:50
+msgid "No active promos."
+msgstr "Нет активных акций."
+
+#: .\promos\templates\promos\list.html:50
+msgid "No passed promos."
+msgstr "Нет прошедших акций."
+
+#: .\promos\templates\promos\picker\_granit_groups.html:5
+#: .\promos\templates\promos\picker\_site_categories.html:5
+msgid "Expand"
+msgstr "Раскрыть"
+
+#: .\promos\templates\promos\picker\_granit_groups.html:13
+msgid "No groups."
+msgstr "Нет групп."
+
+#: .\promos\templates\promos\picker\_rows.html:7
+msgid "Select all shown"
+msgstr "Отметить все показанные"
+
+#: .\promos\templates\promos\picker\_rows.html:8
+msgid "Found"
+msgstr "Найдено"
+
+#: .\promos\templates\promos\picker\_rows.html:21
+msgid "no Granit link"
+msgstr "нет связи с Гранитом"
+
+#: .\promos\templates\promos\picker\_rows.html:26
+msgid "out of stock"
+msgstr "нет в наличии"
+
+#: .\promos\templates\promos\picker\_rows.html:31
+msgid "site"
+msgstr "сайт"
+
+#: .\promos\templates\promos\picker\_rows.html:36
+msgid "Nothing found."
+msgstr "Ничего не найдено."
+
+#: .\promos\templates\promos\picker\_rows.html:44
+msgid "Show more"
+msgstr "Показать ещё"
+
+#: .\promos\templates\promos\picker\_site_categories.html:13
+msgid "No website categories yet. Run the catalog sync."
+msgstr "Категорий сайта пока нет. Запустите синхронизацию каталога."
+
+#: .\promos\views.py:43
+msgid "Catalog sync is already running."
+msgstr "Синхронизация каталога уже идёт."
+
+#: .\promos\views.py:59
+msgid "Catalog sync started. Refresh the page in a few minutes."
+msgstr ""
+"Синхронизация каталога запущена. Обновите страницу через несколько минут."
+
+#: .\promos\views.py:125
+msgid "Example promo file is not available."
+msgstr "Пример файла акций недоступен."
+
+#: .\promos\views.py:155 .\promos\views.py:178
+msgid "Promo saved and calculated."
+msgstr "Акция сохранена и посчитана."
+
+#: .\promos\views.py:159
+#, python-format
+msgid "Saved %(count)s promos from the table."
+msgstr "Из таблицы сохранено акций: %(count)s."
+
+#: .\promos\views.py:236
+msgid "The promo table has no group_id or product_id rows."
+msgstr "В таблице акций нет строк с group_id или product_id."
+
+#: .\promos\views.py:321
+msgid "This promo was recalculated."
+msgstr "Эта акция пересчитана."
+
+#: .\sales\matrix.py:76 .\sales\models.py:31
+#: .\sales\templates\sales\matrix_group.html:71
+msgid "Outside super-groups"
+msgstr "Вне супергрупп"
+
+#: .\sales\matrix.py:201
+msgid "(no group)"
+msgstr "(без группы)"
+
+#: .\sales\reconcile_views.py:27
+msgid "Unknown month."
+msgstr "Неизвестный месяц."
+
+#: .\sales\reconcile_views.py:138
+#, python-format
+msgid "Granit is not reachable: %(error)s"
+msgstr "Гранит недоступен: %(error)s"
+
+#: .\sales\reconcile_views.py:140
+msgid "Reconciliation recalculated."
+msgstr "Сверка пересчитана."
+
+#: .\sales\templates\sales\_explorer.html:11
+#: .\sales\templates\sales\matrix.html:38
+#: .\sales\templates\sales\matrix_group.html:56
+#: .\sales\templates\sales\matrix_sg.html:29 .\templates\base.html:76
 msgid "Sales"
 msgstr "Продажи"
 
-msgid "Retail"
-msgstr "Розница"
+#: .\sales\templates\sales\_explorer.html:19
+msgid "Date from"
+msgstr "Дата с"
 
-msgid "All warehouses"
-msgstr "Все склады"
+#: .\sales\templates\sales\_explorer.html:23
+msgid "Date to"
+msgstr "Дата по"
 
-msgid "Invoice"
-msgstr "Накладная"
+#: .\sales\templates\sales\_explorer.html:27
+#: .\sales\templates\sales\_results.html:20
+#: .\sales\templates\sales\matrix_sg.html:37
+#: .\sales\templates\sales\reconcile_month.html:44 .\sales\views.py:396
+#: .\sales\views.py:411
+msgid "Store"
+msgstr "Магазин"
 
+#: .\sales\templates\sales\_explorer.html:29
+#: .\sales\templates\sales\matrix_sg.html:39
+msgid "All stores"
+msgstr "Все магазины"
+
+#: .\sales\templates\sales\_explorer.html:37
+msgid "Filter groups"
+msgstr "Поиск группы"
+
+#: .\sales\templates\sales\_explorer.html:47
+msgid "Filter products"
+msgstr "Поиск товара"
+
+#: .\sales\templates\sales\_explorer.html:56 .\sales\views.py:395
+#: .\sales\views.py:410
+msgid "Production"
+msgstr "Продукция"
+
+#: .\sales\templates\sales\_explorer.html:58
+msgid "All production types"
+msgstr "Все виды продукции"
+
+#: .\sales\templates\sales\_explorer.html:66
+msgid "Granit client id"
+msgstr "ID клиента в Granit"
+
+#: .\sales\templates\sales\_explorer.html:69
+#: .\sales\templates\sales\matrix_sg.html:104
+msgid "Search"
+msgstr "Найти"
+
+#: .\sales\templates\sales\_explorer.html:70
+msgid "Product name"
+msgstr "Название товара"
+
+#: .\sales\templates\sales\_explorer.html:73
+msgid "Group by"
+msgstr "Группировка"
+
+#: .\sales\templates\sales\_explorer.html:81
+msgid "Sort by"
+msgstr "Сортировка"
+
+#: .\sales\templates\sales\_explorer.html:93
+msgid "The end date is included in the period."
+msgstr "Конечная дата входит в период."
+
+#: .\sales\templates\sales\_reconcile_flag.html:1
+msgid "Granit has an unknown kind of lines"
+msgstr "В Гранте появился новый вид строк"
+
+#: .\sales\templates\sales\_reconcile_flag.html:1
+msgid "New service"
+msgstr "Новая услуга"
+
+#: .\sales\templates\sales\_reconcile_flag.html:1
+#: .\sales\templates\sales\reconcile.html:28
+#: .\sales\templates\sales\reconcile.html:59
+#: .\sales\templates\sales\reconcile_docs.html:38
+#: .\sales\templates\sales\reconcile_month.html:51
+msgid "Difference"
+msgstr "Разница"
+
+#: .\sales\templates\sales\_reconcile_status.html:1
+msgid "Matches"
+msgstr "Сходится"
+
+#: .\sales\templates\sales\_reconcile_status.html:1
+msgid "Small difference"
+msgstr "Мелкая разница"
+
+#: .\sales\templates\sales\_reconcile_status.html:1
+#: .\sales\templates\sales\matrix.html:69
+msgid "Month not closed"
+msgstr "Месяц не закрыт"
+
+#: .\sales\templates\sales\_reconcile_status.html:1
+#: .\sales\templates\sales\matrix.html:69
+msgid "Incomplete history"
+msgstr "Неполная история"
+
+#: .\sales\templates\sales\_reconcile_status.html:1
+msgid "Mismatch"
+msgstr "Расхождение"
+
+#: .\sales\templates\sales\_results.html:3
+msgid "Rows"
+msgstr "Строки"
+
+#: .\sales\templates\sales\_results.html:7
+#: .\sales\templates\sales\matrix.html:32
+msgid "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
+msgstr "Кол-во: кг для весового товара (0,25 = 250 г), шт. для штучного."
+
+#: .\sales\templates\sales\_results.html:8
+msgid ""
+"Stock is remainder as of the period end date for the selected store filter "
+"(Retail = shop warehouses, All warehouses = company)."
+msgstr ""
+"Остаток на дату конца периода с учётом фильтра склада (Розница = склады "
+"магазинов, Все склады = компания)."
+
+#: .\sales\templates\sales\_results.html:9
+#: .\sales\templates\sales\matrix.html:34
 msgid ""
 "All warehouses = the Granit report «Sales by warehouses»: receipts as "
 "realized by warehouse documents plus sales invoices with their services "
@@ -781,312 +1301,210 @@ msgstr ""
 "проведённые в Граните, есть только в «Рознице»; перемещения и списания не "
 "входят."
 
-msgid "Last year"
-msgstr "Прошлый год"
-
-msgid "Extra revenue vs baseline"
-msgstr "Доп. выручка к базе"
-
-msgid "Best promo day"
-msgstr "Лучший день акции"
-
-msgid "Sales by day"
-msgstr "Продажи по дням"
-
-msgid "Promo days"
-msgstr "Дни акции"
-
-msgid "Promo period total"
-msgstr "Итог за период акции"
-
-msgid "actual"
-msgstr "факт"
-
-msgid "no data"
-msgstr "нет данных"
-
-msgid "Cumulative: extra revenue"
-msgstr "Накопительно: доп. выручка"
-
-msgid "Actual, cumulative"
-msgstr "Факт, накопительно"
-
-msgid "Baseline, cumulative"
-msgstr "База, накопительно"
-
-msgid "No analysis yet for this promo. Recalculate to build the charts."
-msgstr "Для этой акции ещё нет расчёта. Пересчитайте, чтобы построить графики."
-
-msgid "No pre-period baseline, so extra revenue cannot be calculated."
-msgstr "Нет базы до акции, поэтому доп. выручку посчитать нельзя."
-
-msgid "Product ID"
-msgstr "ID товара"
-
-msgid "No sales for this group in the period."
-msgstr "Нет продаж по этой группе за период."
-
-msgid "(no group)"
-msgstr "(без группы)"
-
-msgid "Outside groups"
-msgstr "Вне групп"
-
-msgid "Total qty"
-msgstr "Итого qty"
-
-msgid "Total amount"
-msgstr "Итого сумма"
-
-msgid "Matrix of super-groups × stores; edit shared membership"
-msgstr "Матрица супергрупп × магазины; общий редактор состава"
-
-msgid "Stage 4b — Local"
-msgstr "Этап 4b — локально"
-
-msgid "Active"
-msgstr "Активные"
-
-msgid "Passed"
-msgstr "Прошедшие"
-
-msgid "Est. earnings"
-msgstr "Ориент. заработок"
-
-msgid "SKU"
-msgstr "SKU"
-
-msgid "No active promos."
-msgstr "Нет активных акций."
-
-msgid "No passed promos."
-msgstr "Нет прошедших акций."
-
-msgid "Type"
-msgstr "Тип"
-
-msgid "Format"
-msgstr "Формат"
-
-msgid "Channels / locations"
-msgstr "Каналы, локации"
-
-msgid "Products (Granit)"
-msgstr "Товары (Гранит)"
-
-msgid "Products from website"
-msgstr "Товары с сайта"
-
-msgid "Search the website catalog; only items linked to Granit can be saved."
-msgstr "Поиск по каталогу сайта; сохранить можно только товары со связью с Гранитом."
-
-msgid "Search website products"
-msgstr "Поиск товаров сайта"
-
-msgid "no Granit link"
-msgstr "нет связи с Гранитом"
-
-msgid "No website products match."
-msgstr "Нет совпадений в каталоге сайта."
-
-msgid "Type to search the website catalog."
-msgstr "Начните ввод для поиска по каталогу сайта."
-
-msgid "Prices, stock, earnings"
-msgstr "Цены, остатки, заработок"
-
-msgid "Costs and stock from Granit. Site prices are the promo list; sold average from Granit is shown in parentheses when it differs by more than one percent."
-msgstr "Входные цены и остаток — из Гранита. Цены акции — с сайта; средняя цена продажи по Граниту показана в скобках, если отличается больше чем на один процент."
-
-msgid "Last cost"
-msgstr "Входная посл."
-
-msgid "Avg cost 90d"
-msgstr "Входная ср. 90д"
-
-msgid "Retail price"
-msgstr "Розничная"
-
-msgid "Sale price"
-msgstr "Скидочная"
-
-msgid "Margin"
-msgstr "Маржа"
-
-msgid "Stock"
-msgstr "Остаток"
-
-msgid "Total est. earnings"
-msgstr "Итого ориент. заработок"
-
-msgid "no site link"
-msgstr "нет связи с сайтом"
-
-msgid "mapping to wp-id %(wp_id)s, product missing in Woo sync"
-msgstr "маппинг на wp-id %(wp_id)s, товара нет в Woo sync"
-
-msgid "Catalog sync is already running."
-msgstr "Синхронизация каталога уже идёт."
-
-msgid "Catalog sync started. Refresh the page in a few minutes."
-msgstr "Синхронизация каталога запущена. Обновите страницу через несколько минут."
-
-msgid "Catalog sync is running..."
-msgstr "Синхронизация каталога идёт..."
-
-msgid "Catalog synced:"
-msgstr "Каталог синхронизирован:"
-
-msgid "with errors"
-msgstr "с ошибками"
-
-msgid "Catalog not synced yet."
-msgstr "Каталог ещё не синхронизирован."
-
-msgid "site products"
-msgstr "товаров сайта"
-
-msgid "links"
-msgstr "связей"
-
-msgid "Sync now"
-msgstr "Синхронизировать сейчас"
-
-msgid "Expand"
-msgstr "Раскрыть"
-
-msgid "No groups."
-msgstr "Нет групп."
-
-msgid "No website categories yet. Run the catalog sync."
-msgstr "Категорий сайта пока нет. Запустите синхронизацию каталога."
-
-msgid "Pick a group on the left or type to search."
-msgstr "Выберите группу слева или начните вводить для поиска."
-
-msgid "Select all shown"
-msgstr "Отметить все показанные"
-
-msgid "Found"
-msgstr "Найдено"
-
-msgid "out of stock"
-msgstr "нет в наличии"
-
-msgid "site"
-msgstr "сайт"
-
-msgid "Nothing found."
-msgstr "Ничего не найдено."
-
-msgid "Show more"
-msgstr "Показать ещё"
-
-msgid "Promo products"
-msgstr "Товары акции"
-
-msgid "Edit promo"
-msgstr "Редактировать акцию"
-
-msgid "Back to promo"
-msgstr "Назад к акции"
-
-msgid "Add from Granit"
-msgstr "Добавить из Гранита"
-
-msgid "Add from website"
-msgstr "Добавить с сайта"
-
-msgid "Clear all"
-msgstr "Очистить всё"
-
-msgid "Product (Granit)"
-msgstr "Товар (Гранит)"
-
-msgid "On website"
-msgstr "На сайте"
-
-msgid "whole group"
-msgstr "вся группа"
-
-msgid "Expand into products"
-msgstr "Раскрыть в товары"
-
-msgid "No products yet. Use the buttons above to add from Granit or from the website."
-msgstr "Товаров пока нет. Добавьте их кнопками выше — из Гранита или с сайта."
-
-msgid "Import from file (Excel)"
-msgstr "Импорт из файла (Excel)"
-
-msgid "Products from Granit"
-msgstr "Товары Гранита"
-
-msgid "Close"
-msgstr "Закрыть"
-
-msgid "Search by name or Granit ID"
-msgstr "Поиск по названию или ID Гранита"
-
-msgid "show inactive"
-msgstr "показать неактивные"
-
-msgid "Add whole group / all found"
-msgstr "Добавить всю группу / все найденные"
-
-msgid "Add selected"
-msgstr "Добавить выбранные"
-
-msgid "Done"
-msgstr "Готово"
-
-msgid "Only products linked to Granit can be added."
-msgstr "Добавить можно только товары, связанные с Гранитом."
-
-msgid "All categories"
-msgstr "Все категории"
-
-msgid "Added"
-msgstr "Добавлено"
-
-msgid "Reconciliation"
-msgstr "Сверка"
-
-msgid "Reconciliation with Granit"
-msgstr "Сверка с Гранитом"
-
-msgid "Unknown month."
-msgstr "Неизвестный месяц."
-
-msgid "Granit is not reachable: %(error)s"
-msgstr "Гранит недоступен: %(error)s"
-
-msgid "Granit is not reachable"
-msgstr "Гранит недоступен"
-
-msgid "Reconciliation recalculated."
-msgstr "Сверка пересчитана."
-
-msgid "Granit has an unknown kind of lines"
-msgstr "В Гранте появился новый вид строк"
-
-msgid "New service"
-msgstr "Новая услуга"
-
-msgid "Difference"
-msgstr "Разница"
-
+#: .\sales\templates\sales\_results.html:21 .\sales\views.py:397
+#: .\sales\views.py:412
+msgid "Client"
+msgstr "Клиент"
+
+#: .\sales\templates\sales\_results.html:34
+#: .\sales\templates\sales\receipt.html:4
+#: .\sales\templates\sales\receipt.html:5
+#: .\sales\templates\sales\receipt.html:20
+#: .\sales\templates\sales\reconcile_docs.html:45
+msgid "Invoice"
+msgstr "Накладная"
+
+#: .\sales\templates\sales\_results.html:34
+#: .\sales\templates\sales\receipt.html:4
+#: .\sales\templates\sales\receipt.html:5
+#: .\sales\templates\sales\receipt.html:20
+msgid "Realization"
+msgstr "Реализация"
+
+#: .\sales\templates\sales\_results.html:53
+#: .\sales\templates\sales\matrix_group.html:106
+msgid "Receipts"
+msgstr "Чеки"
+
+#: .\sales\templates\sales\explorer.html:25
+msgid "Slice sales for a period, then open the receipts and the full order."
+msgstr "Срез за период, затем переход к чекам и полному составу заказа."
+
+#: .\sales\templates\sales\matrix.html:31
+msgid ""
+"Rows are super-groups, columns are stores with sales in the period. Cell = "
+"qty / amount. Totals must match all sales."
+msgstr ""
+"Строки — супергруппы, колонки — магазины с продажами за период. В ячейке "
+"qty / сумма. Итоги должны совпасть со всеми продажами."
+
+#: .\sales\templates\sales\matrix.html:46
+msgid "From"
+msgstr "С"
+
+#: .\sales\templates\sales\matrix.html:50
+msgid "To"
+msgstr "По"
+
+#: .\sales\templates\sales\matrix.html:54
+msgid "Excel"
+msgstr "Excel"
+
+#: .\sales\templates\sales\matrix.html:60
+msgid "Totals match SaleFact for the period."
+msgstr "Итоги совпадают с SaleFact за период."
+
+#: .\sales\templates\sales\matrix.html:62
+msgid "Totals do not match SaleFact — check membership."
+msgstr "Итоги не совпадают с SaleFact — проверьте состав."
+
+#: .\sales\templates\sales\matrix.html:69
+msgid "OK"
+msgstr "OK"
+
+#: .\sales\templates\sales\matrix.html:69
 msgid "difference"
 msgstr "разница"
 
-msgid "Matches"
-msgstr "Сходится"
+#: .\sales\templates\sales\matrix.html:69
+#, python-format
+msgid "%(n)s flag"
+msgid_plural "%(n)s flags"
+msgstr[0] "%(n)s флаг"
+msgstr[1] "%(n)s флага"
+msgstr[2] "%(n)s флагов"
 
-msgid "Small difference"
-msgstr "Мелкая разница"
+#: .\sales\templates\sales\matrix.html:80
+msgid "Super-group"
+msgstr "Супергруппа"
 
-msgid "Mismatch"
-msgstr "Расхождение"
+#: .\sales\templates\sales\matrix.html:133
+msgid "No sales in this period."
+msgstr "Нет продаж за этот период."
 
+#: .\sales\templates\sales\matrix_edit.html:109
+msgid ""
+"Changes are shared for all users. One product group belongs to at most one "
+"super-group."
+msgstr ""
+"Изменения общие для всех пользователей. Одна группа товаров входит не больше "
+"чем в одну супергруппу."
+
+#: .\sales\templates\sales\matrix_edit.html:114
+#: .\sales\templates\sales\matrix_edit.html:117
+#: .\sales\templates\sales\matrix_edit.html:137
+#: .\sales\templates\sales\matrix_edit.html:197
+#: .\sales\templates\sales\matrix_edit.html:199
+msgid "Color"
+msgstr "Цвет"
+
+#: .\sales\templates\sales\matrix_edit.html:115
+#: .\sales\templates\sales\matrix_edit.html:195
+msgid "Title"
+msgstr "Название"
+
+#: .\sales\templates\sales\matrix_edit.html:116
+#: .\sales\templates\sales\matrix_edit.html:193
+msgid "Key"
+msgstr "Ключ"
+
+#: .\sales\templates\sales\matrix_edit.html:118
+msgid "Order"
+msgstr "Порядок"
+
+#: .\sales\templates\sales\matrix_edit.html:147
+msgid "Move up"
+msgstr "Выше"
+
+#: .\sales\templates\sales\matrix_edit.html:154
+msgid "Move down"
+msgstr "Ниже"
+
+#: .\sales\templates\sales\matrix_edit.html:160
+#: .\sales\templates\sales\matrix_group.html:85
+msgid "Save"
+msgstr "Сохранить"
+
+#: .\sales\templates\sales\matrix_edit.html:161
+#: .\sales\templates\sales\matrix_group.html:47
+msgid "Members"
+msgstr "Состав"
+
+#: .\sales\templates\sales\matrix_edit.html:162
+msgid "Delete this super-group?"
+msgstr "Удалить эту супергруппу?"
+
+#: .\sales\templates\sales\matrix_edit.html:166
+msgid "Delete"
+msgstr "Удалить"
+
+#: .\sales\templates\sales\matrix_edit.html:172
+msgid "No super-groups yet. Seed from JSON or create below."
+msgstr "Супергрупп ещё нет. Запустите сид из JSON или создайте ниже."
+
+#: .\sales\templates\sales\matrix_edit.html:182
+msgid "View remainder"
+msgstr "Смотреть остаток"
+
+#: .\sales\templates\sales\matrix_edit.html:192
+msgid "New super-group"
+msgstr "Новая супергруппа"
+
+#: .\sales\templates\sales\matrix_edit.html:202
+msgid "Create"
+msgstr "Создать"
+
+#: .\sales\templates\sales\matrix_group.html:69
+msgid "Super-group owner"
+msgstr "Владелец — супергруппа"
+
+#: .\sales\templates\sales\matrix_group.html:91
+msgid "Product ID"
+msgstr "ID товара"
+
+#: .\sales\templates\sales\matrix_group.html:110
+msgid "No sales for this group in the period."
+msgstr "Нет продаж по этой группе за период."
+
+#: .\sales\templates\sales\matrix_sg.html:22
+msgid ""
+"Remainder: product groups (and products without a group) not assigned to any "
+"super-group."
+msgstr ""
+"Остаток: группы товаров (и товары без группы), не назначенные ни в одну "
+"супергруппу."
+
+#: .\sales\templates\sales\matrix_sg.html:50
+#: .\sales\templates\sales\matrix_sg.html:109
+msgid "Group ID"
+msgstr "ID группы"
+
+#: .\sales\templates\sales\matrix_sg.html:82
+msgid "No sales for these groups in the period."
+msgstr "Нет продаж по этим группам за период."
+
+#: .\sales\templates\sales\matrix_sg.html:97
+msgid "Add unassigned group"
+msgstr "Добавить группу без назначения"
+
+#: .\sales\templates\sales\matrix_sg.html:103
+msgid "Search groups"
+msgstr "Поиск групп"
+
+#: .\sales\templates\sales\matrix_sg.html:124
+msgid "Add"
+msgstr "Добавить"
+
+#: .\sales\templates\sales\matrix_sg.html:129
+msgid "No unassigned groups with sales (or matching search)."
+msgstr "Нет свободных групп с продажами (или по поиску)."
+
+#: .\sales\templates\sales\reconcile.html:11 .\templates\base.html:34
+#: .\templates\base.html:80
+msgid "Super-groups"
+msgstr "Супергруппы"
+
+#: .\sales\templates\sales\reconcile.html:14
 msgid ""
 "Granit side: sales documents by realization date, the same as the Granit "
 "report «Sales by warehouses» (amount incl. VAT). Each total is split into "
@@ -1098,92 +1516,96 @@ msgstr ""
 "товары, услуги и остаток; остаток должен быть нулевым, иначе в Гранте "
 "появился вид строк, который мы ещё не загружаем."
 
+#: .\sales\templates\sales\reconcile.html:20
+#: .\sales\templates\sales\reconcile_docs.html:32
+#: .\sales\templates\sales\reconcile_month.html:94
 msgid "Granit"
 msgstr "Гранит"
 
+#: .\sales\templates\sales\reconcile.html:24
+#: .\sales\templates\sales\reconcile.html:58
+#: .\sales\templates\sales\reconcile_docs.html:36
+#: .\sales\templates\sales\reconcile_month.html:94
 msgid "Ours"
 msgstr "У нас"
 
+#: .\sales\templates\sales\reconcile.html:32
+#: .\sales\templates\sales\reconcile.html:61
 msgid "Flags"
 msgstr "Флаги"
 
+#: .\sales\templates\sales\reconcile.html:43
 msgid "Recalculate (this and last month)"
 msgstr "Пересчитать (этот и прошлый месяц)"
 
+#: .\sales\templates\sales\reconcile.html:46
+#, python-format
 msgid "Updated nightly. Tolerance per store: %(tolerance)s GEL."
 msgstr "Обновляется ночью. Допуск на магазин: %(tolerance)s лари."
 
+#: .\sales\templates\sales\reconcile.html:53
 msgid "Month"
 msgstr "Месяц"
 
+#: .\sales\templates\sales\reconcile.html:54
 msgid "Granit total"
 msgstr "Гранит итого"
 
+#: .\sales\templates\sales\reconcile.html:55
+#: .\sales\templates\sales\reconcile_docs.html:33
+#: .\sales\templates\sales\reconcile_month.html:46
 msgid "Goods"
 msgstr "Товары"
 
+#: .\sales\templates\sales\reconcile.html:56
+#: .\sales\templates\sales\reconcile_docs.html:34
+#: .\sales\templates\sales\reconcile_month.html:47
+#: .\sales\templates\sales\reconcile_month.html:92
 msgid "Services"
 msgstr "Услуги"
 
-msgid "Service"
-msgstr "Услуга"
-
+#: .\sales\templates\sales\reconcile.html:57
+#: .\sales\templates\sales\reconcile_docs.html:35
+#: .\sales\templates\sales\reconcile_month.html:48
 msgid "Leftover"
 msgstr "Остаток"
 
+#: .\sales\templates\sales\reconcile.html:60
+#: .\sales\templates\sales\reconcile_month.html:53
 msgid "Status"
 msgstr "Статус"
 
+#: .\sales\templates\sales\reconcile.html:77
+#, python-format
 msgid "and %(n)s more"
 msgid_plural "and %(n)s more"
 msgstr[0] "и ещё %(n)s"
 msgstr[1] "и ещё %(n)s"
 msgstr[2] "и ещё %(n)s"
 
+#: .\sales\templates\sales\reconcile.html:85
 msgid "Services by month (Granit)"
 msgstr "Услуги по месяцам (Гранит)"
 
+#: .\sales\templates\sales\reconcile.html:90
+#: .\sales\templates\sales\reconcile_month.html:94
+msgid "Service"
+msgstr "Услуга"
+
+#: .\sales\templates\sales\reconcile.html:97
+#: .\sales\templates\sales\reconcile_month.html:98
 msgid "new"
 msgstr "новая"
 
+#: .\sales\templates\sales\reconcile.html:106
 msgid ""
 "No reconciliation yet. Run «manage.py reconcile_sales --months 12» or press "
 "Recalculate."
 msgstr ""
-"Сверки ещё нет. Запустите «manage.py reconcile_sales --months 12» или нажмите "
-"«Пересчитать»."
+"Сверки ещё нет. Запустите «manage.py reconcile_sales --months 12» или "
+"нажмите «Пересчитать»."
 
-msgid ""
-"Click a store to see the documents that differ. «Amount incl. VAT» per "
-"warehouse is the line of the Granit report."
-msgstr ""
-"Нажмите на магазин, чтобы увидеть документы с расхождением. «Сумма с НДС» по "
-"складу — это строка отчёта Гранита."
-
-msgid "Recalculate this month"
-msgstr "Пересчитать этот месяц"
-
-msgid "Calculated"
-msgstr "Рассчитано"
-
-msgid "Amount incl. VAT (Granit)"
-msgstr "Сумма с НДС (Гранит)"
-
-msgid "Ours: goods"
-msgstr "У нас: товары"
-
-msgid "Ours: services"
-msgstr "У нас: услуги"
-
-msgid "Other Granit documents (not sales, for information)"
-msgstr "Другие документы Гранита (не продажи, для информации)"
-
-msgid "Document type"
-msgstr "Тип документа"
-
-msgid "Documents"
-msgstr "Документов"
-
+#: .\sales\templates\sales\reconcile_docs.html:18
 msgid ""
 "Documents where Granit and our sales disagree. Receipt documents are "
 "compared through the receipt: one receipt can be split into several "
@@ -1193,45 +1615,70 @@ msgstr ""
 "сравниваются через чек: один чек может разбиваться на несколько складских "
 "документов."
 
+#: .\sales\templates\sales\reconcile_docs.html:22
+msgid "Granit is not reachable"
+msgstr "Гранит недоступен"
+
+#: .\sales\templates\sales\reconcile_docs.html:24
+#, python-format
 msgid "Checked: %(checked)s, with a difference: %(total)s."
 msgstr "Проверено: %(checked)s, с расхождением: %(total)s."
 
+#: .\sales\templates\sales\reconcile_docs.html:29 .\sales\views.py:399
+#: .\sales\views.py:414
 msgid "Document"
 msgstr "Документ"
 
+#: .\sales\templates\sales\reconcile_docs.html:30
 msgid "Document date"
 msgstr "Дата документа"
 
+#: .\sales\templates\sales\reconcile_docs.html:31
 msgid "Realization date"
 msgstr "Дата реализации"
 
+#: .\sales\templates\sales\reconcile_docs.html:37
 msgid "Our dates"
 msgstr "Наши даты"
 
+#: .\sales\templates\sales\reconcile_docs.html:55
 msgid "not loaded"
 msgstr "не загружено"
 
+#: .\sales\templates\sales\reconcile_docs.html:61
+#, python-format
 msgid "Showing the first %(shown)s by size of the difference."
 msgstr "Показаны первые %(shown)s по размеру расхождения."
 
+#: .\sales\templates\sales\reconcile_docs.html:63
 msgid "All documents match."
 msgstr "Все документы сходятся."
 
-msgid "OK"
-msgstr "OK"
+#: .\sales\templates\sales\reconcile_month.html:14
+msgid ""
+"Click a store to see the documents that differ. «Amount incl. VAT» per "
+"warehouse is the line of the Granit report."
+msgstr ""
+"Нажмите на магазин, чтобы увидеть документы с расхождением. «Сумма с НДС» по "
+"складу — это строка отчёта Гранита."
 
-msgid "%(n)s flag"
-msgid_plural "%(n)s flags"
-msgstr[0] "%(n)s флаг"
-msgstr[1] "%(n)s флага"
-msgstr[2] "%(n)s флагов"
+#: .\sales\templates\sales\reconcile_month.html:15
+msgid ""
+"«Not realized yet»: receipts of the month without a warehouse document in "
+"Granit; they are in Retail but not in All warehouses."
+msgstr ""
+"«Ещё не проведено» — чеки месяца без складского документа в Граните: они "
+"есть в «Рознице», но не во «Всех складах»."
 
-msgid "Month not closed"
-msgstr "Месяц не закрыт"
+#: .\sales\templates\sales\reconcile_month.html:23
+msgid "Recalculate this month"
+msgstr "Пересчитать этот месяц"
 
-msgid "Incomplete history"
-msgstr "Неполная история"
+#: .\sales\templates\sales\reconcile_month.html:26
+msgid "Calculated"
+msgstr "Рассчитано"
 
+#: .\sales\templates\sales\reconcile_month.html:30
 msgid ""
 "The month is not closed yet: Granit realizes receipts with a delay of "
 "several days, so the difference is expected until all receipts are realized."
@@ -1239,23 +1686,206 @@ msgstr ""
 "Месяц ещё не закрыт: Гранит проводит чеки с задержкой в несколько дней, "
 "поэтому разница ожидаема, пока все чеки не проведены."
 
+#: .\sales\templates\sales\reconcile_month.html:32
 msgid "Our sales history starts inside this month, so it cannot match Granit."
 msgstr ""
 "Наша история продаж начинается внутри этого месяца, поэтому сойтись с "
 "Гранитом он не может."
 
-msgid "Realization"
-msgstr "Реализация"
+#: .\sales\templates\sales\reconcile_month.html:45
+msgid "Amount incl. VAT (Granit)"
+msgstr "Сумма с НДС (Гранит)"
 
+#: .\sales\templates\sales\reconcile_month.html:49
+msgid "Ours: goods"
+msgstr "У нас: товары"
+
+#: .\sales\templates\sales\reconcile_month.html:50
+msgid "Ours: services"
+msgstr "У нас: услуги"
+
+#: .\sales\templates\sales\reconcile_month.html:52
 msgid "Not realized yet"
 msgstr "Ещё не проведено"
 
-msgid ""
-"«Not realized yet»: receipts of the month without a warehouse document in "
-"Granit; they are in Retail but not in All warehouses."
-msgstr ""
-"«Ещё не проведено» — чеки месяца без складского документа в Граните: они "
-"есть в «Рознице», но не во «Всех складах»."
+#: .\sales\templates\sales\reconcile_month.html:108
+msgid "Other Granit documents (not sales, for information)"
+msgstr "Другие документы Гранита (не продажи, для информации)"
+
+#: .\sales\templates\sales\reconcile_month.html:110
+msgid "Document type"
+msgstr "Тип документа"
+
+#: .\sales\templates\sales\reconcile_month.html:110
+msgid "Documents"
+msgstr "Документов"
+
+#: .\sales\views.py:74
+msgid "Retail"
+msgstr "Розница"
+
+#: .\sales\views.py:74
+msgid "All warehouses"
+msgstr "Все склады"
+
+#: .\sales\views.py:443
+msgid "Receipt not found."
+msgstr "Чек не найден."
+
+#: .\sales\views.py:542
+msgid "Key and title are required."
+msgstr "Нужны ключ и название."
+
+#: .\sales\views.py:544
+msgid "A super-group with this key already exists."
+msgstr "Супергруппа с таким ключом уже есть."
+
+#: .\sales\views.py:548
+msgid "Super-group created."
+msgstr "Супергруппа создана."
+
+#: .\sales\views.py:555
+msgid "Super-group updated."
+msgstr "Супергруппа обновлена."
+
+#: .\sales\views.py:561
+msgid "Super-group deleted; its groups are outside again."
+msgstr "Супергруппа удалена; её группы снова вне супергрупп."
+
+#: .\sales\views.py:576
+msgid "Order updated."
+msgstr "Порядок обновлён."
+
+#: .\sales\views.py:612
+msgid "Group removed from super-group."
+msgstr "Группа убрана из супергруппы."
+
+#: .\sales\views.py:620
+msgid "Group added to super-group."
+msgstr "Группа добавлена в супергруппу."
+
+#: .\sales\views.py:666
+msgid "Group moved to outside super-groups."
+msgstr "Группа перенесена во «Вне супергрупп»."
+
+#: .\sales\views.py:674
+msgid "Super-group owner updated."
+msgstr "Владелец супергруппы обновлён."
+
+#: .\sales\views.py:676
+msgid "Super-group not found."
+msgstr "Супергруппа не найдена."
+
+#: .\templates\base.html:16
+msgid "Back"
+msgstr "Назад"
+
+#: .\templates\base.html:35
+msgid "Reconciliation"
+msgstr "Сверка"
+
+#: .\templates\base.html:73
+msgid "Main"
+msgstr "Основное"
+
+#: .\templates\base.html:104
+msgid "Admin Panel"
+msgstr "Админка"
+
+#: .\templates\registration\login.html:4 .\templates\registration\login.html:7
+#: .\templates\registration\login.html:21
+#: .\templates\registration\register.html:33
+msgid "Log in"
+msgstr "Войти"
+
+#: .\templates\registration\login.html:8
+msgid "Sign in to open SMS, sales, and promo screens."
+msgstr "Войдите, чтобы открыть SMS, обзор продаж и акции."
+
+#: .\templates\registration\login.html:25
+msgid "No account yet?"
+msgstr "Ещё нет аккаунта?"
+
+#: .\templates\registration\login.html:26
+#: .\templates\registration\register.html:4
+#: .\templates\registration\register.html:7
+#: .\templates\registration\register.html:29
+msgid "Create an account"
+msgstr "Создать аккаунт"
+
+#: .\templates\registration\register.html:8
+msgid "Register to use SMS campaigns, sales explorer, and promos."
+msgstr "Регистрация для SMS, обзора продаж и акций."
+
+#: .\templates\registration\register.html:32
+msgid "Already have an account?"
+msgstr "Уже есть аккаунт?"
+
+#~ msgid "SMS sent on"
+#~ msgstr "Дата рассылки SMS"
+
+#~ msgid "Excel file"
+#~ msgstr "Файл Excel"
+
+#~ msgid "Client list for this blast only (customer_id + phone)."
+#~ msgstr "Список клиентов только этой рассылки (customer_id + phone)."
+
+#~ msgid "Analysis end must be after the SMS send date."
+#~ msgstr "Дата окончания должна быть позже даты рассылки."
+
+#~ msgid "Open"
+#~ msgstr "Открыть"
+
+#~ msgid "Products"
+#~ msgstr "Товары"
+
+#~ msgid ""
+#~ "Optional if you upload a file. The list narrows to the selected groups."
+#~ msgstr ""
+#~ "Не обязательно, если загружаете файл. Список сужается по выбранным "
+#~ "группам."
+
+#~ msgid ""
+#~ "Start with dates and an Excel table. You can also pick groups or products "
+#~ "by hand below."
+#~ msgstr ""
+#~ "Сначала даты и таблица Excel. Группы и товары можно выбрать вручную ниже."
+
+#~ msgid "Or select groups and products by hand"
+#~ msgstr "Или выберите группы и товары вручную"
+
+#~ msgid "No promos yet."
+#~ msgstr "Акций пока нет."
+
+#~ msgid "Please enter a correct username and password."
+#~ msgstr "Неверный логин или пароль."
+
+#~ msgid "Stock is company remainder as of the period end date."
+#~ msgstr "Остаток — по компании на дату конца периода."
+
+#~ msgid "Outside groups"
+#~ msgstr "Вне групп"
+
+#~ msgid "Total qty"
+#~ msgstr "Итого qty"
+
+#~ msgid "Total amount"
+#~ msgstr "Итого сумма"
+
+#~ msgid "Products (Granit)"
+#~ msgstr "Товары (Гранит)"
+
+#~ msgid ""
+#~ "Search the website catalog; only items linked to Granit can be saved."
+#~ msgstr ""
+#~ "Поиск по каталогу сайта; сохранить можно только товары со связью с "
+#~ "Гранитом."
+
+#~ msgid "No website products match."
+#~ msgstr "Нет совпадений в каталоге сайта."
+
+#~ msgid "Type to search the website catalog."
+#~ msgstr "Начните ввод для поиска по каталогу сайта."
 
 #~ msgid "Stage 3 — Pending"
 #~ msgstr "Этап 3 — ожидает"
@@ -1303,7 +1933,8 @@ msgstr ""
 #~ "SMS were sent on 18 September 2026. Default window is from that day until "
 #~ "today."
 #~ msgstr ""
-#~ "SMS разослали 18 сентября 2026. Окно по умолчанию — с этого дня до сегодня."
+#~ "SMS разослали 18 сентября 2026. Окно по умолчанию — с этого дня до "
+#~ "сегодня."
 
 #~ msgid "Saved local SMS list is available (not stored in git)."
 #~ msgstr "Локальный список SMS доступен (в git не лежит)."
@@ -1315,8 +1946,8 @@ msgstr ""
 #~ msgstr "SMS разослали 18 сентября 2026."
 
 #~ msgid ""
-#~ "Slice sales for a period by product, group, production type, store, client, "
-#~ "or day."
+#~ "Slice sales for a period by product, group, production type, store, "
+#~ "client, or day."
 #~ msgstr ""
 #~ "Срез продаж за период: товар, группа, продукция, магазин, клиент или день."
 
@@ -1324,12 +1955,12 @@ msgstr ""
 #~ "Compare daily sales in the promo window with the pre-period median, last "
 #~ "year, and a seasonal forecast."
 #~ msgstr ""
-#~ "Сравнение дневных продаж в окне акции с медианой до акции, прошлым годом и "
-#~ "сезонным прогнозом."
+#~ "Сравнение дневных продаж в окне акции с медианой до акции, прошлым годом "
+#~ "и сезонным прогнозом."
 
 #~ msgid ""
-#~ "An example promo table is on this machine (Candies group + Ballerina SKU). "
-#~ "You can tick the checkbox instead of uploading."
+#~ "An example promo table is on this machine (Candies group + Ballerina "
+#~ "SKU). You can tick the checkbox instead of uploading."
 #~ msgstr ""
-#~ "Пример таблицы акций есть на этой машине (группа Candies и товар Ballerina)."
-#~ " Можно поставить галочку вместо загрузки."
+#~ "Пример таблицы акций есть на этой машине (группа Candies и товар "
+#~ "Ballerina). Можно поставить галочку вместо загрузки."

@@ -2,6 +2,8 @@
 {% load i18n numbers %}
 
 {% block title %}{% trans "Order items" %} — {{ row.client.name|default:row.granit_client_id }}{% endblock %}
+{% block page_title %}{% trans "Order items" %}{% endblock %}
+{% block back_url %}{% url 'campaign_detail' campaign.pk %}{% if filter_query %}?{{ filter_query|slice:'1:' }}{% endif %}{% endblock %}
 
 {% block extra_css %}
         table { margin: 0.5rem 0 1.5rem; }
@@ -14,8 +16,8 @@
 
 {% block content %}
 <div class="container">
-    <p><a href="{% url 'campaign_detail' campaign.pk %}{% if filter_query %}?{{ filter_query|slice:'1:' }}{% endif %}">← {{ campaign.name }}</a></p>
-    <h1>{% trans "Order items" %}</h1>
+    <p class="page-back"><a href="{% url 'campaign_detail' campaign.pk %}{% if filter_query %}?{{ filter_query|slice:'1:' }}{% endif %}">← {{ campaign.name }}</a></p>
+    <h1 class="page-h1">{% trans "Order items" %}</h1>
     <p>
         {% trans "Client ID" %}: {{ row.granit_client_id|default:"—" }}
         {% if row.card_number %}· {% trans "Card" %}: {{ row.card_number }}{% endif %}
