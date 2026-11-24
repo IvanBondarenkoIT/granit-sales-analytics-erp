@@ -13,8 +13,8 @@
                 <span class="filter-summary-text">
                     {{ date_from|date:"d.m" }} – {{ date_to|date:"d.m" }}
                     · {% for value, label in scope_choices %}{% if scope == value %}{{ label }}{% endif %}{% endfor %}
-                    · {% if store_id %}{% for s in stores %}{% if store_id == s.granit_id %}{{ s.name }}{% endif %}{% endfor %}{% else %}{% trans "All stores" %}{% endif %}
-                    · {% blocktrans count counter=extra_filters %}{{ counter }} filter{% plural %}{{ counter }} filters{% endblocktrans %}
+                    · {% if store_id %}{% for s in stores %}{% if store_id == s.granit_id %}{{ s.name }}{% endif %}{% endfor %}{% else %}{% trans "All stores" %}{% endif %}{% if extra_filters %}
+                    · {% blocktrans count counter=extra_filters %}{{ counter }} filter{% plural %}{{ counter }} filters{% endblocktrans %}{% endif %}
                 </span>
             </summary>
             <div class="filter-fields">
@@ -105,6 +105,5 @@
             <a class="btn btn-secondary" href="{% url 'sales_explorer' %}">{% trans "Reset filters" %}</a>
         </div>
     </form>
-    <p class="hint hint-period">{% trans "The end date is included in the period." %}</p>
     {% include "sales/_results.html" %}
 </div>

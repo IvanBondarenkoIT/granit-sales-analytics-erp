@@ -118,3 +118,30 @@
 ## Вопросы
 
 нет
+
+## Исправления по ревью
+
+Ревью: [reviews/stage-3.md](../reviews/stage-3.md). Коммит ревью+STATUS: `d8e639e`. Прогон: `stage3b` vs `stage3` → `artifacts/ui/stage3b/compare.html`.
+
+1. **Карточка = растянутая ссылка.** Колонка `.tc-action` на телефоне скрыта; `.tc-primary a::after { position:absolute; inset:0 }` на карточке `position:relative`. У строк без ссылки в названии имя обёрнуто в тот же `href`, что у «Чеки» (`receipts_query`). На ≥ 900 px колонка действия снова видна, `::after` отключён. Приём описан в комментарии к `.table-cards` в `static/css/app.css` (для RULES / этап 7).
+2. **Сводка фильтра:** счётчик «N фильтров» только при `extra_filters > 0`.
+3. **Пустой остаток:** `.tc-stock--empty` скрыт на телефоне; «—» остаётся в разметке для десктопа.
+4. **KPI:** «Сумма» первой на всю ширину (`.stat-amount`), «Строки» и «Кол-во» в ряд под ней.
+5. **Десктоп:** `display: contents` у `.filter-panel` / `.filter-fields` / `.explorer-chips` — Group by / Sort by в общей сетке с остальными полями. «Как считается» открывается на ≥ 900 px (JS + CSS).
+6. Подсказка «Конечная дата входит в период.» перенесена внутрь «Как считается».
+7. `htmx:afterSwap` → один вызов `restore()`.
+
+**Плотность карточек на 390×844** (Playwright, `demo_staff`, ru; скролл так, что первая `tbody tr` сразу под `.app-bar`; считались полностью видимые строки):
+
+| Экран | До (stage3 / 9e4f1c5) | После (stage3b) |
+|-------|----------------------|-----------------|
+| `/sales/` (по товару) | 4 карточки, avg height 163 px | **5** карточек, avg height 132 px |
+| `/sales/?group_by=receipt` | 3 карточки, avg height 190 px | **4** карточки, avg height 165 px |
+
+Цель ревью «4–5 строк» достигнута на обоих экранах.
+
+**Метрики stage3 → stage3b (mobile, demo_staff):** sales_* / receipt — scroll 390, taps 0 (без регрессий).
+
+### Вне этапа (проверено, не чинилось)
+
+`hx-push-url` + частичный `_explorer.html` при `request.htmx`: при «назад», если HTMX-кэш истории вытеснен, возможен ответ без каркаса. В коде view по-прежнему `template = "_explorer.html" if request.htmx else "explorer.html"` без учёта `HX-History-Restore-Request`. Руками в этом прогоне не воспроизводилось; правка view — по решению Ивана.

@@ -1,5 +1,9 @@
 {% load i18n numbers %}
 <div class="stats stats-tiles">
+    <div class="stat stat-amount">
+        <span>{% trans "Amount" %}</span>
+        <strong>{{ total_amount|money }}</strong>
+    </div>
     <div class="stat">
         <span>{% trans "Rows" %}</span>
         <strong>{{ row_count }}</strong>
@@ -8,14 +12,11 @@
         <span>{% trans "Qty" %}</span>
         <strong>{{ total_qty|qty }}</strong>
     </div>
-    <div class="stat">
-        <span>{% trans "Amount" %}</span>
-        <strong>{{ total_amount|money }}</strong>
-    </div>
 </div>
-<details class="hint-panel">
+<details class="hint-panel" id="explorer-hint-panel">
     <summary>{% trans "How it's calculated" %}</summary>
-    <p class="hint">{% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}
+    <p class="hint">{% trans "The end date is included in the period." %}
+        {% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}
         {% if show_stock %}{% trans "Stock is remainder as of the period end date for the selected store filter (Retail = shop warehouses, All warehouses = company)." %}{% endif %}
         {% if scope_all %}{% trans "All warehouses = the Granit report «Sales by warehouses»: receipts as realized by warehouse documents plus sales invoices with their services (office, HoReCa, service centres), by realization date. Receipts Granit has not realized yet are only in Retail; transfers and write-offs are not included." %}{% endif %}</p>
 </details>
@@ -44,6 +45,8 @@
             <td class="tc-primary" data-label="{{ name_heading }}">
                 {% if row.sale_id %}
                 <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}{% if row.sale_source and row.sale_source != 'receipt' %}&amp;source={{ row.sale_source }}{% endif %}">{% if row.is_invoice %}{% trans "Invoice" %}{% elif row.is_realized %}{% trans "Realization" %}{% else %}{% trans "Receipt" %}{% endif %} #{{ row.name }}</a>
+                {% elif row.receipts_query %}
+                <a href="{% url 'sales_explorer' %}?{{ row.receipts_query }}">{{ row.name }}</a>
                 {% else %}
                 {{ row.name }}
                 {% endif %}
@@ -54,15 +57,15 @@
             <td class="tc-meta" data-label="{% trans 'Client' %}">{% if row.client_granit_id %}{{ row.client_name|default:row.client_granit_id }}{% else %}—{% endif %}</td>
             {% endif %}
             {% if show_stock %}
-            <td class="num tc-stock" data-label="{% trans 'Stock' %}">{% if row.stock_qty is not None %}{{ row.stock_qty|qty }}{% else %}—{% endif %}</td>
+            <td class="num tc-stock{% if row.stock_qty is None %} tc-stock--empty{% endif %}" data-label="{% trans 'Stock' %}">{% if row.stock_qty is not None %}{{ row.stock_qty|qty }}{% else %}<span class="tc-na">—</span>{% endif %}</td>
             {% endif %}
             <td class="num tc-qty" data-label="{% trans 'Qty' %}">{{ row.qty|qty }}</td>
             <td class="num tc-amount" data-label="{% trans 'Amount' %}">{{ row.amount|money }}</td>
             <td class="tc-action">
                 {% if row.sale_id %}
-                <a class="btn btn-secondary" href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}{% if row.sale_source and row.sale_source != 'receipt' %}&amp;source={{ row.sale_source }}{% endif %}">{% trans "Order items" %}</a>
+                <a href="{% url 'sales_receipt' row.sale_id %}?{{ explorer_query }}{% if row.sale_source and row.sale_source != 'receipt' %}&amp;source={{ row.sale_source }}{% endif %}">{% trans "Order items" %}</a>
                 {% elif row.receipts_query %}
-                <a class="btn btn-secondary" href="{% url 'sales_explorer' %}?{{ row.receipts_query }}">{% trans "Receipts" %}</a>
+                <a href="{% url 'sales_explorer' %}?{{ row.receipts_query }}">{% trans "Receipts" %}</a>
                 {% endif %}
             </td>
         </tr>

@@ -90,16 +90,22 @@
             padding: 0.5rem 0.9rem;
             text-decoration: none;
         }
-        .hint-period { font-size: 0.9rem; }
         .stats-tiles {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr 1fr;
             gap: 0.5rem;
             margin: 0 0 0.85rem;
+        }
+        .stats-tiles .stat-amount {
+            grid-column: 1 / -1;
         }
         .stats-tiles .stat {
             padding: 0.65rem 0.5rem;
             text-align: center;
+        }
+        .stats-tiles .stat-amount {
+            text-align: left;
+            padding: 0.75rem 0.85rem;
         }
         .stats-tiles .stat span {
             display: block;
@@ -109,6 +115,10 @@
         .stats-tiles .stat strong {
             font-size: 1.1rem;
             margin-top: 0.15rem;
+        }
+        .stats-tiles .stat-amount strong {
+            font-size: 1.35rem;
+            color: var(--brand);
         }
         .hint-panel {
             background: var(--surface);
@@ -140,44 +150,36 @@
             }
         }
         @media (min-width: 900px) {
-            .filter-panel {
-                border: 0;
+            /* One shared grid: filter fields + group_by/sort as equal cells. */
+            .filters {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 0.75rem 1rem;
+                align-items: end;
                 background: var(--surface);
-                padding: 0;
+                padding: 1rem;
+                margin: 1rem 0;
+            }
+            .filter-panel,
+            .filter-fields,
+            .explorer-chips {
+                display: contents;
             }
             .filter-summary { display: none; }
-            .filter-fields {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-                gap: 0.75rem 1rem;
-                padding: 1rem;
-                margin: 0;
-            }
-            /* Keep fields visible even if <details> lacks [open] (JS sets it). */
-            .filter-panel:not([open]) > .filter-fields {
-                display: grid;
-            }
-            .explorer-chips {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-                gap: 0.75rem 1rem;
-                overflow: visible;
-                padding: 0 1rem;
-                margin: 0;
-                background: var(--surface);
-            }
             .explorer-chips label { min-width: 0; }
             .filters .actions {
-                padding: 0 1rem 1rem;
-                background: var(--surface);
+                padding: 0;
                 margin: 0;
+                background: transparent;
             }
             .stats-tiles {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 1.5rem;
             }
-            .stats-tiles .stat {
+            .stats-tiles .stat,
+            .stats-tiles .stat-amount {
+                grid-column: auto;
                 background: transparent;
                 padding: 0;
                 text-align: left;
@@ -188,10 +190,17 @@
                 color: inherit;
             }
             .stats-tiles .stat span::after { content: ": "; }
-            .stats-tiles .stat strong {
+            .stats-tiles .stat strong,
+            .stats-tiles .stat-amount strong {
                 display: inline;
                 font-size: inherit;
                 color: inherit;
+            }
+            .hint-panel > summary { display: none; }
+            .hint-panel .hint { margin: 0.75rem 0; }
+            /* Keep hint body visible even if <details> lacks [open]. */
+            .hint-panel:not([open]) > .hint {
+                display: block;
             }
         }
 {% endblock %}
@@ -210,21 +219,20 @@
   var KEY = "explorer-filters-open";
   var MQ = window.matchMedia("(min-width: 900px)");
 
-  function panel() {
-    return document.getElementById("explorer-filter-panel");
-  }
-
   function restore() {
-    var el = panel();
-    if (!el) return;
+    var el = document.getElementById("explorer-filter-panel");
+    var hint = document.getElementById("explorer-hint-panel");
     if (MQ.matches) {
-      el.open = true;
+      if (el) el.open = true;
+      if (hint) hint.open = true;
       return;
     }
-    try {
-      el.open = sessionStorage.getItem(KEY) === "1";
-    } catch (err) {
-      el.open = false;
+    if (el) {
+      try {
+        el.open = sessionStorage.getItem(KEY) === "1";
+      } catch (err) {
+        el.open = false;
+      }
     }
   }
 
@@ -238,14 +246,7 @@
   }
 
   document.body.addEventListener("toggle", onToggle, true);
-  document.body.addEventListener("htmx:afterSwap", function (ev) {
-    var t = ev.detail && ev.detail.target;
-    if (t && (t.id === "sales-explorer" || (t.querySelector && t.querySelector("#explorer-filter-panel")))) {
-      restore();
-    } else {
-      restore();
-    }
-  });
+  document.body.addEventListener("htmx:afterSwap", restore);
   if (MQ.addEventListener) MQ.addEventListener("change", restore);
   else if (MQ.addListener) MQ.addListener(restore);
   restore();
