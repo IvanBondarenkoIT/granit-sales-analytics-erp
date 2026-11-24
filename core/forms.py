@@ -10,6 +10,7 @@ class StyledAuthenticationForm(AuthenticationForm):
         widget=forms.TextInput(
             attrs={
                 "autocomplete": "username",
+                "autocapitalize": "off",
                 "autofocus": True,
                 "placeholder": _("Your username"),
             }
@@ -35,6 +36,7 @@ class RegisterForm(UserCreationForm):
         widget=forms.TextInput(
             attrs={
                 "autocomplete": "username",
+                "autocapitalize": "off",
                 "autofocus": True,
                 "placeholder": _("Choose a username"),
             }

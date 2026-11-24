@@ -5,7 +5,7 @@
 | # | Этап | Промпт | Ветка | Статус | Обновлено | Последний коммит | Отчёт | Ревью |
 |---|------|--------|-------|--------|-----------|------------------|-------|-------|
 | 0 | Демо-данные, скрипт скриншотов, сверка контракта | [stage-0](prompts/stage-0-baseline.md) | feature/mobile-0-baseline | done | 2026-11-24 | df7ffcd | [stage-0.md](reports/stage-0.md) | [stage-0](reviews/stage-0.md) |
-| 1 | Фундамент: static/app.css, htmx локально, поля 16px, тап-зоны, safe-area | [stage-1](prompts/stage-1-foundation.md) | feature/mobile-1-foundation | todo | | | | |
+| 1 | Фундамент: static/app.css, htmx локально, поля 16px, тап-зоны, safe-area | [stage-1](prompts/stage-1-foundation.md) | feature/mobile-1-foundation | in_progress | 2026-11-24 | | | |
 | 2 | Каркас: плашка, нижнее меню, «Ещё», главная | [stage-2](prompts/stage-2-shell.md) | feature/mobile-2-shell | todo | | | | |
 | 3 | Обозреватель продаж и чек, паттерн `.table-cards` | [stage-3](prompts/stage-3-explorer.md) | feature/mobile-3-explorer | todo | | | | |
 | 4 | Супергруппы (матрица, детализация, редактор) | [stage-4](prompts/stage-4-matrix.md) | feature/mobile-4-matrix | todo | | | | |

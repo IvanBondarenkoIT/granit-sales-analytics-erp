@@ -4,12 +4,9 @@
 {% block title %}{{ sg.display_title }}{% endblock %}
 
 {% block extra_css %}
-        table { width: 100%; border-collapse: collapse; background: #fff; margin: 1rem 0; }
-        th, td { text-align: left; padding: 0.55rem; border-bottom: 1px solid #eee; }
-        td.num, th.num { text-align: right; }
-        .btn { background: #667eea; color: #fff; border: 0; padding: 0.35rem 0.7rem; border-radius: 6px; cursor: pointer; font: inherit; }
-        .btn-danger { background: #b91c1c; }
+        table { margin: 1rem 0; }
         .toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; margin: 1rem 0; background: #fff; padding: 1rem; }
+        .toolbar input, .toolbar select { font-size: 16px; min-height: 44px; }
         .panel { background: #fff; padding: 1rem; margin-top: 1.5rem; }
         .swatch { display: inline-block; width: 1rem; height: 1rem; border: 1px solid #ccc; vertical-align: middle; }
 {% endblock %}
@@ -101,7 +98,7 @@
             <input type="hidden" name="date_to" value="{{ date_to|date:'Y-m-d' }}">
             {% if store_id %}<input type="hidden" name="store" value="{{ store_id }}">{% endif %}
             {% if scope_all %}<input type="hidden" name="scope" value="all">{% endif %}
-            <input name="q" value="{{ request.GET.q }}" placeholder="{% trans "Search groups" %}">
+            <input type="search" name="q" value="{{ request.GET.q }}" placeholder="{% trans "Search groups" %}" enterkeyhint="search">
             <button class="btn" type="submit">{% trans "Search" %}</button>
         </form>
         <table>

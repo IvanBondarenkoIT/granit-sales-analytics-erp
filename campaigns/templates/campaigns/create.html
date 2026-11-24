@@ -4,13 +4,12 @@
 {% block title %}{% trans "New campaign" %}{% endblock %}
 
 {% block extra_css %}
-        form { background: #fff; padding: 2rem; max-width: 640px; }
+        form { background: #fff; padding: 1rem; max-width: 640px; }
         label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; }
-        input[type=text], input[type=date], textarea, input[type=file] { width: 100%; padding: 0.5rem; }
-        .hint { color: #666; font-size: 0.9rem; margin-bottom: 1rem; }
-        .help { color: #777; font-size: 0.85rem; margin: 0.2rem 0 0; }
-        .btn { margin-top: 1rem; background: #667eea; color: #fff; border: 0; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; }
+        input[type=text], input[type=date], textarea, input[type=file] { width: 100%; padding: 0.5rem; font-size: 16px; min-height: 44px; }
+        .hint { margin-bottom: 1rem; }
         .errors { color: #b91c1c; }
+        .btn { margin-top: 1rem; }
 {% endblock %}
 
 {% block content %}

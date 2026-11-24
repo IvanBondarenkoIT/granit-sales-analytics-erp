@@ -6,18 +6,11 @@
 {% block extra_css %}
         .page-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 1rem; }
         .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
-        .tabs a { padding: 0.45rem 0.9rem; text-decoration: none; color: #444; background: #f3f4f6; border-radius: 6px; }
+        .tabs a { padding: 0.45rem 0.9rem; text-decoration: none; color: #444; background: #f3f4f6; border-radius: 6px; min-height: 44px; display: inline-flex; align-items: center; }
         .tabs a.active { background: #667eea; color: #fff; }
-        table { width: 100%; border-collapse: collapse; background: #fff; }
-        th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid #eee; }
-        th { color: #555; font-size: 0.85rem; }
-        td.num, th.num { text-align: right; }
-        .btn { display: inline-block; background: #667eea; color: #fff; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; }
-        .empty { background: #fff; padding: 2rem; color: #666; }
         .catalog-status { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; color: #666; font-size: 0.85rem; margin-bottom: 1rem; }
         .catalog-status form { margin: 0; }
         .catalog-status .warn { color: #b45309; }
-        .btn-link { background: none; border: 0; color: #667eea; cursor: pointer; padding: 0; font-size: 0.85rem; text-decoration: underline; }
 {% endblock %}
 
 {% block content %}

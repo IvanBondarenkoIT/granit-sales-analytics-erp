@@ -1,44 +1,24 @@
-{% load i18n %}
+{% load i18n static %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#667eea">
+    <link rel="manifest" href="{% static 'manifest.webmanifest' %}">
+    <link rel="icon" href="{% static 'icons/icon-192.png' %}" type="image/png">
     <title>{% block title %}{% trans "Granit Sales Analytics ERP" %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body.auth-body {
-            min-height: 100vh;
-            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-            color: #1f2937;
-            background:
-                radial-gradient(ellipse 80% 60% at 10% 0%, rgba(102, 126, 234, 0.35), transparent 55%),
-                radial-gradient(ellipse 70% 50% at 90% 100%, rgba(118, 75, 162, 0.28), transparent 50%),
-                linear-gradient(160deg, #f3f4f8 0%, #e8eaf6 45%, #f5f5f5 100%);
-        }
         .auth-top {
             display: flex;
             justify-content: flex-end;
-            padding: 1rem 1.5rem;
-        }
-        .lang-switch {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            color: #555;
-        }
-        .lang-switch select {
-            padding: 0.35rem 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background: #fff;
-            font: inherit;
+            padding: calc(1rem + env(safe-area-inset-top, 0px)) 1.5rem 0;
         }
         .auth-wrap {
             display: flex;
             justify-content: center;
-            padding: 0 1rem 3rem;
+            padding: 0 1rem calc(3rem + env(safe-area-inset-bottom, 0px));
         }
         .auth-card {
             width: 100%;
@@ -81,6 +61,8 @@
             border: 1px solid #d1d5db;
             border-radius: 8px;
             font: inherit;
+            font-size: 16px;
+            min-height: 44px;
             background: #fafafa;
         }
         .auth-card input:focus {
@@ -113,6 +95,7 @@
             font: inherit;
             font-weight: 600;
             font-size: 1rem;
+            min-height: 44px;
         }
         .auth-card .btn:hover { filter: brightness(1.05); }
         .auth-footer {
@@ -127,20 +110,14 @@
             text-decoration: none;
         }
         .auth-footer a:hover { text-decoration: underline; }
-        .flash {
+        .auth-body .flash {
             max-width: 420px;
             margin: 0 auto 1rem;
             padding: 0 1rem;
         }
-        .flash-item {
-            background: #fff;
-            padding: 0.65rem 1rem;
-            margin-bottom: 0.4rem;
-            border-left: 4px solid #667eea;
+        .auth-body .flash-item {
             border-radius: 4px;
         }
-        .flash-item.success { border-color: #047857; color: #047857; }
-        .flash-item.error { border-color: #b91c1c; color: #b91c1c; }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
