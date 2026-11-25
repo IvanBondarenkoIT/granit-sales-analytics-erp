@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: granit-sales-analytics-erp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-25 18:57+0400\n"
+"POT-Creation-Date: 2026-11-25 20:43+0400\n"
 "PO-Revision-Date: 2026-09-22 16:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
@@ -30,22 +30,24 @@ msgstr "Название кампании"
 msgid "Give each blast its own name so lists stay separate."
 msgstr "У каждой рассылки своё имя, чтобы списки не смешивались."
 
-#: .\campaigns\forms.py:16 .\campaigns\templates\campaigns\list.html:24
+#: .\campaigns\forms.py:16 .\campaigns\templates\campaigns\list.html:116
+#: .\campaigns\templates\campaigns\list.html:127
 msgid "Channel"
 msgstr "Канал"
 
-#: .\campaigns\forms.py:18 .\campaigns\templates\campaigns\detail.html:23
-#: .\campaigns\templates\campaigns\list.html:35
+#: .\campaigns\forms.py:18 .\campaigns\templates\campaigns\detail.html:322
+#: .\campaigns\templates\campaigns\list.html:128
 msgid "SMS"
 msgstr "SMS"
 
-#: .\campaigns\forms.py:19 .\campaigns\templates\campaigns\detail.html:23
-#: .\campaigns\templates\campaigns\list.html:35
+#: .\campaigns\forms.py:19 .\campaigns\templates\campaigns\detail.html:322
+#: .\campaigns\templates\campaigns\list.html:128
 msgid "Telegram bot"
 msgstr "Telegram-бот"
 
-#: .\campaigns\forms.py:24 .\campaigns\templates\campaigns\detail.html:24
-#: .\campaigns\templates\campaigns\list.html:23
+#: .\campaigns\forms.py:24 .\campaigns\templates\campaigns\detail.html:323
+#: .\campaigns\templates\campaigns\list.html:115
+#: .\campaigns\templates\campaigns\list.html:126
 msgid "Sent on"
 msgstr "Дата рассылки"
 
@@ -105,7 +107,22 @@ msgstr "Загрузите Excel или используйте сохранён�
 msgid "SMS list must be an .xlsx file."
 msgstr "Список SMS должен быть файлом .xlsx."
 
-#: .\campaigns\templates\campaigns\_catalog_filter.html:5
+#: .\campaigns\templates\campaigns\_catalog_filter.html:8
+#: .\campaigns\templates\campaigns\_catalog_filter.html:14
+#: .\campaigns\templates\campaigns\_catalog_filter.html:23
+#: .\promos\templates\promos\create.html:190
+#: .\sales\templates\sales\_explorer.html:50
+msgid "All groups"
+msgstr "Все группы"
+
+#: .\campaigns\templates\campaigns\_catalog_filter.html:12
+#: .\campaigns\templates\campaigns\_catalog_filter.html:14
+#: .\campaigns\templates\campaigns\_catalog_filter.html:32
+#: .\sales\templates\sales\_explorer.html:60
+msgid "All products"
+msgstr "Все товары"
+
+#: .\campaigns\templates\campaigns\_catalog_filter.html:21
 #: .\sales\templates\sales\_explorer.html:47
 #: .\sales\templates\sales\matrix_sg.html:77
 #: .\sales\templates\sales\matrix_sg.html:87
@@ -115,15 +132,11 @@ msgstr "Список SMS должен быть файлом .xlsx."
 msgid "Product group"
 msgstr "Группа товара"
 
-#: .\campaigns\templates\campaigns\_catalog_filter.html:7
-#: .\promos\templates\promos\create.html:190
-#: .\sales\templates\sales\_explorer.html:50
-msgid "All groups"
-msgstr "Все группы"
-
-#: .\campaigns\templates\campaigns\_catalog_filter.html:14
-#: .\campaigns\templates\campaigns\client_purchases.html:42
-#: .\campaigns\templates\campaigns\purchases.html:24
+#: .\campaigns\templates\campaigns\_catalog_filter.html:30
+#: .\campaigns\templates\campaigns\client_purchases.html:152
+#: .\campaigns\templates\campaigns\client_purchases.html:161
+#: .\campaigns\templates\campaigns\purchases.html:114
+#: .\campaigns\templates\campaigns\purchases.html:123
 #: .\promos\templates\promos\detail.html:44
 #: .\sales\templates\sales\_explorer.html:57
 #: .\sales\templates\sales\matrix_group.html:133
@@ -134,67 +147,65 @@ msgstr "Все группы"
 msgid "Product"
 msgstr "Товар"
 
-#: .\campaigns\templates\campaigns\_catalog_filter.html:16
-#: .\sales\templates\sales\_explorer.html:60
-msgid "All products"
-msgstr "Все товары"
-
-#: .\campaigns\templates\campaigns\_catalog_filter.html:22
+#: .\campaigns\templates\campaigns\_catalog_filter.html:38
 #: .\sales\templates\sales\_explorer.html:104
 #: .\sales\templates\sales\matrix.html:325
 msgid "Apply"
 msgstr "Применить"
 
-#: .\campaigns\templates\campaigns\_catalog_filter.html:24
+#: .\campaigns\templates\campaigns\_catalog_filter.html:40
 #: .\sales\templates\sales\_explorer.html:105
 msgid "Reset filters"
 msgstr "Сбросить фильтры"
 
-#: .\campaigns\templates\campaigns\_catalog_filter.html:28
+#: .\campaigns\templates\campaigns\_catalog_filter.html:45
 msgid "Bought and amounts are limited to the selected group or product."
 msgstr "Купили и суммы считаются только по выбранной группе или товару."
 
 #: .\campaigns\templates\campaigns\client_purchases.html:4
 #: .\campaigns\templates\campaigns\client_purchases.html:5
-#: .\campaigns\templates\campaigns\client_purchases.html:20
-#: .\campaigns\templates\campaigns\detail.html:74
+#: .\campaigns\templates\campaigns\client_purchases.html:130
+#: .\campaigns\templates\campaigns\detail.html:385
 #: .\sales\templates\sales\_results.html:66
 msgid "Order items"
 msgstr "Состав заказа"
 
-#: .\campaigns\templates\campaigns\client_purchases.html:22
-#: .\campaigns\templates\campaigns\detail.html:54
+#: .\campaigns\templates\campaigns\client_purchases.html:132
+#: .\campaigns\templates\campaigns\detail.html:357
+#: .\campaigns\templates\campaigns\detail.html:368
 #: .\sales\templates\sales\_explorer.html:76
 #: .\sales\templates\sales\receipt.html:64 .\sales\views.py:404
 msgid "Client ID"
 msgstr "ID клиента"
 
-#: .\campaigns\templates\campaigns\client_purchases.html:23
-#: .\campaigns\templates\campaigns\detail.html:55
+#: .\campaigns\templates\campaigns\client_purchases.html:133
+#: .\campaigns\templates\campaigns\detail.html:358
+#: .\campaigns\templates\campaigns\detail.html:370
 msgid "Card"
 msgstr "Карта"
 
-#: .\campaigns\templates\campaigns\client_purchases.html:25
-#: .\campaigns\templates\campaigns\detail.html:25
-#: .\campaigns\templates\campaigns\list.html:26
+#: .\campaigns\templates\campaigns\client_purchases.html:135
+#: .\campaigns\templates\campaigns\detail.html:324
+#: .\campaigns\templates\campaigns\list.html:118
+#: .\campaigns\templates\campaigns\list.html:133
 #: .\promos\templates\promos\detail.html:19
 #: .\promos\templates\promos\list.html:33
 msgid "Period"
 msgstr "Период"
 
-#: .\campaigns\templates\campaigns\client_purchases.html:29
-#: .\campaigns\templates\campaigns\detail.html:89
-#: .\campaigns\templates\campaigns\purchases.html:39
+#: .\campaigns\templates\campaigns\client_purchases.html:139
+#: .\campaigns\templates\campaigns\detail.html:403
+#: .\campaigns\templates\campaigns\purchases.html:130
 #: .\sales\templates\sales\_results.html:87
 msgid "No matching sales for this filter."
 msgstr "Нет продаж по выбранному фильтру."
 
-#: .\campaigns\templates\campaigns\client_purchases.html:29
-#: .\campaigns\templates\campaigns\purchases.html:39
+#: .\campaigns\templates\campaigns\client_purchases.html:139
+#: .\campaigns\templates\campaigns\purchases.html:130
 msgid "No sales in this campaign window."
 msgstr "В окне этой кампании продаж нет."
 
-#: .\campaigns\templates\campaigns\client_purchases.html:34
+#: .\campaigns\templates\campaigns\client_purchases.html:144
 #: .\sales\templates\sales\_results.html:47
 #: .\sales\templates\sales\receipt.html:4
 #: .\sales\templates\sales\receipt.html:5
@@ -203,10 +214,14 @@ msgstr "В окне этой кампании продаж нет."
 msgid "Receipt"
 msgstr "Чек"
 
-#: .\campaigns\templates\campaigns\client_purchases.html:37
-#: .\campaigns\templates\campaigns\client_purchases.html:45
-#: .\campaigns\templates\campaigns\detail.html:58
-#: .\campaigns\templates\campaigns\purchases.html:27
+#: .\campaigns\templates\campaigns\client_purchases.html:147
+#: .\campaigns\templates\campaigns\client_purchases.html:155
+#: .\campaigns\templates\campaigns\client_purchases.html:164
+#: .\campaigns\templates\campaigns\detail.html:361
+#: .\campaigns\templates\campaigns\detail.html:382
+#: .\campaigns\templates\campaigns\detail.html:397
+#: .\campaigns\templates\campaigns\purchases.html:117
+#: .\campaigns\templates\campaigns\purchases.html:126
 #: .\sales\templates\sales\_results.html:4
 #: .\sales\templates\sales\_results.html:38
 #: .\sales\templates\sales\_results.html:63
@@ -226,16 +241,20 @@ msgstr "Чек"
 msgid "Amount"
 msgstr "Сумма"
 
-#: .\campaigns\templates\campaigns\client_purchases.html:43
-#: .\campaigns\templates\campaigns\purchases.html:25
+#: .\campaigns\templates\campaigns\client_purchases.html:153
+#: .\campaigns\templates\campaigns\client_purchases.html:162
+#: .\campaigns\templates\campaigns\purchases.html:115
+#: .\campaigns\templates\campaigns\purchases.html:124
 #: .\promos\templates\promos\create.html:119
 #: .\sales\templates\sales\receipt.html:71
 #: .\sales\templates\sales\receipt.html:80
 msgid "Group"
 msgstr "Группа"
 
-#: .\campaigns\templates\campaigns\client_purchases.html:44
-#: .\campaigns\templates\campaigns\purchases.html:26
+#: .\campaigns\templates\campaigns\client_purchases.html:154
+#: .\campaigns\templates\campaigns\client_purchases.html:163
+#: .\campaigns\templates\campaigns\purchases.html:116
+#: .\campaigns\templates\campaigns\purchases.html:125
 #: .\sales\templates\sales\_results.html:12
 #: .\sales\templates\sales\_results.html:37
 #: .\sales\templates\sales\_results.html:62
@@ -256,24 +275,25 @@ msgstr "Кол-во"
 
 #: .\campaigns\templates\campaigns\create.html:4
 #: .\campaigns\templates\campaigns\create.html:5
-#: .\campaigns\templates\campaigns\create.html:20
-#: .\campaigns\templates\campaigns\list.html:17
+#: .\campaigns\templates\campaigns\create.html:99
+#: .\campaigns\templates\campaigns\list.html:109
+#: .\campaigns\templates\campaigns\list.html:149
 #: .\core\templates\core\more.html:36
 msgid "New campaign"
 msgstr "Новая кампания"
 
-#: .\campaigns\templates\campaigns\create.html:19
-#: .\campaigns\templates\campaigns\detail.html:21
+#: .\campaigns\templates\campaigns\create.html:98
+#: .\campaigns\templates\campaigns\detail.html:319
 msgid "All campaigns"
 msgstr "Все кампании"
 
-#: .\campaigns\templates\campaigns\create.html:21
+#: .\campaigns\templates\campaigns\create.html:100
 msgid ""
 "Each mailing is a separate campaign. Saving here does not change older "
 "blasts."
 msgstr "Каждая рассылка — отдельная кампания. Сохранение не меняет старые."
 
-#: .\campaigns\templates\campaigns\create.html:22
+#: .\campaigns\templates\campaigns\create.html:101
 msgid ""
 "Telegram bot: choose that channel and upload the CSV export (card number, "
 "phone). Clients are matched by loyalty card."
@@ -281,7 +301,7 @@ msgstr ""
 "Telegram-бот: выберите этот канал и загрузите CSV-выгрузку (номер карты, "
 "телефон). Клиенты сопоставляются по бонусной карте."
 
-#: .\campaigns\templates\campaigns\create.html:24
+#: .\campaigns\templates\campaigns\create.html:103
 msgid ""
 "A local list for the 18 Sep 2026 blast is on this machine (not in git). "
 "Leave the checkbox off for a new list."
@@ -289,82 +309,94 @@ msgstr ""
 "Локальный список рассылки 18.09.2026 есть на этой машине (не в git). Для "
 "нового списка галочку не ставьте."
 
-#: .\campaigns\templates\campaigns\create.html:35
+#: .\campaigns\templates\campaigns\create.html:112
+msgid "Tap to choose Excel or CSV file"
+msgstr "Нажмите, чтобы выбрать Excel или CSV"
+
+#: .\campaigns\templates\campaigns\create.html:121
+#: .\campaigns\templates\campaigns\create.html:124
 msgid "Create campaign"
 msgstr "Создать кампанию"
 
-#: .\campaigns\templates\campaigns\detail.html:28
-msgid "Recalculate this campaign until"
-msgstr "Пересчитать эту кампанию до"
-
-#: .\campaigns\templates\campaigns\detail.html:30
+#: .\campaigns\templates\campaigns\detail.html:327
+#: .\campaigns\templates\campaigns\detail.html:332
 #: .\promos\templates\promos\charts.html:36
 #: .\promos\templates\promos\detail.html:101
 msgid "Recalculate"
 msgstr "Пересчитать"
 
-#: .\campaigns\templates\campaigns\detail.html:33
-#: .\campaigns\templates\campaigns\list.html:27
-msgid "Clients"
-msgstr "Клиенты"
+#: .\campaigns\templates\campaigns\detail.html:330
+msgid "Recalculate this campaign until"
+msgstr "Пересчитать эту кампанию до"
 
-#: .\campaigns\templates\campaigns\detail.html:34
-#: .\campaigns\templates\campaigns\detail.html:42
-#: .\campaigns\templates\campaigns\detail.html:57
-#: .\campaigns\templates\campaigns\list.html:28
-msgid "Bought"
-msgstr "Купили"
-
-#: .\campaigns\templates\campaigns\detail.html:35
-#: .\campaigns\templates\campaigns\detail.html:43
-msgid "Did not buy"
-msgstr "Не купили"
-
-#: .\campaigns\templates\campaigns\detail.html:36
+#: .\campaigns\templates\campaigns\detail.html:336
 msgid "Share bought"
 msgstr "Доля купивших"
 
-#: .\campaigns\templates\campaigns\detail.html:37
+#: .\campaigns\templates\campaigns\detail.html:337
+#: .\campaigns\templates\campaigns\list.html:119
+#: .\campaigns\templates\campaigns\list.html:136
+msgid "Clients"
+msgstr "Клиенты"
+
+#: .\campaigns\templates\campaigns\detail.html:338
+#: .\campaigns\templates\campaigns\detail.html:343
+#: .\campaigns\templates\campaigns\detail.html:345
+#: .\campaigns\templates\campaigns\detail.html:360
+#: .\campaigns\templates\campaigns\detail.html:379
+#: .\campaigns\templates\campaigns\list.html:120
+#: .\campaigns\templates\campaigns\list.html:137
+msgid "Bought"
+msgstr "Купили"
+
+#: .\campaigns\templates\campaigns\detail.html:339
+#: .\campaigns\templates\campaigns\detail.html:346
+msgid "Did not buy"
+msgstr "Не купили"
+
+#: .\campaigns\templates\campaigns\detail.html:340
 msgid "Not matched to ERP"
 msgstr "Не сошлись с ERP"
 
-#: .\campaigns\templates\campaigns\detail.html:41
+#: .\campaigns\templates\campaigns\detail.html:344
 msgid "All"
 msgstr "Все"
 
-#: .\campaigns\templates\campaigns\detail.html:44
+#: .\campaigns\templates\campaigns\detail.html:347
 #: .\campaigns\templates\campaigns\purchases.html:4
 #: .\campaigns\templates\campaigns\purchases.html:5
-#: .\campaigns\templates\campaigns\purchases.html:18
+#: .\campaigns\templates\campaigns\purchases.html:108
 msgid "What they bought"
 msgstr "Что купили"
 
-#: .\campaigns\templates\campaigns\detail.html:47
+#: .\campaigns\templates\campaigns\detail.html:350
 #: .\sales\templates\sales\_results.html:24
 #, python-format
 msgid "Showing first %(shown)s of %(total)s rows."
 msgstr "Показаны первые %(shown)s из %(total)s строк."
 
-#: .\campaigns\templates\campaigns\detail.html:48
+#: .\campaigns\templates\campaigns\detail.html:351
 #, python-format
 msgid "Amount of all matching rows: %(amount)s"
 msgstr "Сумма всех подходящих строк: %(amount)s"
 
-#: .\campaigns\templates\campaigns\detail.html:56
-#: .\campaigns\templates\campaigns\list.html:25
+#: .\campaigns\templates\campaigns\detail.html:359
+#: .\campaigns\templates\campaigns\detail.html:372
+#: .\campaigns\templates\campaigns\list.html:117
+#: .\campaigns\templates\campaigns\list.html:130
 #: .\promos\templates\promos\list.html:32 .\sales\views.py:419
 msgid "Name"
 msgstr "Имя"
 
-#: .\campaigns\templates\campaigns\detail.html:69
+#: .\campaigns\templates\campaigns\detail.html:380
 msgid "Yes"
 msgstr "Да"
 
-#: .\campaigns\templates\campaigns\detail.html:69
+#: .\campaigns\templates\campaigns\detail.html:380
 msgid "No"
 msgstr "Нет"
 
-#: .\campaigns\templates\campaigns\detail.html:82
+#: .\campaigns\templates\campaigns\detail.html:395
 #: .\promos\templates\promos\detail.html:149
 #: .\sales\templates\sales\_results.html:76
 #: .\sales\templates\sales\matrix.html:387
@@ -377,12 +409,12 @@ msgstr "Нет"
 msgid "Total"
 msgstr "Итого"
 
-#: .\campaigns\templates\campaigns\detail.html:89
+#: .\campaigns\templates\campaigns\detail.html:403
 msgid "No clients in this list."
 msgstr "В этом списке нет клиентов."
 
 #: .\campaigns\templates\campaigns\list.html:4
-#: .\campaigns\templates\campaigns\list.html:16 .\templates\base.html:32
+#: .\campaigns\templates\campaigns\list.html:108 .\templates\base.html:32
 msgid "Campaign Analysis"
 msgstr "Анализ кампаний"
 
@@ -390,11 +422,16 @@ msgstr "Анализ кампаний"
 msgid "Campaigns"
 msgstr "Кампании"
 
-#: .\campaigns\templates\campaigns\list.html:45
+#: .\campaigns\templates\campaigns\list.html:138
+#, python-format
+msgid "%(bought)s of %(total)s"
+msgstr "%(bought)s из %(total)s"
+
+#: .\campaigns\templates\campaigns\list.html:146
 msgid "No campaigns yet."
 msgstr "Кампаний пока нет."
 
-#: .\campaigns\templates\campaigns\purchases.html:19
+#: .\campaigns\templates\campaigns\purchases.html:109
 msgid "Products bought by this campaign list in the analysis window."
 msgstr "Товары, которые купили клиенты этого списка в окне анализа."
 

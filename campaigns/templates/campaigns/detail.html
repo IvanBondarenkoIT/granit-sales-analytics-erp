@@ -6,41 +6,344 @@
 {% block back_url %}{% url 'campaign_list' %}{% endblock %}
 
 {% block extra_css %}
-        .stat strong { font-size: 1.6rem; }
-        .filters a { margin-right: 0.75rem; min-height: 44px; display: inline-flex; align-items: center; }
-        .catalog-filter { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; background: #fff; padding: 1rem; margin: 1rem 0; }
-        .catalog-filter select { min-width: 220px; padding: 0.5rem; font-size: 16px; min-height: 44px; }
-        .filter-hint { color: #555; margin: 0 0 1rem; }
-        table { margin-top: 1rem; }
+        .camp-head {
+            margin: 0 0 0.75rem;
+            color: #444;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .camp-head .badge {
+            display: inline-block;
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            background: #eef2ff;
+            color: #4338ca;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+        .camp-head .badge-telegram { background: #e0f2fe; color: #0369a1; }
+        .recalc-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin: 0 0 0.85rem;
+        }
+        .recalc-panel > summary {
+            list-style: none;
+            cursor: pointer;
+            min-height: var(--tap);
+            display: flex;
+            align-items: center;
+            padding: 0 0.85rem;
+            color: #333;
+            font-size: 0.95rem;
+        }
+        .recalc-panel > summary::-webkit-details-marker { display: none; }
+        .recalc-panel > summary::after {
+            content: "▾";
+            margin-left: auto;
+            color: var(--muted);
+        }
+        .recalc-panel[open] > summary::after { content: "▴"; }
+        .recalc-panel .recalc-body {
+            padding: 0 0.85rem 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .recalc-panel label { font-weight: 600; font-size: 0.9rem; color: #444; }
+        .recalc-panel input[type=date] {
+            width: 100%;
+            padding: 0.5rem;
+            font: inherit;
+            font-size: 16px;
+            min-height: var(--tap);
+            box-sizing: border-box;
+        }
+        .recalc-panel button {
+            min-height: var(--tap);
+            padding: 0.55rem 1rem;
+            font: inherit;
+            font-size: 1rem;
+            background: var(--brand);
+            color: #fff;
+            border: 0;
+            border-radius: var(--radius);
+            cursor: pointer;
+        }
+        .stats-tiles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin: 0 0 0.85rem;
+        }
+        .stats-tiles .stat-rate { grid-column: 1 / -1; }
+        .stats-tiles .stat {
+            background: var(--surface);
+            padding: 0.65rem 0.5rem;
+            text-align: center;
+        }
+        .stats-tiles .stat-rate {
+            text-align: left;
+            padding: 0.75rem 0.85rem;
+        }
+        .stats-tiles .stat span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+        .stats-tiles .stat strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-top: 0.15rem;
+            color: var(--brand);
+        }
+        .stats-tiles .stat-rate strong { font-size: 1.35rem; }
+        .filter-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin: 0 0 0.75rem;
+        }
+        .filter-summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: var(--tap);
+            padding: 0.65rem 0.85rem;
+            font-size: 0.95rem;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .filter-summary::-webkit-details-marker { display: none; }
+        .filter-summary::after {
+            content: "▾";
+            margin-left: auto;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        .filter-panel[open] > .filter-summary::after { content: "▴"; }
+        .filter-summary-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-width: 0;
+        }
+        .catalog-filter {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            padding: 0 0.85rem 0.85rem;
+            align-items: end;
+        }
+        .catalog-filter label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+            color: #444;
+        }
+        .catalog-filter select {
+            width: 100%;
+            padding: 0.5rem;
+            font: inherit;
+            font-size: 16px;
+            min-height: var(--tap);
+            box-sizing: border-box;
+        }
+        .catalog-filter a {
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+        }
+        .filter-hint { color: #555; margin: 0 0 0.75rem; font-size: 0.9rem; }
+        .status-chips {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 0.35rem;
+            margin: 0 0 0.85rem;
+        }
+        .status-chips a {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: var(--tap);
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: #445;
+            text-decoration: none;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        .status-chips a.is-active {
+            background: #eef2ff;
+            border-color: #c7ccf5;
+            color: var(--brand-dark);
+            font-weight: 600;
+        }
         .yes { color: #047857; font-weight: 600; }
         .no { color: #92400e; }
+        .clients-cards.table-cards--compact .tc-bought {
+            grid-column: 2;
+            grid-row: 2;
+            text-align: right;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .clients-cards.table-cards--compact .tc-card,
+        .clients-cards.table-cards--compact .tc-id-col {
+            grid-column: 1;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        .clients-cards.table-cards--compact.has-cards .tc-id-col {
+            display: none;
+        }
+        @media (min-width: 600px) {
+            .catalog-filter { grid-template-columns: repeat(2, 1fr); }
+            .stats-tiles { grid-template-columns: repeat(3, 1fr); }
+            .stats-tiles .stat-rate { grid-column: 1 / -1; }
+        }
+        @media (min-width: 900px) {
+            .camp-head { margin-bottom: 1rem; }
+            .recalc-panel {
+                border: 0;
+                background: transparent;
+                margin: 1rem 0;
+            }
+            .recalc-panel > summary { display: none; }
+            .recalc-panel .recalc-body {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: end;
+                gap: 0.75rem;
+                padding: 0;
+            }
+            .recalc-panel input[type=date] {
+                width: auto;
+                min-width: 12rem;
+                min-height: unset;
+                font-size: inherit;
+            }
+            .recalc-panel button {
+                min-height: unset;
+                padding: 0.4rem 0.85rem;
+            }
+            .stats-tiles {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1.5rem;
+                margin: 1.5rem 0;
+            }
+            .stats-tiles .stat,
+            .stats-tiles .stat-rate {
+                flex: 1 1 140px;
+                grid-column: auto;
+                text-align: left;
+                padding: 1rem;
+            }
+            .stats-tiles .stat span { font-size: inherit; color: inherit; }
+            .stats-tiles .stat strong,
+            .stats-tiles .stat-rate strong {
+                font-size: 1.6rem;
+                margin-top: 0;
+            }
+            .filter-panel {
+                border: 0;
+                background: transparent;
+                margin: 1rem 0;
+            }
+            .filter-summary { display: none; }
+            .catalog-filter {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                align-items: end;
+                background: #fff;
+                padding: 1rem;
+            }
+            .catalog-filter select {
+                min-width: 220px;
+                min-height: unset;
+                font-size: inherit;
+            }
+            .status-chips {
+                overflow: visible;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+            .status-chips a {
+                border: 0;
+                background: transparent;
+                border-radius: 0;
+                padding: 0;
+                min-height: unset;
+                color: var(--brand);
+                text-decoration: underline;
+            }
+            .status-chips a.is-active {
+                background: transparent;
+                border: 0;
+                color: var(--brand-dark);
+                font-weight: 700;
+                text-decoration: none;
+            }
+            .clients-cards.table-cards--compact .tc-id-col,
+            .clients-cards.table-cards--compact.has-cards .tc-id-col,
+            .clients-cards.table-cards--compact .tc-card,
+            .clients-cards.table-cards--compact .tc-bought {
+                display: table-cell;
+                grid-column: auto;
+                grid-row: auto;
+                text-align: left;
+                font-size: inherit;
+                color: inherit;
+                font-weight: inherit;
+            }
+            .clients-cards.table-cards--compact .tc-bought.yes { color: #047857; font-weight: 600; }
+            .clients-cards.table-cards--compact .tc-bought.no { color: #92400e; font-weight: inherit; }
+        }
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <p class="page-back"><a href="{% url 'campaign_list' %}">{% trans "All campaigns" %}</a></p>
     <h1 class="page-h1">{{ campaign.name }}</h1>
-    <p>{% if campaign.channel == "telegram" %}{% trans "Telegram bot" %}{% else %}{% trans "SMS" %}{% endif %}
-       · {% trans "Sent on" %}: <strong>{{ campaign.sms_sent_on|default:"—" }}</strong>
-       · {% trans "Period" %}: {{ campaign.analysis_period_start }} — {{ campaign.analysis_period_end }}</p>
-    <form method="post" action="{% url 'campaign_reanalyze' campaign.pk %}" style="margin: 1rem 0;">
-        {% csrf_token %}
-        <label for="date_to">{% trans "Recalculate this campaign until" %}</label>
-        <input type="date" id="date_to" name="date_to" value="{{ today|date:'Y-m-d' }}">
-        <button type="submit">{% trans "Recalculate" %}</button>
-    </form>
-    <div class="stats">
+    <p class="camp-head">
+        <span class="badge badge-{{ campaign.channel }}">{% if campaign.channel == "telegram" %}{% trans "Telegram bot" %}{% else %}{% trans "SMS" %}{% endif %}</span>
+        · {% trans "Sent on" %}: <strong>{{ campaign.sms_sent_on|default:"—" }}</strong>
+        · {% trans "Period" %}: {{ campaign.analysis_period_start }} — {{ campaign.analysis_period_end }}
+    </p>
+    <details class="recalc-panel">
+        <summary>{% trans "Recalculate" %}</summary>
+        <form class="recalc-body" method="post" action="{% url 'campaign_reanalyze' campaign.pk %}">
+            {% csrf_token %}
+            <label for="date_to">{% trans "Recalculate this campaign until" %}</label>
+            <input type="date" id="date_to" name="date_to" value="{{ today|date:'Y-m-d' }}">
+            <button type="submit">{% trans "Recalculate" %}</button>
+        </form>
+    </details>
+    <div class="stats stats-tiles">
+        <div class="stat stat-rate"><span>{% trans "Share bought" %}</span><strong>{{ rate }}%</strong></div>
         <div class="stat"><span>{% trans "Clients" %}</span><strong>{{ campaign.total_clients }}</strong></div>
         <div class="stat"><span>{% trans "Bought" %}</span><strong>{{ bought_count }}</strong></div>
         <div class="stat"><span>{% trans "Did not buy" %}</span><strong>{{ not_bought }}</strong></div>
-        <div class="stat"><span>{% trans "Share bought" %}</span><strong>{{ rate }}%</strong></div>
         <div class="stat"><span>{% trans "Not matched to ERP" %}</span><strong>{{ unmatched }}</strong></div>
     </div>
     {% include "campaigns/_catalog_filter.html" %}
-    <p class="filters">
-        <a href="?status=all{{ filter_query }}">{% trans "All" %}</a>
-        <a href="?status=bought{{ filter_query }}">{% trans "Bought" %}</a>
-        <a href="?status=not_bought{{ filter_query }}">{% trans "Did not buy" %}</a>
+    <p class="status-chips" role="navigation" aria-label="{% trans 'Bought' %}">
+        <a href="?status=all{{ filter_query }}"{% if status == "all" or not status %} class="is-active"{% endif %}>{% trans "All" %}</a>
+        <a href="?status=bought{{ filter_query }}"{% if status == "bought" %} class="is-active"{% endif %}>{% trans "Bought" %}</a>
+        <a href="?status=not_bought{{ filter_query }}"{% if status == "not_bought" %} class="is-active"{% endif %}>{% trans "Did not buy" %}</a>
         <a href="{% url 'campaign_purchases' campaign.pk %}?{{ filter_query|slice:'1:' }}">{% trans "What they bought" %}</a>
     </p>
     {% if truncated %}
@@ -48,7 +351,7 @@
        {% blocktrans with amount=matching_amount|money %}Amount of all matching rows: {{ amount }}{% endblocktrans %}</p>
     {% endif %}
     {% if clients %}
-    <table>
+    <table class="table-cards table-cards--compact clients-cards{% if show_cards %} has-cards{% endif %}">
         <thead>
             <tr>
                 <th>{% trans "Client ID" %}</th>
@@ -62,14 +365,22 @@
         <tbody>
             {% for row in clients %}
             <tr>
-                <td>{{ row.granit_client_id|default:"—" }}</td>
-                {% if show_cards %}<td>{{ row.card_number|default:"—" }}</td>{% endif %}
-                <td>{{ row.client.name|default:"—" }}</td>
-                <td class="{% if row.view_bought %}yes{% else %}no{% endif %}">
+                <td class="tc-id-col tc-meta" data-label="{% trans 'Client ID' %}">{{ row.granit_client_id|default:"—" }}</td>
+                {% if show_cards %}
+                <td class="tc-card tc-meta" data-label="{% trans 'Card' %}">{{ row.card_number|default:"—" }}</td>
+                {% endif %}
+                <td class="tc-primary" data-label="{% trans 'Name' %}">
+                    {% if row.view_bought %}
+                    <a href="{% url 'campaign_client_purchases' campaign.pk row.pk %}?{{ filter_query|slice:'1:' }}">{{ row.client.name|default:row.granit_client_id|default:"—" }}</a>
+                    {% else %}
+                    {{ row.client.name|default:row.granit_client_id|default:"—" }}
+                    {% endif %}
+                </td>
+                <td class="tc-bought {% if row.view_bought %}yes{% else %}no{% endif %}" data-label="{% trans 'Bought' %}">
                     {% if row.view_bought %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}
                 </td>
-                <td class="num">{{ row.view_amount|money }}</td>
-                <td>
+                <td class="num tc-amount" data-label="{% trans 'Amount' %}">{{ row.view_amount|money }}</td>
+                <td class="tc-action">
                     {% if row.view_bought %}
                     <a href="{% url 'campaign_client_purchases' campaign.pk row.pk %}?{{ filter_query|slice:'1:' }}">{% trans "Order items" %}</a>
                     {% endif %}
@@ -79,9 +390,12 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="{% if show_cards %}4{% else %}3{% endif %}">{% trans "Total" %}</td>
-                <td class="num">{{ shown_amount|money }}</td>
-                <td></td>
+                <td class="tc-id-col" data-label=""></td>
+                {% if show_cards %}<td class="tc-card" data-label=""></td>{% endif %}
+                <td class="tc-primary" data-label="">{% trans "Total" %}</td>
+                <td class="tc-bought" data-label=""></td>
+                <td class="num tc-amount" data-label="{% trans 'Amount' %}">{{ shown_amount|money }}</td>
+                <td class="tc-action"></td>
             </tr>
         </tfoot>
     </table>
@@ -89,4 +403,8 @@
     <p class="empty">{% if filter_active %}{% trans "No matching sales for this filter." %}{% else %}{% trans "No clients in this list." %}{% endif %}</p>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% include "campaigns/_desktop_details_open.html" %}
 {% endblock %}

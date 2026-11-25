@@ -6,19 +6,129 @@
 {% block back_url %}{% url 'campaign_detail' campaign.pk %}{% if filter_query %}?{{ filter_query|slice:'1:' }}{% endif %}{% endblock %}
 
 {% block extra_css %}
-        table { margin: 0.5rem 0 1.5rem; }
-        .order { background: #fff; padding: 1rem 1rem 0.25rem; margin-bottom: 1rem; }
-        .order h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
-        .catalog-filter { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; background: #fff; padding: 1rem; margin: 1rem 0; }
-        .catalog-filter select { min-width: 220px; padding: 0.5rem; font-size: 16px; min-height: 44px; }
-        .filter-hint { color: #555; margin: 0 0 1rem; }
+        .order {
+            background: var(--surface);
+            padding: 0.85rem 0.85rem 0.35rem;
+            margin-bottom: 0.75rem;
+            border-radius: var(--radius);
+        }
+        .order h2 {
+            font-size: 1rem;
+            margin: 0 0 0.65rem;
+            line-height: 1.35;
+        }
+        .client-meta {
+            color: #444;
+            font-size: 0.95rem;
+            margin: 0 0 0.85rem;
+            line-height: 1.4;
+        }
+        .filter-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin: 0 0 0.75rem;
+        }
+        .filter-summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: var(--tap);
+            padding: 0.65rem 0.85rem;
+            font-size: 0.95rem;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .filter-summary::-webkit-details-marker { display: none; }
+        .filter-summary::after {
+            content: "▾";
+            margin-left: auto;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        .filter-panel[open] > .filter-summary::after { content: "▴"; }
+        .filter-summary-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-width: 0;
+        }
+        .catalog-filter {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            padding: 0 0.85rem 0.85rem;
+            align-items: end;
+        }
+        .catalog-filter label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+            color: #444;
+        }
+        .catalog-filter select {
+            width: 100%;
+            padding: 0.5rem;
+            font: inherit;
+            font-size: 16px;
+            min-height: var(--tap);
+            box-sizing: border-box;
+        }
+        .catalog-filter a {
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+        }
+        .filter-hint { color: #555; margin: 0 0 0.75rem; font-size: 0.9rem; }
+        .order-lines.table-cards--compact .tc-group {
+            grid-column: 1;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        @media (min-width: 600px) {
+            .catalog-filter { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 900px) {
+            .order {
+                padding: 1rem 1rem 0.25rem;
+                margin-bottom: 1rem;
+            }
+            .order h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+            .filter-panel {
+                border: 0;
+                background: transparent;
+                margin: 1rem 0;
+            }
+            .filter-summary { display: none; }
+            .catalog-filter {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                align-items: end;
+                background: #fff;
+                padding: 1rem;
+            }
+            .catalog-filter select {
+                min-width: 220px;
+                min-height: unset;
+                font-size: inherit;
+            }
+            .order-lines.table-cards--compact .tc-group {
+                display: table-cell;
+                color: inherit;
+                font-size: inherit;
+            }
+        }
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <p class="page-back"><a href="{% url 'campaign_detail' campaign.pk %}{% if filter_query %}?{{ filter_query|slice:'1:' }}{% endif %}">← {{ campaign.name }}</a></p>
     <h1 class="page-h1">{% trans "Order items" %}</h1>
-    <p>
+    <p class="client-meta">
         {% trans "Client ID" %}: {{ row.granit_client_id|default:"—" }}
         {% if row.card_number %}· {% trans "Card" %}: {{ row.card_number }}{% endif %}
         · {{ row.client.name|default:"—" }}
@@ -36,22 +146,22 @@
             · {{ order.store }}
             · {% trans "Amount" %}: {{ order.amount|money }}
         </h2>
-        <table>
+        <table class="table-cards table-cards--compact order-lines">
             <thead>
                 <tr>
                     <th>{% trans "Product" %}</th>
                     <th>{% trans "Group" %}</th>
-                    <th>{% trans "Qty" %}</th>
-                    <th>{% trans "Amount" %}</th>
+                    <th class="num">{% trans "Qty" %}</th>
+                    <th class="num">{% trans "Amount" %}</th>
                 </tr>
             </thead>
             <tbody>
                 {% for line in order.lines %}
                 <tr>
-                    <td>{{ line.product.name }}</td>
-                    <td>{{ line.product.group.name|default:"—" }}</td>
-                    <td>{{ line.quantity|qty }}</td>
-                    <td>{{ line.amount|money }}</td>
+                    <td class="tc-primary" data-label="{% trans 'Product' %}">{{ line.product.name }}</td>
+                    <td class="tc-group tc-meta" data-label="{% trans 'Group' %}">{{ line.product.group.name|default:"—" }}</td>
+                    <td class="num tc-qty" data-label="{% trans 'Qty' %}">{{ line.quantity|qty }}</td>
+                    <td class="num tc-amount" data-label="{% trans 'Amount' %}">{{ line.amount|money }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -59,4 +169,8 @@
     </section>
     {% endfor %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% include "campaigns/_desktop_details_open.html" %}
 {% endblock %}
