@@ -6,11 +6,37 @@
 {% block back_url %}{% url 'sales_matrix' %}?{{ matrix_query }}{% endblock %}
 
 {% block extra_css %}
-        table { margin: 1rem 0; }
-        .toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; margin: 1rem 0; background: #fff; padding: 1rem; }
-        .toolbar input, .toolbar select { font-size: 16px; min-height: 44px; }
-        .panel { background: #fff; padding: 1rem; margin-top: 1.5rem; }
+        .toolbar {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+            margin: 0.75rem 0;
+            background: var(--surface);
+            padding: 0.85rem;
+            border-radius: var(--radius);
+        }
+        .toolbar label { display: block; font-weight: 600; font-size: 0.85rem; }
+        .toolbar input, .toolbar select { width: 100%; box-sizing: border-box; font-size: 16px; min-height: var(--tap); }
+        .panel { background: var(--surface); padding: 1rem; margin-top: 1rem; border-radius: var(--radius); }
+        .panel-search { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
+        .panel-search input[type="search"] { flex: 1 1 100%; min-width: 0; }
         .swatch { display: inline-block; width: 1rem; height: 1rem; border: 1px solid #ccc; vertical-align: middle; }
+        .inline-form { display: inline; margin: 0; }
+        @media (min-width: 900px) {
+            .toolbar {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: end;
+                gap: 1rem;
+                padding: 1rem;
+                border-radius: 0;
+            }
+            .toolbar input, .toolbar select { width: auto; }
+            table { margin: 1rem 0; }
+            .panel { border-radius: 0; margin-top: 1.5rem; }
+            .panel-search input[type="search"] { flex: 1 1 16rem; }
+        }
 {% endblock %}
 
 {% block content %}
@@ -44,7 +70,7 @@
         </div>
     </form>
 
-    <table>
+    <table class="table-cards table-cards--compact">
         <thead>
             <tr>
                 <th>{% trans "Group ID" %}</th>
@@ -57,19 +83,19 @@
         <tbody>
             {% for row in rows %}
             <tr>
-                <td>{{ row.granit_id|default:"—" }}</td>
-                <td>
+                <td class="tc-meta tc-id" data-label="{% trans 'Group ID' %}">{{ row.granit_id|default:"—" }}</td>
+                <td class="tc-primary" data-label="{% trans 'Product group' %}">
                     {% if row.granit_id %}
                     <a href="{% url 'sales_matrix_group' row.granit_id %}?{{ period_query }}">{{ row.name }}</a>
                     {% else %}
                     {{ row.name }}
                     {% endif %}
                 </td>
-                <td class="num">{{ row.qty|qty }}</td>
-                <td class="num">{{ row.amount|money }}</td>
-                <td>
+                <td class="num tc-qty" data-label="{% trans 'Qty' %}">{{ row.qty|qty }}</td>
+                <td class="num tc-amount" data-label="{% trans 'Amount' %}">{{ row.amount|money }}</td>
+                <td class="{% if not sg.is_catchall and row.granit_id %}tc-action tc-action--keep{% else %}tc-action{% endif %}">
                     {% if not sg.is_catchall and row.granit_id %}
-                    <form method="post" style="display:inline">
+                    <form class="inline-form" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="remove">
                         <input type="hidden" name="group_id" value="{{ row.granit_id }}">
@@ -84,10 +110,10 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="2">{% trans "Total" %}</td>
-                <td class="num">{{ total_qty|qty }}</td>
-                <td class="num">{{ total_amount|money }}</td>
-                <td></td>
+                <td class="tc-primary" colspan="2" data-label="">{% trans "Total" %}</td>
+                <td class="num tc-qty" data-label="{% trans 'Qty' %}">{{ total_qty|qty }}</td>
+                <td class="num tc-amount" data-label="{% trans 'Amount' %}">{{ total_amount|money }}</td>
+                <td class="tc-action"></td>
             </tr>
         </tfoot>
     </table>
@@ -95,7 +121,7 @@
     {% if not sg.is_catchall %}
     <div class="panel">
         <h2>{% trans "Add unassigned group" %}</h2>
-        <form method="get" style="margin-bottom:0.75rem">
+        <form class="panel-search" method="get">
             <input type="hidden" name="date_from" value="{{ date_from|date:'Y-m-d' }}">
             <input type="hidden" name="date_to" value="{{ date_to|date:'Y-m-d' }}">
             {% if store_id %}<input type="hidden" name="store" value="{{ store_id }}">{% endif %}
@@ -103,7 +129,7 @@
             <input type="search" name="q" value="{{ request.GET.q }}" placeholder="{% trans "Search groups" %}" enterkeyhint="search">
             <button class="btn" type="submit">{% trans "Search" %}</button>
         </form>
-        <table>
+        <table class="table-cards table-cards--compact">
             <thead>
                 <tr>
                     <th>{% trans "Group ID" %}</th>
@@ -114,9 +140,9 @@
             <tbody>
                 {% for g in available %}
                 <tr>
-                    <td>{{ g.granit_id }}</td>
-                    <td>{{ g.name }}</td>
-                    <td>
+                    <td class="tc-meta tc-id" data-label="{% trans 'Group ID' %}">{{ g.granit_id }}</td>
+                    <td class="tc-primary" data-label="{% trans 'Product group' %}">{{ g.name }}</td>
+                    <td class="tc-action tc-action--keep">
                         <form method="post">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="add">

@@ -6,38 +6,79 @@
 {% block back_url %}{% url 'sales_matrix' %}?{{ matrix_query }}{% endblock %}
 
 {% block extra_css %}
-        table { margin: 1rem 0; }
         .owner-panel {
-            background: #fff;
-            padding: 1rem 1.1rem;
-            margin: 1rem 0;
+            background: var(--surface);
+            padding: 1rem;
+            margin: 0.75rem 0;
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem 1rem;
-            align-items: flex-end;
-            border: 1px solid #eee;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
         }
         .owner-panel label { display: block; font-weight: 600; margin-bottom: 0.3rem; }
         .owner-panel select {
-            min-width: 16rem;
+            width: 100%;
             max-width: 100%;
+            min-width: 0;
             padding: 0.45rem 0.5rem;
             font: inherit;
             font-size: 16px;
-            min-height: 44px;
+            min-height: var(--tap);
+            box-sizing: border-box;
         }
         .owner-meta {
             display: flex;
             align-items: center;
             gap: 0.4rem;
-            padding-bottom: 0.45rem;
             color: #555;
             font-size: 0.95rem;
         }
         .swatch { display: inline-block; width: 0.9rem; height: 0.9rem; border: 1px solid #ccc; vertical-align: middle; }
-        .scope-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin: 0.5rem 0; }
+        .scope-row {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.65rem;
+            margin: 0.5rem 0 0.75rem;
+        }
         .scope-row label { font-weight: 600; }
-        .scope-row select { padding: 0.35rem 0.45rem; font: inherit; font-size: 16px; min-height: 44px; }
+        .scope-row select {
+            width: 100%;
+            padding: 0.35rem 0.45rem;
+            font: inherit;
+            font-size: 16px;
+            min-height: var(--tap);
+            box-sizing: border-box;
+        }
+        .scope-row a.explorer-link {
+            display: inline-flex;
+            align-items: center;
+            min-height: var(--tap);
+        }
+        @media (min-width: 900px) {
+            table { margin: 1rem 0; }
+            .owner-panel {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: flex-end;
+                gap: 0.75rem 1rem;
+                padding: 1rem 1.1rem;
+                margin: 1rem 0;
+                border-radius: 0;
+            }
+            .owner-panel select { width: auto; min-width: 16rem; }
+            .owner-meta { padding-bottom: 0.45rem; }
+            .scope-row {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            .scope-row select { width: auto; }
+            .scope-row a.explorer-link { min-height: 0; }
+        }
 {% endblock %}
 
 {% block content %}
@@ -59,7 +100,7 @@
             <option value="{{ value }}" {% if scope == value %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
         </select>
-        <a href="{% url 'sales_explorer' %}?{{ explorer_query }}">{% trans "Open in Sales Explorer" %}</a>
+        <a class="explorer-link" href="{% url 'sales_explorer' %}?{{ explorer_query }}">{% trans "Open in Sales Explorer" %}</a>
     </form>
 
     <form class="owner-panel" method="post">
@@ -85,7 +126,7 @@
         <button class="btn" type="submit">{% trans "Save" %}</button>
     </form>
 
-    <table>
+    <table class="table-cards table-cards--compact">
         <thead>
             <tr>
                 <th>{% trans "Product ID" %}</th>
@@ -98,11 +139,13 @@
         <tbody>
             {% for row in rows %}
             <tr>
-                <td>{{ row.granit_id }}</td>
-                <td>{{ row.name }}</td>
-                <td class="num">{{ row.qty|qty }}</td>
-                <td class="num">{{ row.amount|money }}</td>
-                <td>
+                <td class="tc-meta tc-id" data-label="{% trans 'Product ID' %}">{{ row.granit_id }}</td>
+                <td class="tc-primary" data-label="{% trans 'Product' %}">
+                    <a href="{% url 'sales_explorer' %}?date_from={{ date_from|date:'Y-m-d' }}&amp;date_to={{ date_to|date:'Y-m-d' }}&amp;product={{ row.granit_id }}&amp;group_by=receipt{% if scope_all %}&amp;scope=all{% endif %}">{{ row.name }}</a>
+                </td>
+                <td class="num tc-qty" data-label="{% trans 'Qty' %}">{{ row.qty|qty }}</td>
+                <td class="num tc-amount" data-label="{% trans 'Amount' %}">{{ row.amount|money }}</td>
+                <td class="tc-action">
                     <a href="{% url 'sales_explorer' %}?date_from={{ date_from|date:'Y-m-d' }}&amp;date_to={{ date_to|date:'Y-m-d' }}&amp;product={{ row.granit_id }}&amp;group_by=receipt{% if scope_all %}&amp;scope=all{% endif %}">{% trans "Receipts" %}</a>
                 </td>
             </tr>
@@ -112,10 +155,10 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="2">{% trans "Total" %}</td>
-                <td class="num">{{ total_qty|qty }}</td>
-                <td class="num">{{ total_amount|money }}</td>
-                <td></td>
+                <td class="tc-primary" colspan="2" data-label="">{% trans "Total" %}</td>
+                <td class="num tc-qty" data-label="{% trans 'Qty' %}">{{ total_qty|qty }}</td>
+                <td class="num tc-amount" data-label="{% trans 'Amount' %}">{{ total_amount|money }}</td>
+                <td class="tc-action"></td>
             </tr>
         </tfoot>
     </table>

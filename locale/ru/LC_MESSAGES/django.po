@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: granit-sales-analytics-erp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-24 20:54+0400\n"
+"POT-Creation-Date: 2026-11-25 16:54+0400\n"
 "PO-Revision-Date: 2026-09-22 16:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
@@ -107,8 +107,10 @@ msgstr "Список SMS должен быть файлом .xlsx."
 
 #: .\campaigns\templates\campaigns\_catalog_filter.html:5
 #: .\sales\templates\sales\_explorer.html:47
-#: .\sales\templates\sales\matrix_sg.html:51
-#: .\sales\templates\sales\matrix_sg.html:110 .\sales\views.py:394
+#: .\sales\templates\sales\matrix_sg.html:77
+#: .\sales\templates\sales\matrix_sg.html:87
+#: .\sales\templates\sales\matrix_sg.html:136
+#: .\sales\templates\sales\matrix_sg.html:144 .\sales\views.py:394
 #: .\sales\views.py:403 .\sales\views.py:409
 msgid "Product group"
 msgstr "Группа товара"
@@ -124,7 +126,8 @@ msgstr "Все группы"
 #: .\campaigns\templates\campaigns\purchases.html:24
 #: .\promos\templates\promos\detail.html:44
 #: .\sales\templates\sales\_explorer.html:57
-#: .\sales\templates\sales\matrix_group.html:92
+#: .\sales\templates\sales\matrix_group.html:133
+#: .\sales\templates\sales\matrix_group.html:143
 #: .\sales\templates\sales\receipt.html:70
 #: .\sales\templates\sales\receipt.html:79 .\sales\views.py:393
 #: .\sales\views.py:408
@@ -138,7 +141,7 @@ msgstr "Все товары"
 
 #: .\campaigns\templates\campaigns\_catalog_filter.html:22
 #: .\sales\templates\sales\_explorer.html:104
-#: .\sales\templates\sales\matrix.html:53
+#: .\sales\templates\sales\matrix.html:325
 msgid "Apply"
 msgstr "Применить"
 
@@ -155,7 +158,7 @@ msgstr "Купили и суммы считаются только по выбр
 #: .\campaigns\templates\campaigns\client_purchases.html:5
 #: .\campaigns\templates\campaigns\client_purchases.html:20
 #: .\campaigns\templates\campaigns\detail.html:74
-#: .\sales\templates\sales\_results.html:63
+#: .\sales\templates\sales\_results.html:66
 msgid "Order items"
 msgstr "Состав заказа"
 
@@ -182,7 +185,7 @@ msgstr "Период"
 #: .\campaigns\templates\campaigns\client_purchases.html:29
 #: .\campaigns\templates\campaigns\detail.html:89
 #: .\campaigns\templates\campaigns\purchases.html:39
-#: .\sales\templates\sales\_results.html:84
+#: .\sales\templates\sales\_results.html:87
 msgid "No matching sales for this filter."
 msgstr "Нет продаж по выбранному фильтру."
 
@@ -192,7 +195,7 @@ msgid "No sales in this campaign window."
 msgstr "В окне этой кампании продаж нет."
 
 #: .\campaigns\templates\campaigns\client_purchases.html:34
-#: .\sales\templates\sales\_results.html:46
+#: .\sales\templates\sales\_results.html:47
 #: .\sales\templates\sales\receipt.html:4
 #: .\sales\templates\sales\receipt.html:5
 #: .\sales\templates\sales\receipt.html:60
@@ -204,14 +207,18 @@ msgstr "Чек"
 #: .\campaigns\templates\campaigns\client_purchases.html:45
 #: .\campaigns\templates\campaigns\detail.html:58
 #: .\campaigns\templates\campaigns\purchases.html:27
-#: .\sales\templates\sales\_results.html:12
-#: .\sales\templates\sales\_results.html:37
-#: .\sales\templates\sales\_results.html:60
-#: .\sales\templates\sales\_results.html:78
-#: .\sales\templates\sales\matrix.html:90
-#: .\sales\templates\sales\matrix.html:93
-#: .\sales\templates\sales\matrix_group.html:94
-#: .\sales\templates\sales\matrix_sg.html:53
+#: .\sales\templates\sales\_results.html:4
+#: .\sales\templates\sales\_results.html:38
+#: .\sales\templates\sales\_results.html:63
+#: .\sales\templates\sales\_results.html:81
+#: .\sales\templates\sales\matrix.html:414
+#: .\sales\templates\sales\matrix.html:417
+#: .\sales\templates\sales\matrix_group.html:135
+#: .\sales\templates\sales\matrix_group.html:147
+#: .\sales\templates\sales\matrix_group.html:160
+#: .\sales\templates\sales\matrix_sg.html:79
+#: .\sales\templates\sales\matrix_sg.html:95
+#: .\sales\templates\sales\matrix_sg.html:115
 #: .\sales\templates\sales\receipt.html:73
 #: .\sales\templates\sales\receipt.html:82
 #: .\sales\templates\sales\receipt.html:91
@@ -229,14 +236,18 @@ msgstr "Группа"
 
 #: .\campaigns\templates\campaigns\client_purchases.html:44
 #: .\campaigns\templates\campaigns\purchases.html:26
-#: .\sales\templates\sales\_results.html:8
-#: .\sales\templates\sales\_results.html:36
-#: .\sales\templates\sales\_results.html:59
-#: .\sales\templates\sales\_results.html:77
-#: .\sales\templates\sales\matrix.html:89
-#: .\sales\templates\sales\matrix.html:92
-#: .\sales\templates\sales\matrix_group.html:93
-#: .\sales\templates\sales\matrix_sg.html:52
+#: .\sales\templates\sales\_results.html:12
+#: .\sales\templates\sales\_results.html:37
+#: .\sales\templates\sales\_results.html:62
+#: .\sales\templates\sales\_results.html:80
+#: .\sales\templates\sales\matrix.html:413
+#: .\sales\templates\sales\matrix.html:416
+#: .\sales\templates\sales\matrix_group.html:134
+#: .\sales\templates\sales\matrix_group.html:146
+#: .\sales\templates\sales\matrix_group.html:159
+#: .\sales\templates\sales\matrix_sg.html:78
+#: .\sales\templates\sales\matrix_sg.html:94
+#: .\sales\templates\sales\matrix_sg.html:114
 #: .\sales\templates\sales\receipt.html:72
 #: .\sales\templates\sales\receipt.html:81
 #: .\sales\templates\sales\receipt.html:90 .\sales\views.py:418
@@ -329,7 +340,7 @@ msgid "What they bought"
 msgstr "Что купили"
 
 #: .\campaigns\templates\campaigns\detail.html:47
-#: .\sales\templates\sales\_results.html:23
+#: .\sales\templates\sales\_results.html:24
 #, python-format
 msgid "Showing first %(shown)s of %(total)s rows."
 msgstr "Показаны первые %(shown)s из %(total)s строк."
@@ -355,11 +366,12 @@ msgstr "Нет"
 
 #: .\campaigns\templates\campaigns\detail.html:82
 #: .\promos\templates\promos\detail.html:149
-#: .\sales\templates\sales\_results.html:73
-#: .\sales\templates\sales\matrix.html:84
-#: .\sales\templates\sales\matrix.html:121
-#: .\sales\templates\sales\matrix_group.html:115
-#: .\sales\templates\sales\matrix_sg.html:87
+#: .\sales\templates\sales\_results.html:76
+#: .\sales\templates\sales\matrix.html:387
+#: .\sales\templates\sales\matrix.html:408
+#: .\sales\templates\sales\matrix.html:445
+#: .\sales\templates\sales\matrix_group.html:158
+#: .\sales\templates\sales\matrix_sg.html:113
 #: .\sales\templates\sales\receipt.html:88
 #: .\sales\templates\sales\reconcile_month.html:77
 msgid "Total"
@@ -478,7 +490,8 @@ msgid "Architecture: alt Debian (pg-core + UI), analytics.dimkava.ge"
 msgstr "Архитектура: alt Debian (pg-core + UI), analytics.dimkava.ge"
 
 #: .\core\templates\core\more.html:4 .\core\templates\core\more.html:5
-#: .\core\templates\core\more.html:9 .\templates\base.html:92
+#: .\core\templates\core\more.html:9 .\sales\templates\sales\matrix.html:334
+#: .\templates\base.html:92
 msgid "More"
 msgstr "Ещё"
 
@@ -491,8 +504,8 @@ msgstr "Ещё"
 msgid "Granit Sales Analytics ERP"
 msgstr "Granit Sales Analytics ERP"
 
-#: .\core\templates\core\more.html:15 .\sales\templates\sales\matrix.html:68
-#: .\sales\templates\sales\matrix.html:72
+#: .\core\templates\core\more.html:15 .\sales\templates\sales\matrix.html:355
+#: .\sales\templates\sales\matrix.html:359
 #: .\sales\templates\sales\reconcile.html:4
 #: .\sales\templates\sales\reconcile.html:5
 #: .\sales\templates\sales\reconcile.html:12
@@ -514,11 +527,12 @@ msgstr "Главная"
 msgid "New promo"
 msgstr "Новая акция"
 
-#: .\core\templates\core\more.html:43 .\sales\templates\sales\matrix.html:55
+#: .\core\templates\core\more.html:43 .\sales\templates\sales\matrix.html:331
+#: .\sales\templates\sales\matrix.html:337
 #: .\sales\templates\sales\matrix_edit.html:4
 #: .\sales\templates\sales\matrix_edit.html:5
-#: .\sales\templates\sales\matrix_edit.html:108
-#: .\sales\templates\sales\matrix_sg.html:19
+#: .\sales\templates\sales\matrix_edit.html:171
+#: .\sales\templates\sales\matrix_sg.html:45
 msgid "Edit super-groups"
 msgstr "Редактировать супергруппы"
 
@@ -553,8 +567,8 @@ msgstr "Этап 3 — готов"
 
 #: .\core\views.py:27 .\sales\templates\sales\explorer.html:4
 #: .\sales\templates\sales\explorer.html:5
-#: .\sales\templates\sales\explorer.html:201
-#: .\sales\templates\sales\matrix.html:56
+#: .\sales\templates\sales\explorer.html:210
+#: .\sales\templates\sales\matrix.html:332
 #: .\sales\templates\sales\receipt.html:57 .\templates\base.html:33
 msgid "Sales Explorer"
 msgstr "Обзор продаж"
@@ -569,10 +583,10 @@ msgstr "Этап 4 — готов"
 
 #: .\core\views.py:34 .\sales\templates\sales\matrix.html:4
 #: .\sales\templates\sales\matrix.html:5
-#: .\sales\templates\sales\matrix.html:30
-#: .\sales\templates\sales\matrix_edit.html:107
-#: .\sales\templates\sales\matrix_group.html:45
-#: .\sales\templates\sales\matrix_sg.html:18
+#: .\sales\templates\sales\matrix.html:290
+#: .\sales\templates\sales\matrix_edit.html:170
+#: .\sales\templates\sales\matrix_group.html:86
+#: .\sales\templates\sales\matrix_sg.html:44
 msgid "Sales by super-groups"
 msgstr "Продажи по супергруппам"
 
@@ -891,7 +905,7 @@ msgstr "Раскрыть в товары"
 #: .\promos\templates\promos\create.html:124
 #: .\promos\templates\promos\create.html:135
 #: .\promos\templates\promos\create.html:239
-#: .\sales\templates\sales\matrix_sg.html:76
+#: .\sales\templates\sales\matrix_sg.html:102
 msgid "Remove"
 msgstr "Убрать"
 
@@ -976,7 +990,7 @@ msgid "Targets"
 msgstr "Цели"
 
 #: .\promos\templates\promos\detail.html:34
-#: .\sales\templates\sales\matrix_group.html:62
+#: .\sales\templates\sales\matrix_group.html:103
 msgid "Open in Sales Explorer"
 msgstr "Открыть в обзоре продаж"
 
@@ -1014,8 +1028,8 @@ msgid "Margin"
 msgstr "Маржа"
 
 #: .\promos\templates\promos\detail.html:50
-#: .\sales\templates\sales\_results.html:35
-#: .\sales\templates\sales\_results.html:57
+#: .\sales\templates\sales\_results.html:36
+#: .\sales\templates\sales\_results.html:60
 msgid "Stock"
 msgstr "Остаток"
 
@@ -1151,7 +1165,7 @@ msgid "This promo was recalculated."
 msgstr "Эта акция пересчитана."
 
 #: .\sales\matrix.py:76 .\sales\models.py:31
-#: .\sales\templates\sales\matrix_group.html:71
+#: .\sales\templates\sales\matrix_group.html:112
 msgid "Outside super-groups"
 msgstr "Вне супергрупп"
 
@@ -1174,7 +1188,8 @@ msgstr "Сверка пересчитана."
 
 #: .\sales\templates\sales\_explorer.html:16
 #: .\sales\templates\sales\_explorer.html:40
-#: .\sales\templates\sales\matrix_sg.html:39
+#: .\sales\templates\sales\matrix.html:365
+#: .\sales\templates\sales\matrix_sg.html:65
 msgid "All stores"
 msgstr "Все магазины"
 
@@ -1187,9 +1202,9 @@ msgstr[1] "%(counter)s фильтра"
 msgstr[2] "%(counter)s фильтров"
 
 #: .\sales\templates\sales\_explorer.html:22
-#: .\sales\templates\sales\matrix.html:38
-#: .\sales\templates\sales\matrix_group.html:56
-#: .\sales\templates\sales\matrix_sg.html:29 .\templates\base.html:76
+#: .\sales\templates\sales\matrix.html:310
+#: .\sales\templates\sales\matrix_group.html:97
+#: .\sales\templates\sales\matrix_sg.html:55 .\templates\base.html:76
 msgid "Sales"
 msgstr "Продажи"
 
@@ -1202,9 +1217,9 @@ msgid "Date to"
 msgstr "Дата по"
 
 #: .\sales\templates\sales\_explorer.html:38
-#: .\sales\templates\sales\_results.html:32
-#: .\sales\templates\sales\_results.html:53
-#: .\sales\templates\sales\matrix_sg.html:37
+#: .\sales\templates\sales\_results.html:33
+#: .\sales\templates\sales\_results.html:56
+#: .\sales\templates\sales\matrix_sg.html:63
 #: .\sales\templates\sales\reconcile_month.html:44 .\sales\views.py:396
 #: .\sales\views.py:411
 msgid "Store"
@@ -1232,7 +1247,7 @@ msgid "Granit client id"
 msgstr "ID клиента в Granit"
 
 #: .\sales\templates\sales\_explorer.html:80
-#: .\sales\templates\sales\matrix_sg.html:104
+#: .\sales\templates\sales\matrix_sg.html:130
 msgid "Search"
 msgstr "Найти"
 
@@ -1247,10 +1262,6 @@ msgstr "Группировка"
 #: .\sales\templates\sales\_explorer.html:95
 msgid "Sort by"
 msgstr "Сортировка"
-
-#: .\sales\templates\sales\_explorer.html:108
-msgid "The end date is included in the period."
-msgstr "Конечная дата входит в период."
 
 #: .\sales\templates\sales\_reconcile_flag.html:1
 msgid "Granit has an unknown kind of lines"
@@ -1277,12 +1288,12 @@ msgid "Small difference"
 msgstr "Мелкая разница"
 
 #: .\sales\templates\sales\_reconcile_status.html:1
-#: .\sales\templates\sales\matrix.html:69
+#: .\sales\templates\sales\matrix.html:356
 msgid "Month not closed"
 msgstr "Месяц не закрыт"
 
 #: .\sales\templates\sales\_reconcile_status.html:1
-#: .\sales\templates\sales\matrix.html:69
+#: .\sales\templates\sales\matrix.html:356
 msgid "Incomplete history"
 msgstr "Неполная история"
 
@@ -1290,20 +1301,25 @@ msgstr "Неполная история"
 msgid "Mismatch"
 msgstr "Расхождение"
 
-#: .\sales\templates\sales\_results.html:4
+#: .\sales\templates\sales\_results.html:8
 msgid "Rows"
 msgstr "Строки"
 
 #: .\sales\templates\sales\_results.html:17
+#: .\sales\templates\sales\matrix.html:292
 msgid "How it's calculated"
 msgstr "Как считается"
 
 #: .\sales\templates\sales\_results.html:18
-#: .\sales\templates\sales\matrix.html:32
+msgid "The end date is included in the period."
+msgstr "Конечная дата входит в период."
+
+#: .\sales\templates\sales\_results.html:19
+#: .\sales\templates\sales\matrix.html:294
 msgid "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
 msgstr "Кол-во: кг для весового товара (0,25 = 250 г), шт. для штучного."
 
-#: .\sales\templates\sales\_results.html:19
+#: .\sales\templates\sales\_results.html:20
 msgid ""
 "Stock is remainder as of the period end date for the selected store filter "
 "(Retail = shop warehouses, All warehouses = company)."
@@ -1311,8 +1327,8 @@ msgstr ""
 "Остаток на дату конца периода с учётом фильтра склада (Розница = склады "
 "магазинов, Все склады = компания)."
 
-#: .\sales\templates\sales\_results.html:20
-#: .\sales\templates\sales\matrix.html:34
+#: .\sales\templates\sales\_results.html:21
+#: .\sales\templates\sales\matrix.html:296
 msgid ""
 "All warehouses = the Granit report «Sales by warehouses»: receipts as "
 "realized by warehouse documents plus sales invoices with their services "
@@ -1326,13 +1342,13 @@ msgstr ""
 "проведённые в Граните, есть только в «Рознице»; перемещения и списания не "
 "входят."
 
-#: .\sales\templates\sales\_results.html:33
-#: .\sales\templates\sales\_results.html:54 .\sales\views.py:397
+#: .\sales\templates\sales\_results.html:34
+#: .\sales\templates\sales\_results.html:57 .\sales\views.py:397
 #: .\sales\views.py:412
 msgid "Client"
 msgstr "Клиент"
 
-#: .\sales\templates\sales\_results.html:46
+#: .\sales\templates\sales\_results.html:47
 #: .\sales\templates\sales\receipt.html:4
 #: .\sales\templates\sales\receipt.html:5
 #: .\sales\templates\sales\receipt.html:60
@@ -1340,23 +1356,23 @@ msgstr "Клиент"
 msgid "Invoice"
 msgstr "Накладная"
 
-#: .\sales\templates\sales\_results.html:46
+#: .\sales\templates\sales\_results.html:47
 #: .\sales\templates\sales\receipt.html:4
 #: .\sales\templates\sales\receipt.html:5
 #: .\sales\templates\sales\receipt.html:60
 msgid "Realization"
 msgstr "Реализация"
 
-#: .\sales\templates\sales\_results.html:65
-#: .\sales\templates\sales\matrix_group.html:106
+#: .\sales\templates\sales\_results.html:68
+#: .\sales\templates\sales\matrix_group.html:149
 msgid "Receipts"
 msgstr "Чеки"
 
-#: .\sales\templates\sales\explorer.html:202
+#: .\sales\templates\sales\explorer.html:211
 msgid "Slice sales for a period, then open the receipts and the full order."
 msgstr "Срез за период, затем переход к чекам и полному составу заказа."
 
-#: .\sales\templates\sales\matrix.html:31
+#: .\sales\templates\sales\matrix.html:293
 msgid ""
 "Rows are super-groups, columns are stores with sales in the period. Cell = "
 "qty / amount. Totals must match all sales."
@@ -1364,35 +1380,44 @@ msgstr ""
 "Строки — супергруппы, колонки — магазины с продажами за период. В ячейке "
 "qty / сумма. Итоги должны совпасть со всеми продажами."
 
-#: .\sales\templates\sales\matrix.html:46
+#: .\sales\templates\sales\matrix.html:318
 msgid "From"
 msgstr "С"
 
-#: .\sales\templates\sales\matrix.html:50
+#: .\sales\templates\sales\matrix.html:322
 msgid "To"
 msgstr "По"
 
-#: .\sales\templates\sales\matrix.html:54
+#: .\sales\templates\sales\matrix.html:330
+#: .\sales\templates\sales\matrix.html:336
 msgid "Excel"
 msgstr "Excel"
 
-#: .\sales\templates\sales\matrix.html:60
+#: .\sales\templates\sales\matrix.html:341
+msgid "Table"
+msgstr "Таблица"
+
+#: .\sales\templates\sales\matrix.html:341
+msgid "By store"
+msgstr "По магазинам"
+
+#: .\sales\templates\sales\matrix.html:347
 msgid "Totals match SaleFact for the period."
 msgstr "Итоги совпадают с SaleFact за период."
 
-#: .\sales\templates\sales\matrix.html:62
+#: .\sales\templates\sales\matrix.html:349
 msgid "Totals do not match SaleFact — check membership."
 msgstr "Итоги не совпадают с SaleFact — проверьте состав."
 
-#: .\sales\templates\sales\matrix.html:69
+#: .\sales\templates\sales\matrix.html:356
 msgid "OK"
 msgstr "OK"
 
-#: .\sales\templates\sales\matrix.html:69
+#: .\sales\templates\sales\matrix.html:356
 msgid "difference"
 msgstr "разница"
 
-#: .\sales\templates\sales\matrix.html:69
+#: .\sales\templates\sales\matrix.html:356
 #, python-format
 msgid "%(n)s flag"
 msgid_plural "%(n)s flags"
@@ -1400,15 +1425,15 @@ msgstr[0] "%(n)s флаг"
 msgstr[1] "%(n)s флага"
 msgstr[2] "%(n)s флагов"
 
-#: .\sales\templates\sales\matrix.html:80
+#: .\sales\templates\sales\matrix.html:404
 msgid "Super-group"
 msgstr "Супергруппа"
 
-#: .\sales\templates\sales\matrix.html:133
+#: .\sales\templates\sales\matrix.html:458
 msgid "No sales in this period."
 msgstr "Нет продаж за этот период."
 
-#: .\sales\templates\sales\matrix_edit.html:109
+#: .\sales\templates\sales\matrix_edit.html:172
 msgid ""
 "Changes are shared for all users. One product group belongs to at most one "
 "super-group."
@@ -1416,83 +1441,86 @@ msgstr ""
 "Изменения общие для всех пользователей. Одна группа товаров входит не больше "
 "чем в одну супергруппу."
 
-#: .\sales\templates\sales\matrix_edit.html:114
-#: .\sales\templates\sales\matrix_edit.html:117
-#: .\sales\templates\sales\matrix_edit.html:137
-#: .\sales\templates\sales\matrix_edit.html:197
-#: .\sales\templates\sales\matrix_edit.html:199
+#: .\sales\templates\sales\matrix_edit.html:177
+#: .\sales\templates\sales\matrix_edit.html:180
+#: .\sales\templates\sales\matrix_edit.html:200
+#: .\sales\templates\sales\matrix_edit.html:262
+#: .\sales\templates\sales\matrix_edit.html:264
 msgid "Color"
 msgstr "Цвет"
 
-#: .\sales\templates\sales\matrix_edit.html:115
-#: .\sales\templates\sales\matrix_edit.html:195
+#: .\sales\templates\sales\matrix_edit.html:178
+#: .\sales\templates\sales\matrix_edit.html:194
+#: .\sales\templates\sales\matrix_edit.html:260
 msgid "Title"
 msgstr "Название"
 
-#: .\sales\templates\sales\matrix_edit.html:116
-#: .\sales\templates\sales\matrix_edit.html:193
+#: .\sales\templates\sales\matrix_edit.html:179
+#: .\sales\templates\sales\matrix_edit.html:258
 msgid "Key"
 msgstr "Ключ"
 
-#: .\sales\templates\sales\matrix_edit.html:118
+#: .\sales\templates\sales\matrix_edit.html:181
 msgid "Order"
 msgstr "Порядок"
 
-#: .\sales\templates\sales\matrix_edit.html:147
+#: .\sales\templates\sales\matrix_edit.html:210
 msgid "Move up"
 msgstr "Выше"
 
-#: .\sales\templates\sales\matrix_edit.html:154
+#: .\sales\templates\sales\matrix_edit.html:217
 msgid "Move down"
 msgstr "Ниже"
 
-#: .\sales\templates\sales\matrix_edit.html:160
-#: .\sales\templates\sales\matrix_group.html:85
+#: .\sales\templates\sales\matrix_edit.html:223
+#: .\sales\templates\sales\matrix_group.html:126
 msgid "Save"
 msgstr "Сохранить"
 
-#: .\sales\templates\sales\matrix_edit.html:161
-#: .\sales\templates\sales\matrix_group.html:47
+#: .\sales\templates\sales\matrix_edit.html:224
+#: .\sales\templates\sales\matrix_group.html:88
 msgid "Members"
 msgstr "Состав"
 
-#: .\sales\templates\sales\matrix_edit.html:162
+#: .\sales\templates\sales\matrix_edit.html:225
 msgid "Delete this super-group?"
 msgstr "Удалить эту супергруппу?"
 
-#: .\sales\templates\sales\matrix_edit.html:166
+#: .\sales\templates\sales\matrix_edit.html:229
 msgid "Delete"
 msgstr "Удалить"
 
-#: .\sales\templates\sales\matrix_edit.html:172
+#: .\sales\templates\sales\matrix_edit.html:235
 msgid "No super-groups yet. Seed from JSON or create below."
 msgstr "Супергрупп ещё нет. Запустите сид из JSON или создайте ниже."
 
-#: .\sales\templates\sales\matrix_edit.html:182
+#: .\sales\templates\sales\matrix_edit.html:245
 msgid "View remainder"
 msgstr "Смотреть остаток"
 
-#: .\sales\templates\sales\matrix_edit.html:192
+#: .\sales\templates\sales\matrix_edit.html:253
+#: .\sales\templates\sales\matrix_edit.html:257
 msgid "New super-group"
 msgstr "Новая супергруппа"
 
-#: .\sales\templates\sales\matrix_edit.html:202
+#: .\sales\templates\sales\matrix_edit.html:267
 msgid "Create"
 msgstr "Создать"
 
-#: .\sales\templates\sales\matrix_group.html:69
+#: .\sales\templates\sales\matrix_group.html:110
 msgid "Super-group owner"
 msgstr "Владелец — супергруппа"
 
-#: .\sales\templates\sales\matrix_group.html:91
+#: .\sales\templates\sales\matrix_group.html:132
+#: .\sales\templates\sales\matrix_group.html:142
 msgid "Product ID"
 msgstr "ID товара"
 
-#: .\sales\templates\sales\matrix_group.html:110
+#: .\sales\templates\sales\matrix_group.html:153
 msgid "No sales for this group in the period."
 msgstr "Нет продаж по этой группе за период."
 
-#: .\sales\templates\sales\matrix_sg.html:22
+#: .\sales\templates\sales\matrix_sg.html:48
 msgid ""
 "Remainder: product groups (and products without a group) not assigned to any "
 "super-group."
@@ -1500,28 +1528,30 @@ msgstr ""
 "Остаток: группы товаров (и товары без группы), не назначенные ни в одну "
 "супергруппу."
 
-#: .\sales\templates\sales\matrix_sg.html:50
-#: .\sales\templates\sales\matrix_sg.html:109
+#: .\sales\templates\sales\matrix_sg.html:76
+#: .\sales\templates\sales\matrix_sg.html:86
+#: .\sales\templates\sales\matrix_sg.html:135
+#: .\sales\templates\sales\matrix_sg.html:143
 msgid "Group ID"
 msgstr "ID группы"
 
-#: .\sales\templates\sales\matrix_sg.html:82
+#: .\sales\templates\sales\matrix_sg.html:108
 msgid "No sales for these groups in the period."
 msgstr "Нет продаж по этим группам за период."
 
-#: .\sales\templates\sales\matrix_sg.html:97
+#: .\sales\templates\sales\matrix_sg.html:123
 msgid "Add unassigned group"
 msgstr "Добавить группу без назначения"
 
-#: .\sales\templates\sales\matrix_sg.html:103
+#: .\sales\templates\sales\matrix_sg.html:129
 msgid "Search groups"
 msgstr "Поиск групп"
 
-#: .\sales\templates\sales\matrix_sg.html:124
+#: .\sales\templates\sales\matrix_sg.html:150
 msgid "Add"
 msgstr "Добавить"
 
-#: .\sales\templates\sales\matrix_sg.html:129
+#: .\sales\templates\sales\matrix_sg.html:155
 msgid "No unassigned groups with sales (or matching search)."
 msgstr "Нет свободных групп с продажами (или по поиску)."
 
