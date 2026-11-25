@@ -11,7 +11,7 @@
 | 4 | Супергруппы (матрица, детализация, редактор) | [stage-4](prompts/stage-4-matrix.md) | feature/mobile-4-matrix | done | 2026-11-25 | ed4363c | [stage-4.md](reports/stage-4.md) | [stage-4](reviews/stage-4.md) |
 | 5 | Сверка с Гранитом | [stage-5](prompts/stage-5-reconcile.md) | feature/mobile-5-reconcile | done | 2026-11-25 | f9dde5f | [stage-5.md](reports/stage-5.md) | [stage-5](reviews/stage-5.md) |
 | 6 | Кампании | [stage-6](prompts/stage-6-campaigns.md) | feature/mobile-6-campaigns | done | 2026-11-25 | 57b21ca | [stage-6.md](reports/stage-6.md) | [stage-6](reviews/stage-6.md) |
-| 7 | Акции (карточка, графики, форма, пикер), итоговая проверка | [stage-7](prompts/stage-7-promos.md) | feature/mobile-7-promos | review | 2026-11-25 | | [stage-7.md](reports/stage-7.md) | |
+| 7 | Акции (карточка, графики, форма, пикер), итоговая проверка | [stage-7](prompts/stage-7-promos.md) | feature/mobile-7-promos | review | 2026-11-25 | 640a8e8 | [stage-7.md](reports/stage-7.md) | |
 
 Этапы 0 → 1 → 2 → 3 строго по порядку (на 3 появляется `.table-cards`). 4–7 можно переставлять, но каждый начинается
 от `main` с уже смерженными предыдущими. Итоговая проверка — в последнем выполненном этапе.
