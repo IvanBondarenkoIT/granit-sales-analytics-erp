@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: granit-sales-analytics-erp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-25 16:54+0400\n"
+"POT-Creation-Date: 2026-11-25 18:57+0400\n"
 "PO-Revision-Date: 2026-09-22 16:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
@@ -199,7 +199,7 @@ msgstr "В окне этой кампании продаж нет."
 #: .\sales\templates\sales\receipt.html:4
 #: .\sales\templates\sales\receipt.html:5
 #: .\sales\templates\sales\receipt.html:60
-#: .\sales\templates\sales\reconcile_docs.html:45
+#: .\sales\templates\sales\reconcile_docs.html:48
 msgid "Receipt"
 msgstr "Чек"
 
@@ -222,7 +222,7 @@ msgstr "Чек"
 #: .\sales\templates\sales\receipt.html:73
 #: .\sales\templates\sales\receipt.html:82
 #: .\sales\templates\sales\receipt.html:91
-#: .\sales\templates\sales\reconcile_month.html:110 .\sales\views.py:417
+#: .\sales\templates\sales\reconcile_month.html:148 .\sales\views.py:417
 msgid "Amount"
 msgstr "Сумма"
 
@@ -373,7 +373,7 @@ msgstr "Нет"
 #: .\sales\templates\sales\matrix_group.html:158
 #: .\sales\templates\sales\matrix_sg.html:113
 #: .\sales\templates\sales\receipt.html:88
-#: .\sales\templates\sales\reconcile_month.html:77
+#: .\sales\templates\sales\reconcile_month.html:111
 msgid "Total"
 msgstr "Итого"
 
@@ -531,7 +531,7 @@ msgstr "Новая акция"
 #: .\sales\templates\sales\matrix.html:337
 #: .\sales\templates\sales\matrix_edit.html:4
 #: .\sales\templates\sales\matrix_edit.html:5
-#: .\sales\templates\sales\matrix_edit.html:171
+#: .\sales\templates\sales\matrix_edit.html:175
 #: .\sales\templates\sales\matrix_sg.html:45
 msgid "Edit super-groups"
 msgstr "Редактировать супергруппы"
@@ -584,7 +584,7 @@ msgstr "Этап 4 — готов"
 #: .\core\views.py:34 .\sales\templates\sales\matrix.html:4
 #: .\sales\templates\sales\matrix.html:5
 #: .\sales\templates\sales\matrix.html:290
-#: .\sales\templates\sales\matrix_edit.html:170
+#: .\sales\templates\sales\matrix_edit.html:174
 #: .\sales\templates\sales\matrix_group.html:86
 #: .\sales\templates\sales\matrix_sg.html:44
 msgid "Sales by super-groups"
@@ -1220,7 +1220,8 @@ msgstr "Дата по"
 #: .\sales\templates\sales\_results.html:33
 #: .\sales\templates\sales\_results.html:56
 #: .\sales\templates\sales\matrix_sg.html:63
-#: .\sales\templates\sales\reconcile_month.html:44 .\sales\views.py:396
+#: .\sales\templates\sales\reconcile_month.html:57
+#: .\sales\templates\sales\reconcile_month.html:73 .\sales\views.py:396
 #: .\sales\views.py:411
 msgid "Store"
 msgstr "Магазин"
@@ -1272,10 +1273,13 @@ msgid "New service"
 msgstr "Новая услуга"
 
 #: .\sales\templates\sales\_reconcile_flag.html:1
-#: .\sales\templates\sales\reconcile.html:28
-#: .\sales\templates\sales\reconcile.html:59
-#: .\sales\templates\sales\reconcile_docs.html:38
-#: .\sales\templates\sales\reconcile_month.html:51
+#: .\sales\templates\sales\reconcile.html:30
+#: .\sales\templates\sales\reconcile.html:64
+#: .\sales\templates\sales\reconcile_docs.html:40
+#: .\sales\templates\sales\reconcile_docs.html:61
+#: .\sales\templates\sales\reconcile_month.html:64
+#: .\sales\templates\sales\reconcile_month.html:89
+#: .\sales\templates\sales\reconcile_month.html:118
 msgid "Difference"
 msgstr "Разница"
 
@@ -1352,7 +1356,7 @@ msgstr "Клиент"
 #: .\sales\templates\sales\receipt.html:4
 #: .\sales\templates\sales\receipt.html:5
 #: .\sales\templates\sales\receipt.html:60
-#: .\sales\templates\sales\reconcile_docs.html:45
+#: .\sales\templates\sales\reconcile_docs.html:48
 msgid "Invoice"
 msgstr "Накладная"
 
@@ -1418,6 +1422,8 @@ msgid "difference"
 msgstr "разница"
 
 #: .\sales\templates\sales\matrix.html:356
+#: .\sales\templates\sales\reconcile.html:73
+#: .\sales\templates\sales\reconcile_month.html:49
 #, python-format
 msgid "%(n)s flag"
 msgid_plural "%(n)s flags"
@@ -1433,7 +1439,7 @@ msgstr "Супергруппа"
 msgid "No sales in this period."
 msgstr "Нет продаж за этот период."
 
-#: .\sales\templates\sales\matrix_edit.html:172
+#: .\sales\templates\sales\matrix_edit.html:176
 msgid ""
 "Changes are shared for all users. One product group belongs to at most one "
 "super-group."
@@ -1441,69 +1447,69 @@ msgstr ""
 "Изменения общие для всех пользователей. Одна группа товаров входит не больше "
 "чем в одну супергруппу."
 
-#: .\sales\templates\sales\matrix_edit.html:177
-#: .\sales\templates\sales\matrix_edit.html:180
-#: .\sales\templates\sales\matrix_edit.html:200
-#: .\sales\templates\sales\matrix_edit.html:262
-#: .\sales\templates\sales\matrix_edit.html:264
+#: .\sales\templates\sales\matrix_edit.html:181
+#: .\sales\templates\sales\matrix_edit.html:184
+#: .\sales\templates\sales\matrix_edit.html:204
+#: .\sales\templates\sales\matrix_edit.html:266
+#: .\sales\templates\sales\matrix_edit.html:268
 msgid "Color"
 msgstr "Цвет"
 
-#: .\sales\templates\sales\matrix_edit.html:178
-#: .\sales\templates\sales\matrix_edit.html:194
-#: .\sales\templates\sales\matrix_edit.html:260
+#: .\sales\templates\sales\matrix_edit.html:182
+#: .\sales\templates\sales\matrix_edit.html:198
+#: .\sales\templates\sales\matrix_edit.html:264
 msgid "Title"
 msgstr "Название"
 
-#: .\sales\templates\sales\matrix_edit.html:179
-#: .\sales\templates\sales\matrix_edit.html:258
+#: .\sales\templates\sales\matrix_edit.html:183
+#: .\sales\templates\sales\matrix_edit.html:262
 msgid "Key"
 msgstr "Ключ"
 
-#: .\sales\templates\sales\matrix_edit.html:181
+#: .\sales\templates\sales\matrix_edit.html:185
 msgid "Order"
 msgstr "Порядок"
 
-#: .\sales\templates\sales\matrix_edit.html:210
+#: .\sales\templates\sales\matrix_edit.html:214
 msgid "Move up"
 msgstr "Выше"
 
-#: .\sales\templates\sales\matrix_edit.html:217
+#: .\sales\templates\sales\matrix_edit.html:221
 msgid "Move down"
 msgstr "Ниже"
 
-#: .\sales\templates\sales\matrix_edit.html:223
+#: .\sales\templates\sales\matrix_edit.html:227
 #: .\sales\templates\sales\matrix_group.html:126
 msgid "Save"
 msgstr "Сохранить"
 
-#: .\sales\templates\sales\matrix_edit.html:224
+#: .\sales\templates\sales\matrix_edit.html:228
 #: .\sales\templates\sales\matrix_group.html:88
 msgid "Members"
 msgstr "Состав"
 
-#: .\sales\templates\sales\matrix_edit.html:225
+#: .\sales\templates\sales\matrix_edit.html:229
 msgid "Delete this super-group?"
 msgstr "Удалить эту супергруппу?"
 
-#: .\sales\templates\sales\matrix_edit.html:229
+#: .\sales\templates\sales\matrix_edit.html:233
 msgid "Delete"
 msgstr "Удалить"
 
-#: .\sales\templates\sales\matrix_edit.html:235
+#: .\sales\templates\sales\matrix_edit.html:239
 msgid "No super-groups yet. Seed from JSON or create below."
 msgstr "Супергрупп ещё нет. Запустите сид из JSON или создайте ниже."
 
-#: .\sales\templates\sales\matrix_edit.html:245
+#: .\sales\templates\sales\matrix_edit.html:249
 msgid "View remainder"
 msgstr "Смотреть остаток"
 
-#: .\sales\templates\sales\matrix_edit.html:253
 #: .\sales\templates\sales\matrix_edit.html:257
+#: .\sales\templates\sales\matrix_edit.html:261
 msgid "New super-group"
 msgstr "Новая супергруппа"
 
-#: .\sales\templates\sales\matrix_edit.html:267
+#: .\sales\templates\sales\matrix_edit.html:271
 msgid "Create"
 msgstr "Создать"
 
@@ -1560,7 +1566,7 @@ msgstr "Нет свободных групп с продажами (или по 
 msgid "Super-groups"
 msgstr "Супергруппы"
 
-#: .\sales\templates\sales\reconcile.html:14
+#: .\sales\templates\sales\reconcile.html:15
 msgid ""
 "Granit side: sales documents by realization date, the same as the Granit "
 "report «Sales by warehouses» (amount incl. VAT). Each total is split into "
@@ -1572,88 +1578,84 @@ msgstr ""
 "товары, услуги и остаток; остаток должен быть нулевым, иначе в Гранте "
 "появился вид строк, который мы ещё не загружаем."
 
-#: .\sales\templates\sales\reconcile.html:20
-#: .\sales\templates\sales\reconcile_docs.html:32
-#: .\sales\templates\sales\reconcile_month.html:94
+#: .\sales\templates\sales\reconcile.html:22
+#: .\sales\templates\sales\reconcile.html:60
+#: .\sales\templates\sales\reconcile_docs.html:34
+#: .\sales\templates\sales\reconcile_docs.html:55
+#: .\sales\templates\sales\reconcile_month.html:130
 msgid "Granit"
 msgstr "Гранит"
 
-#: .\sales\templates\sales\reconcile.html:24
-#: .\sales\templates\sales\reconcile.html:58
-#: .\sales\templates\sales\reconcile_docs.html:36
-#: .\sales\templates\sales\reconcile_month.html:94
+#: .\sales\templates\sales\reconcile.html:26
+#: .\sales\templates\sales\reconcile.html:62
+#: .\sales\templates\sales\reconcile_docs.html:38
+#: .\sales\templates\sales\reconcile_docs.html:59
+#: .\sales\templates\sales\reconcile_month.html:130
 msgid "Ours"
 msgstr "У нас"
 
-#: .\sales\templates\sales\reconcile.html:32
-#: .\sales\templates\sales\reconcile.html:61
+#: .\sales\templates\sales\reconcile.html:34
 msgid "Flags"
 msgstr "Флаги"
 
-#: .\sales\templates\sales\reconcile.html:43
+#: .\sales\templates\sales\reconcile.html:45
 msgid "Recalculate (this and last month)"
 msgstr "Пересчитать (этот и прошлый месяц)"
 
-#: .\sales\templates\sales\reconcile.html:46
+#: .\sales\templates\sales\reconcile.html:48
 #, python-format
 msgid "Updated nightly. Tolerance per store: %(tolerance)s GEL."
 msgstr "Обновляется ночью. Допуск на магазин: %(tolerance)s лари."
 
-#: .\sales\templates\sales\reconcile.html:53
-msgid "Month"
-msgstr "Месяц"
-
-#: .\sales\templates\sales\reconcile.html:54
-msgid "Granit total"
-msgstr "Гранит итого"
-
-#: .\sales\templates\sales\reconcile.html:55
-#: .\sales\templates\sales\reconcile_docs.html:33
-#: .\sales\templates\sales\reconcile_month.html:46
+#: .\sales\templates\sales\reconcile.html:67
+#: .\sales\templates\sales\reconcile_docs.html:35
+#: .\sales\templates\sales\reconcile_docs.html:56
+#: .\sales\templates\sales\reconcile_docs.html:70
+#: .\sales\templates\sales\reconcile_month.html:59
+#: .\sales\templates\sales\reconcile_month.html:80
+#: .\sales\templates\sales\reconcile_month.html:96
+#: .\sales\templates\sales\reconcile_month.html:113
 msgid "Goods"
 msgstr "Товары"
 
-#: .\sales\templates\sales\reconcile.html:56
-#: .\sales\templates\sales\reconcile_docs.html:34
-#: .\sales\templates\sales\reconcile_month.html:47
-#: .\sales\templates\sales\reconcile_month.html:92
+#: .\sales\templates\sales\reconcile.html:68
+#: .\sales\templates\sales\reconcile_docs.html:36
+#: .\sales\templates\sales\reconcile_docs.html:57
+#: .\sales\templates\sales\reconcile_docs.html:71
+#: .\sales\templates\sales\reconcile_month.html:60
+#: .\sales\templates\sales\reconcile_month.html:81
+#: .\sales\templates\sales\reconcile_month.html:97
+#: .\sales\templates\sales\reconcile_month.html:114
+#: .\sales\templates\sales\reconcile_month.html:127
 msgid "Services"
 msgstr "Услуги"
 
-#: .\sales\templates\sales\reconcile.html:57
-#: .\sales\templates\sales\reconcile_docs.html:35
-#: .\sales\templates\sales\reconcile_month.html:48
+#: .\sales\templates\sales\reconcile.html:69
+#: .\sales\templates\sales\reconcile_docs.html:37
+#: .\sales\templates\sales\reconcile_docs.html:58
+#: .\sales\templates\sales\reconcile_docs.html:72
+#: .\sales\templates\sales\reconcile_month.html:61
+#: .\sales\templates\sales\reconcile_month.html:82
+#: .\sales\templates\sales\reconcile_month.html:98
+#: .\sales\templates\sales\reconcile_month.html:115
 msgid "Leftover"
 msgstr "Остаток"
 
-#: .\sales\templates\sales\reconcile.html:60
-#: .\sales\templates\sales\reconcile_month.html:53
-msgid "Status"
-msgstr "Статус"
-
-#: .\sales\templates\sales\reconcile.html:77
-#, python-format
-msgid "and %(n)s more"
-msgid_plural "and %(n)s more"
-msgstr[0] "и ещё %(n)s"
-msgstr[1] "и ещё %(n)s"
-msgstr[2] "и ещё %(n)s"
-
-#: .\sales\templates\sales\reconcile.html:85
+#: .\sales\templates\sales\reconcile.html:86
 msgid "Services by month (Granit)"
 msgstr "Услуги по месяцам (Гранит)"
 
-#: .\sales\templates\sales\reconcile.html:90
-#: .\sales\templates\sales\reconcile_month.html:94
+#: .\sales\templates\sales\reconcile.html:91
+#: .\sales\templates\sales\reconcile_month.html:130
 msgid "Service"
 msgstr "Услуга"
 
-#: .\sales\templates\sales\reconcile.html:97
-#: .\sales\templates\sales\reconcile_month.html:98
+#: .\sales\templates\sales\reconcile.html:98
+#: .\sales\templates\sales\reconcile_month.html:134
 msgid "new"
 msgstr "новая"
 
-#: .\sales\templates\sales\reconcile.html:106
+#: .\sales\templates\sales\reconcile.html:107
 msgid ""
 "No reconciliation yet. Run «manage.py reconcile_sales --months 12» or press "
 "Recalculate."
@@ -1661,7 +1663,7 @@ msgstr ""
 "Сверки ещё нет. Запустите «manage.py reconcile_sales --months 12» или "
 "нажмите «Пересчитать»."
 
-#: .\sales\templates\sales\reconcile_docs.html:18
+#: .\sales\templates\sales\reconcile_docs.html:19
 msgid ""
 "Documents where Granit and our sales disagree. Receipt documents are "
 "compared through the receipt: one receipt can be split into several "
@@ -1671,46 +1673,58 @@ msgstr ""
 "сравниваются через чек: один чек может разбиваться на несколько складских "
 "документов."
 
-#: .\sales\templates\sales\reconcile_docs.html:22
+#: .\sales\templates\sales\reconcile_docs.html:24
 msgid "Granit is not reachable"
 msgstr "Гранит недоступен"
 
-#: .\sales\templates\sales\reconcile_docs.html:24
+#: .\sales\templates\sales\reconcile_docs.html:26
 #, python-format
 msgid "Checked: %(checked)s, with a difference: %(total)s."
 msgstr "Проверено: %(checked)s, с расхождением: %(total)s."
 
-#: .\sales\templates\sales\reconcile_docs.html:29 .\sales\views.py:399
+#: .\sales\templates\sales\reconcile_docs.html:31
+#: .\sales\templates\sales\reconcile_docs.html:47 .\sales\views.py:399
 #: .\sales\views.py:414
 msgid "Document"
 msgstr "Документ"
 
-#: .\sales\templates\sales\reconcile_docs.html:30
+#: .\sales\templates\sales\reconcile_docs.html:32
+#: .\sales\templates\sales\reconcile_docs.html:51
 msgid "Document date"
 msgstr "Дата документа"
 
-#: .\sales\templates\sales\reconcile_docs.html:31
+#: .\sales\templates\sales\reconcile_docs.html:33
+#: .\sales\templates\sales\reconcile_docs.html:54
+#: .\sales\templates\sales\reconcile_docs.html:67
 msgid "Realization date"
 msgstr "Дата реализации"
 
-#: .\sales\templates\sales\reconcile_docs.html:37
+#: .\sales\templates\sales\reconcile_docs.html:39
+#: .\sales\templates\sales\reconcile_docs.html:60
+#: .\sales\templates\sales\reconcile_docs.html:74
 msgid "Our dates"
 msgstr "Наши даты"
 
-#: .\sales\templates\sales\reconcile_docs.html:55
+#: .\sales\templates\sales\reconcile_docs.html:60
+#: .\sales\templates\sales\reconcile_docs.html:75
 msgid "not loaded"
 msgstr "не загружено"
 
-#: .\sales\templates\sales\reconcile_docs.html:61
+#: .\sales\templates\sales\reconcile_docs.html:64
+#: .\sales\templates\sales\reconcile_month.html:94
+msgid "More details"
+msgstr "Подробнее"
+
+#: .\sales\templates\sales\reconcile_docs.html:84
 #, python-format
 msgid "Showing the first %(shown)s by size of the difference."
 msgstr "Показаны первые %(shown)s по размеру расхождения."
 
-#: .\sales\templates\sales\reconcile_docs.html:63
+#: .\sales\templates\sales\reconcile_docs.html:86
 msgid "All documents match."
 msgstr "Все документы сходятся."
 
-#: .\sales\templates\sales\reconcile_month.html:14
+#: .\sales\templates\sales\reconcile_month.html:16
 msgid ""
 "Click a store to see the documents that differ. «Amount incl. VAT» per "
 "warehouse is the line of the Granit report."
@@ -1718,7 +1732,7 @@ msgstr ""
 "Нажмите на магазин, чтобы увидеть документы с расхождением. «Сумма с НДС» по "
 "складу — это строка отчёта Гранита."
 
-#: .\sales\templates\sales\reconcile_month.html:15
+#: .\sales\templates\sales\reconcile_month.html:17
 msgid ""
 "«Not realized yet»: receipts of the month without a warehouse document in "
 "Granit; they are in Retail but not in All warehouses."
@@ -1726,15 +1740,15 @@ msgstr ""
 "«Ещё не проведено» — чеки месяца без складского документа в Граните: они "
 "есть в «Рознице», но не во «Всех складах»."
 
-#: .\sales\templates\sales\reconcile_month.html:23
+#: .\sales\templates\sales\reconcile_month.html:27
 msgid "Recalculate this month"
 msgstr "Пересчитать этот месяц"
 
-#: .\sales\templates\sales\reconcile_month.html:26
+#: .\sales\templates\sales\reconcile_month.html:30
 msgid "Calculated"
 msgstr "Рассчитано"
 
-#: .\sales\templates\sales\reconcile_month.html:30
+#: .\sales\templates\sales\reconcile_month.html:36
 msgid ""
 "The month is not closed yet: Granit realizes receipts with a delay of "
 "several days, so the difference is expected until all receipts are realized."
@@ -1742,37 +1756,51 @@ msgstr ""
 "Месяц ещё не закрыт: Гранит проводит чеки с задержкой в несколько дней, "
 "поэтому разница ожидаема, пока все чеки не проведены."
 
-#: .\sales\templates\sales\reconcile_month.html:32
+#: .\sales\templates\sales\reconcile_month.html:42
 msgid "Our sales history starts inside this month, so it cannot match Granit."
 msgstr ""
 "Наша история продаж начинается внутри этого месяца, поэтому сойтись с "
 "Гранитом он не может."
 
-#: .\sales\templates\sales\reconcile_month.html:45
+#: .\sales\templates\sales\reconcile_month.html:58
+#: .\sales\templates\sales\reconcile_month.html:79
+#: .\sales\templates\sales\reconcile_month.html:112
 msgid "Amount incl. VAT (Granit)"
 msgstr "Сумма с НДС (Гранит)"
 
-#: .\sales\templates\sales\reconcile_month.html:49
+#: .\sales\templates\sales\reconcile_month.html:62
+#: .\sales\templates\sales\reconcile_month.html:83
+#: .\sales\templates\sales\reconcile_month.html:116
 msgid "Ours: goods"
 msgstr "У нас: товары"
 
-#: .\sales\templates\sales\reconcile_month.html:50
+#: .\sales\templates\sales\reconcile_month.html:63
+#: .\sales\templates\sales\reconcile_month.html:86
+#: .\sales\templates\sales\reconcile_month.html:117
 msgid "Ours: services"
 msgstr "У нас: услуги"
 
-#: .\sales\templates\sales\reconcile_month.html:52
+#: .\sales\templates\sales\reconcile_month.html:65
+#: .\sales\templates\sales\reconcile_month.html:90
+#: .\sales\templates\sales\reconcile_month.html:119
 msgid "Not realized yet"
 msgstr "Ещё не проведено"
 
-#: .\sales\templates\sales\reconcile_month.html:108
+#: .\sales\templates\sales\reconcile_month.html:66
+#: .\sales\templates\sales\reconcile_month.html:91
+#: .\sales\templates\sales\reconcile_month.html:99
+msgid "Status"
+msgstr "Статус"
+
+#: .\sales\templates\sales\reconcile_month.html:145
 msgid "Other Granit documents (not sales, for information)"
 msgstr "Другие документы Гранита (не продажи, для информации)"
 
-#: .\sales\templates\sales\reconcile_month.html:110
+#: .\sales\templates\sales\reconcile_month.html:148
 msgid "Document type"
 msgstr "Тип документа"
 
-#: .\sales\templates\sales\reconcile_month.html:110
+#: .\sales\templates\sales\reconcile_month.html:148
 msgid "Documents"
 msgstr "Документов"
 
@@ -1876,6 +1904,19 @@ msgstr "Регистрация для SMS, обзора продаж и акци
 #: .\templates\registration\register.html:32
 msgid "Already have an account?"
 msgstr "Уже есть аккаунт?"
+
+#~ msgid "Month"
+#~ msgstr "Месяц"
+
+#~ msgid "Granit total"
+#~ msgstr "Гранит итого"
+
+#, python-format
+#~ msgid "and %(n)s more"
+#~ msgid_plural "and %(n)s more"
+#~ msgstr[0] "и ещё %(n)s"
+#~ msgstr[1] "и ещё %(n)s"
+#~ msgstr[2] "и ещё %(n)s"
 
 #~ msgid "SMS sent on"
 #~ msgstr "Дата рассылки SMS"

@@ -9,7 +9,7 @@
 | 2 | Каркас: плашка, нижнее меню, «Ещё», главная | [stage-2](prompts/stage-2-shell.md) | feature/mobile-2-shell | done | 2026-11-24 | 66156ff | [stage-2.md](reports/stage-2.md) | [stage-2](reviews/stage-2.md) |
 | 3 | Обозреватель продаж и чек, паттерн `.table-cards` | [stage-3](prompts/stage-3-explorer.md) | feature/mobile-3-explorer | done | 2026-11-25 | 0fc5a75 | [stage-3.md](reports/stage-3.md) | [stage-3](reviews/stage-3.md) |
 | 4 | Супергруппы (матрица, детализация, редактор) | [stage-4](prompts/stage-4-matrix.md) | feature/mobile-4-matrix | done | 2026-11-25 | ed4363c | [stage-4.md](reports/stage-4.md) | [stage-4](reviews/stage-4.md) |
-| 5 | Сверка с Гранитом | [stage-5](prompts/stage-5-reconcile.md) | feature/mobile-5-reconcile | todo | | | | |
+| 5 | Сверка с Гранитом | [stage-5](prompts/stage-5-reconcile.md) | feature/mobile-5-reconcile | review | 2026-11-25 | *(pending commit)* | [stage-5.md](reports/stage-5.md) | |
 | 6 | Кампании | [stage-6](prompts/stage-6-campaigns.md) | feature/mobile-6-campaigns | todo | | | | |
 | 7 | Акции (карточка, графики, форма, пикер), итоговая проверка | [stage-7](prompts/stage-7-promos.md) | feature/mobile-7-promos | todo | | | | |
 

@@ -2,7 +2,7 @@
         .rc-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0.75rem; margin: 1rem 0; }
         .rc-card { background: #fff; padding: 0.8rem 1rem; border-left: 4px solid #cbd5e1; }
         .rc-card .label { color: #64748b; font-size: 0.8rem; }
-        .rc-card .value { font-size: 1.35rem; font-weight: 700; }
+        .rc-card .value { font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
         .rc-card.ok { border-color: #059669; }
         .rc-card.warn { border-color: #d97706; }
         .rc-card.bad { border-color: #dc2626; }
@@ -29,10 +29,366 @@
         .pill.open, .pill.partial { background: #e2e8f0; color: #334155; }
         .rc-card.open, .rc-card.partial { border-color: #64748b; }
         .rc-table tr.open td:first-child, .rc-table tr.partial td:first-child { box-shadow: inset 4px 0 #64748b; }
-        .rc-note { background: #fff; padding: 0.6rem 1rem; margin-bottom: 1rem; border-left: 4px solid #64748b; }
+        .rc-note { background: #fff; padding: 0.6rem 1rem; margin: 0; border-left: 4px solid #64748b; color: #334155; }
         .neg { color: #b91c1c; }
         .pos { color: #047857; }
         .rc-bar { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin: 0.5rem 0 1rem; }
         .rc-bar form { margin: 0; }
         .rc-flags { background: #fff; padding: 0.6rem 1rem; margin-bottom: 1rem; border-left: 4px solid #dc2626; }
         .rc-flags li { margin-left: 1.2rem; }
+
+        /* Collapsible long hints: one-line preview + ▾ */
+        .rc-collapse {
+            margin: 0.4rem 0 1rem;
+            max-width: 70rem;
+        }
+        .rc-collapse > summary {
+            list-style: none;
+            cursor: pointer;
+            color: #555;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            min-height: 44px;
+            padding: 0.55rem 0;
+            box-sizing: border-box;
+        }
+        .rc-collapse > summary::-webkit-details-marker { display: none; }
+        .rc-collapse > summary::after {
+            content: "▾";
+            flex: 0 0 auto;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 0.15rem;
+        }
+        .rc-collapse[open] > summary::after { content: "▴"; }
+        .rc-collapse-preview {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        .rc-collapse:not([open]) .rc-collapse-preview {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            overflow: hidden;
+        }
+        .rc-collapse .rc-hint,
+        .rc-collapse .rc-note {
+            margin: 0;
+        }
+        .rc-note-wrap .rc-note {
+            border-left: 0;
+            padding: 0;
+            background: transparent;
+        }
+        .rc-note-wrap > summary {
+            background: #fff;
+            padding: 0.6rem 1rem;
+            border-left: 4px solid #64748b;
+        }
+
+        .rc-flags-toggle {
+            background: #fff;
+            padding: 0.45rem 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid #dc2626;
+        }
+        .rc-flags-toggle > summary {
+            list-style: none;
+            cursor: pointer;
+            font-weight: 600;
+            min-height: var(--tap);
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .rc-flags-toggle > summary::-webkit-details-marker { display: none; }
+        .rc-flags-toggle > summary::after { content: "▾"; color: #64748b; }
+        .rc-flags-toggle[open] > summary::after { content: "▴"; }
+        .rc-flags-toggle ul { margin: 0.35rem 0 0.25rem; padding: 0; }
+        .rc-flags-toggle li { margin-left: 1.2rem; }
+
+        /* Overview month cards */
+        .rc-months { display: flex; flex-direction: column; gap: 0.55rem; margin-bottom: 1.5rem; }
+        .rc-month {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius, 8px);
+            padding: 0.7rem 0.85rem;
+            border-left: 4px solid #cbd5e1;
+        }
+        .rc-month.ok { border-left-color: #059669; }
+        .rc-month.warn { border-left-color: #d97706; }
+        .rc-month.bad { border-left-color: #dc2626; }
+        .rc-month.open, .rc-month.partial { border-left-color: #64748b; }
+        .rc-month-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.45rem 0.65rem;
+            margin-bottom: 0.35rem;
+        }
+        .rc-month-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #4c51bf;
+            text-decoration: none;
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+        }
+        .rc-month-title:hover,
+        .rc-month-title:focus-visible { text-decoration: underline; }
+        .rc-month-line {
+            margin: 0;
+            font-variant-numeric: tabular-nums;
+            font-size: 0.92rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem 0.4rem;
+        }
+        .rc-month-meta {
+            margin: 0.3rem 0 0;
+            font-size: 0.8rem;
+            font-variant-numeric: tabular-nums;
+        }
+        .rc-month .rc-flags-toggle {
+            margin: 0.45rem 0 0;
+            padding: 0;
+            border-left: 0;
+            background: transparent;
+        }
+
+        .rc-dl {
+            margin: 0.35rem 0 0;
+            display: grid;
+            gap: 0.25rem;
+        }
+        .rc-dl > div {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            font-size: 0.85rem;
+            font-variant-numeric: tabular-nums;
+        }
+        .rc-dl dt { color: #64748b; margin: 0; }
+        .rc-dl dd { margin: 0; text-align: right; }
+        .rc-row-more > summary {
+            list-style: none;
+            cursor: pointer;
+            color: #4c51bf;
+            font-size: 0.9rem;
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            position: relative;
+            z-index: 2;
+        }
+        .rc-row-more > summary::-webkit-details-marker { display: none; }
+        .rc-row-more > summary::after { content: "▾"; }
+        .rc-row-more[open] > summary::after { content: "▴"; }
+
+        .rc-wh-desktop { display: none; }
+
+        /* Phone: store cards */
+        .rc-store-cards.table-cards tbody tr,
+        .rc-store-cards.table-cards tfoot tr {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 0.75rem;
+            row-gap: 0.2rem;
+            align-items: start;
+        }
+        .rc-store-cards.table-cards td {
+            display: block;
+            padding: 0.15rem 0;
+            border: 0;
+            white-space: normal;
+            text-align: left;
+            box-shadow: none !important;
+        }
+        .rc-store-cards.table-cards td::before {
+            content: attr(data-label);
+            display: block;
+            color: #64748b;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 0.1rem;
+        }
+        .rc-store-cards.table-cards td:not([data-label])::before,
+        .rc-store-cards.table-cards td[data-label=""]::before { content: none; }
+        .rc-store-cards .tc-primary {
+            grid-column: 1;
+            grid-row: 1;
+            font-weight: 600;
+        }
+        .rc-store-cards .tc-primary::before { content: none; }
+        .rc-store-cards .tc-primary a {
+            color: inherit;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            min-height: var(--tap);
+            min-width: var(--tap);
+            box-sizing: border-box;
+        }
+        .rc-store-cards .tc-primary a::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+        .rc-store-cards .tc-amount {
+            grid-column: 2;
+            grid-row: 1;
+            text-align: right;
+            font-size: 1.15rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+        .rc-store-cards .tc-amount::before { text-align: right; }
+        .rc-store-cards .tc-granit { grid-column: 1; grid-row: 2; font-variant-numeric: tabular-nums; }
+        .rc-store-cards .tc-ours-g { grid-column: 2; grid-row: 2; font-variant-numeric: tabular-nums; }
+        .rc-store-cards .tc-ours-s { grid-column: 1; grid-row: 3; font-variant-numeric: tabular-nums; }
+        .rc-store-cards .tc-pending { grid-column: 2; grid-row: 3; font-variant-numeric: tabular-nums; }
+        .rc-store-cards .tc-extra { display: none; }
+        .rc-store-cards .tc-more {
+            grid-column: 1 / -1;
+            grid-row: 4;
+            position: relative;
+            z-index: 2;
+            margin-top: 0.25rem;
+        }
+        .rc-store-cards .tc-more::before { content: none; }
+        .rc-store-cards tbody tr.ok { border-left: 4px solid #059669; }
+        .rc-store-cards tbody tr.warn { border-left: 4px solid #d97706; background: #fffbeb; }
+        .rc-store-cards tbody tr.bad { border-left: 4px solid #dc2626; background: #fef2f2; }
+        .rc-store-cards tbody tr.open,
+        .rc-store-cards tbody tr.partial { border-left: 4px solid #64748b; }
+
+        /* Phone: doc cards — date under title; amounts on the right */
+        .rc-doc-cards.table-cards--compact .tc-doc-date {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        .rc-doc-cards.table-cards--compact .tc-qty {
+            grid-column: 2;
+            grid-row: 2;
+        }
+        .rc-doc-cards.table-cards--compact .tc-ours {
+            grid-column: 1;
+            grid-row: 3;
+            font-variant-numeric: tabular-nums;
+            color: inherit;
+            font-size: 0.85rem;
+        }
+        .rc-doc-cards.table-cards--compact .tc-ours::before {
+            content: attr(data-label) ": ";
+            color: #64748b;
+        }
+        .rc-doc-cards .tc-extra { display: none; }
+        .rc-doc-cards .tc-more {
+            grid-column: 1 / -1;
+            display: block;
+            position: relative;
+            z-index: 2;
+            margin-top: 0.2rem;
+        }
+        .rc-doc-cards .rc-doc-title { font-weight: 600; }
+        .rc-doc-cards tbody tr.bad { background: #fef2f2; }
+        .rc-doc-cards tbody tr.warn { background: #fffbeb; }
+
+        @media (min-width: 900px) {
+            .rc-collapse > summary {
+                cursor: default;
+            }
+            .rc-collapse > summary::after { content: none; }
+            .rc-collapse .rc-collapse-preview {
+                display: block;
+                -webkit-line-clamp: unset;
+                overflow: visible;
+            }
+            .rc-note-wrap > summary {
+                background: #fff;
+                padding: 0.6rem 1rem;
+                border-left: 4px solid #64748b;
+            }
+            .rc-flags-toggle > summary { display: none; }
+            .rc-flags-toggle ul { display: block; margin: 0; }
+            .rc-flags-toggle {
+                padding: 0.6rem 1rem;
+                border-left: 4px solid #dc2626;
+                background: #fff;
+            }
+
+            .rc-months {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 0.75rem;
+            }
+
+            .rc-wh-desktop { display: block; }
+
+            .rc-store-cards.table-cards thead { display: table-header-group; }
+            .rc-store-cards.table-cards tbody,
+            .rc-store-cards.table-cards tfoot { display: table-row-group; }
+            .rc-store-cards.table-cards tbody tr,
+            .rc-store-cards.table-cards tfoot tr {
+                display: table-row;
+                position: static;
+                background: inherit;
+                border: 0;
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                box-shadow: none;
+            }
+            .rc-store-cards.table-cards td {
+                display: table-cell;
+                padding: 0.4rem 0.55rem;
+                white-space: nowrap;
+                text-align: right;
+            }
+            .rc-store-cards.table-cards td.text,
+            .rc-store-cards.table-cards td.store { text-align: left; white-space: normal; }
+            .rc-store-cards.table-cards td::before { content: none !important; }
+            .rc-store-cards .tc-primary a::after { content: none; }
+            .rc-store-cards .tc-primary a {
+                min-height: 0;
+                min-width: 0;
+                color: #4c51bf;
+            }
+            .rc-store-cards .tc-amount { font-size: inherit; font-weight: inherit; }
+            .rc-store-cards .tc-extra { display: table-cell; }
+            .rc-store-cards .tc-more { display: none; }
+            .rc-store-cards td.store { min-width: 15rem; }
+            .rc-store-cards tbody tr.ok,
+            .rc-store-cards tbody tr.warn,
+            .rc-store-cards tbody tr.bad,
+            .rc-store-cards tbody tr.open,
+            .rc-store-cards tbody tr.partial { border-left: 0; }
+
+            .rc-doc-cards.table-cards--compact thead { display: table-header-group; }
+            .rc-doc-cards.table-cards--compact tbody { display: table-row-group; }
+            .rc-doc-cards.table-cards--compact tbody tr {
+                display: table-row;
+                position: static;
+                background: inherit;
+                border: 0;
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+            }
+            .rc-doc-cards.table-cards--compact td {
+                display: table-cell;
+                padding: 0.4rem 0.55rem;
+                white-space: nowrap;
+                text-align: right;
+            }
+            .rc-doc-cards.table-cards--compact td.text { text-align: left; white-space: normal; }
+            .rc-doc-cards.table-cards--compact td::before { content: none !important; }
+            .rc-doc-cards .tc-extra { display: table-cell; }
+            .rc-doc-cards .tc-more { display: none; }
+            .rc-doc-cards .tc-ours::before { content: none; }
+        }

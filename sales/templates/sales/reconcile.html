@@ -10,9 +10,11 @@
 <div class="container">
     <p class="page-back"><a href="{% url 'sales_matrix' %}">{% trans "Super-groups" %}</a></p>
     <h1 class="page-h1">{% trans "Reconciliation with Granit" %}</h1>
-    <p class="rc-hint">
-        {% trans "Granit side: sales documents by realization date, the same as the Granit report «Sales by warehouses» (amount incl. VAT). Each total is split into goods lines, service lines and a leftover; the leftover must be zero, otherwise Granit has a kind of lines we do not load yet." %}
-    </p>
+    <details class="rc-collapse">
+        <summary>
+            <span class="rc-collapse-preview rc-hint">{% trans "Granit side: sales documents by realization date, the same as the Granit report «Sales by warehouses» (amount incl. VAT). Each total is split into goods lines, service lines and a leftover; the leftover must be zero, otherwise Granit has a kind of lines we do not load yet." %}</span>
+        </summary>
+    </details>
 
     {% if current %}
     <div class="rc-cards">
@@ -47,43 +49,42 @@
     </div>
 
     {% if rows %}
-    <table class="rc-table">
-        <thead>
-            <tr>
-                <th>{% trans "Month" %}</th>
-                <th>{% trans "Granit total" %}</th>
-                <th>{% trans "Goods" %}</th>
-                <th>{% trans "Services" %}</th>
-                <th>{% trans "Leftover" %}</th>
-                <th>{% trans "Ours" %}</th>
-                <th>{% trans "Difference" %}</th>
-                <th>{% trans "Status" %}</th>
-                <th class="text">{% trans "Flags" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in rows %}
-            <tr class="{{ row.status }}">
-                <td><a href="{% url 'sales_reconcile_month' row.key %}">{{ row.month|date:"F Y" }}</a></td>
-                <td>{{ row.totals.granit_total|money }}</td>
-                <td>{{ row.totals.granit_goods|money }}</td>
-                <td>{{ row.totals.granit_services|money }}</td>
-                <td class="{% if row.totals.leftover %}neg{% else %}muted{% endif %}">{{ row.totals.leftover|money }}</td>
-                <td>{{ row.totals.ours_total|money }}</td>
-                <td class="{% if row.totals.diff < 0 %}neg{% elif row.totals.diff > 0 %}pos{% else %}muted{% endif %}">{{ row.totals.diff|money }}</td>
-                <td>{% include "sales/_reconcile_status.html" with status=row.status %}</td>
-                <td class="text">
-                    {% for flag in row.flags|slice:":3" %}<span class="sub">{% include "sales/_reconcile_flag.html" %}</span>{% endfor %}
-                    {% if row.flags|length > 3 %}<span class="sub">{% blocktrans count n=row.flags|length|add:"-3" %}and {{ n }} more{% plural %}and {{ n }} more{% endblocktrans %}</span>{% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="rc-months">
+        {% for row in rows %}
+        <article class="rc-month {{ row.status }}">
+            <header class="rc-month-head">
+                <a class="rc-month-title" href="{% url 'sales_reconcile_month' row.key %}">{{ row.month|date:"F Y" }}</a>
+                {% include "sales/_reconcile_status.html" with status=row.status %}
+            </header>
+            <p class="rc-month-line">
+                <span>{% trans "Granit" %} {{ row.totals.granit_total|money }}</span>
+                <span aria-hidden="true">·</span>
+                <span>{% trans "Ours" %} {{ row.totals.ours_total|money }}</span>
+                <span aria-hidden="true">·</span>
+                <span class="{% if row.totals.diff < 0 %}neg{% elif row.totals.diff > 0 %}pos{% else %}muted{% endif %}">{% trans "Difference" %} {{ row.totals.diff|money }}</span>
+            </p>
+            <p class="rc-month-meta muted">
+                {% trans "Goods" %} {{ row.totals.granit_goods|money }}
+                · {% trans "Services" %} {{ row.totals.granit_services|money }}
+                · <span class="{% if row.totals.leftover %}neg{% else %}muted{% endif %}">{% trans "Leftover" %} {{ row.totals.leftover|money }}</span>
+            </p>
+            {% if row.flags %}
+            <details class="rc-flags-toggle">
+                <summary>{% blocktrans count n=row.flags|length %}{{ n }} flag{% plural %}{{ n }} flags{% endblocktrans %}</summary>
+                <ul>
+                    {% for flag in row.flags %}
+                    <li>{% include "sales/_reconcile_flag.html" %}</li>
+                    {% endfor %}
+                </ul>
+            </details>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
 
     {% if services.kinds %}
     <h2>{% trans "Services by month (Granit)" %}</h2>
-    <div style="overflow-x:auto">
+    <div class="scroll-x">
     <table class="rc-table">
         <thead>
             <tr>

@@ -381,11 +381,12 @@ class SnapshotRunner:
                 {"key": "reconcile_month", "path": f"/sales/reconcile/{ids['reconcile_month']}/"}
             )
         if ids.get("reconcile_month") and ids.get("reconcile_store"):
+            # With scripts/stub_granit_proxy.py (or a real proxy) this is a normal page.
+            # Without proxy the view still returns 200 + error banner (ProxyApiError).
             jobs.append(
                 {
                     "key": "reconcile_docs",
                     "path": f"/sales/reconcile/{ids['reconcile_month']}/store/{ids['reconcile_store']}/",
-                    "expected_error": "needs Granit proxy",
                 }
             )
         if ids.get("campaign_id"):
