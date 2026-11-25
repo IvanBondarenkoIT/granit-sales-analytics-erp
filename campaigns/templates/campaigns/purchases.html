@@ -6,10 +6,101 @@
 {% block back_url %}{% url 'campaign_detail' campaign.pk %}{% if filter_query %}?{{ filter_query|slice:'1:' }}{% endif %}{% endblock %}
 
 {% block extra_css %}
-        table { margin-top: 1rem; }
-        .catalog-filter { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; background: #fff; padding: 1rem; margin: 1rem 0; }
-        .catalog-filter select { min-width: 220px; padding: 0.5rem; font-size: 16px; min-height: 44px; }
-        .filter-hint { color: #555; margin: 0 0 1rem; }
+        .filter-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin: 0 0 0.75rem;
+        }
+        .filter-summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: var(--tap);
+            padding: 0.65rem 0.85rem;
+            font-size: 0.95rem;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .filter-summary::-webkit-details-marker { display: none; }
+        .filter-summary::after {
+            content: "▾";
+            margin-left: auto;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        .filter-panel[open] > .filter-summary::after { content: "▴"; }
+        .filter-summary-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-width: 0;
+        }
+        .catalog-filter {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            padding: 0 0.85rem 0.85rem;
+            align-items: end;
+        }
+        .catalog-filter label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+            color: #444;
+        }
+        .catalog-filter select {
+            width: 100%;
+            padding: 0.5rem;
+            font: inherit;
+            font-size: 16px;
+            min-height: var(--tap);
+            box-sizing: border-box;
+        }
+        .catalog-filter a {
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+        }
+        .filter-hint { color: #555; margin: 0 0 0.75rem; font-size: 0.9rem; }
+        .purchases-cards.table-cards--compact .tc-group {
+            grid-column: 1;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        @media (min-width: 600px) {
+            .catalog-filter { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 900px) {
+            .filter-panel {
+                border: 0;
+                background: transparent;
+                margin: 1rem 0;
+            }
+            .filter-summary { display: none; }
+            .catalog-filter,
+            .catalog-filter-panel:not([open]) > .catalog-filter {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                align-items: end;
+                background: #fff;
+                padding: 1rem;
+            }
+            .catalog-filter select {
+                min-width: 220px;
+                min-height: unset;
+                font-size: inherit;
+            }
+            .purchases-cards.table-cards--compact .tc-group {
+                display: table-cell;
+                color: inherit;
+                font-size: inherit;
+            }
+        }
 {% endblock %}
 
 {% block content %}
@@ -18,25 +109,27 @@
     <h1 class="page-h1">{% trans "What they bought" %}</h1>
     <p>{% trans "Products bought by this campaign list in the analysis window." %}</p>
     {% include "campaigns/_catalog_filter.html" %}
-    <table>
+    <table class="table-cards table-cards--compact purchases-cards">
         <thead>
             <tr>
                 <th>{% trans "Product" %}</th>
                 <th>{% trans "Group" %}</th>
-                <th>{% trans "Qty" %}</th>
-                <th>{% trans "Amount" %}</th>
+                <th class="num">{% trans "Qty" %}</th>
+                <th class="num">{% trans "Amount" %}</th>
             </tr>
         </thead>
         <tbody>
             {% for row in products %}
             <tr>
-                <td>{{ row.product__name }}</td>
-                <td>{{ row.product__group__name|default:"—" }}</td>
-                <td>{{ row.qty|qty }}</td>
-                <td>{{ row.amount|money }}</td>
+                <td class="tc-primary" data-label="{% trans 'Product' %}">{{ row.product__name }}</td>
+                <td class="tc-group tc-meta" data-label="{% trans 'Group' %}">{{ row.product__group__name|default:"—" }}</td>
+                <td class="num tc-qty" data-label="{% trans 'Qty' %}">{{ row.qty|qty }}</td>
+                <td class="num tc-amount" data-label="{% trans 'Amount' %}">{{ row.amount|money }}</td>
             </tr>
             {% empty %}
-            <tr><td colspan="4">{% if filter_active %}{% trans "No matching sales for this filter." %}{% else %}{% trans "No sales in this campaign window." %}{% endif %}</td></tr>
+            <tr>
+                <td class="tc-primary" colspan="4" data-label="">{% if filter_active %}{% trans "No matching sales for this filter." %}{% else %}{% trans "No sales in this campaign window." %}{% endif %}</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>

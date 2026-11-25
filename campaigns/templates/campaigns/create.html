@@ -6,16 +6,115 @@
 {% block back_url %}{% url 'campaign_list' %}{% endblock %}
 
 {% block extra_css %}
-        form { background: #fff; padding: 1rem; max-width: 640px; }
-        label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; }
-        input[type=text], input[type=date], textarea, input[type=file] { width: 100%; padding: 0.5rem; font-size: 16px; min-height: 44px; }
+        .container.has-sticky-action {
+            padding-bottom: calc(4.5rem + var(--nav-pad-bottom));
+        }
+        .campaign-form {
+            background: #fff;
+            padding: 1rem;
+            max-width: 640px;
+        }
+        .campaign-form label {
+            display: block;
+            margin: 0.75rem 0 0.25rem;
+            font-weight: 600;
+        }
+        .campaign-form input[type=text],
+        .campaign-form input[type=date],
+        .campaign-form textarea,
+        .campaign-form select {
+            width: 100%;
+            padding: 0.5rem;
+            font: inherit;
+            font-size: 16px;
+            min-height: var(--tap);
+            box-sizing: border-box;
+        }
+        .campaign-form textarea { min-height: 4.5rem; }
+        .file-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+            padding: 1.25rem 1rem;
+            border: 2px dashed #c7ccf5;
+            border-radius: var(--radius);
+            background: #f8f9ff;
+            min-height: 7rem;
+            box-sizing: border-box;
+        }
+        .file-zone input[type=file] {
+            width: 100%;
+            font-size: 16px;
+            min-height: var(--tap);
+        }
+        .file-zone-hint {
+            color: #555;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        .check-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: var(--tap);
+            font-weight: 600;
+            margin: 0.75rem 0 0.25rem;
+            cursor: pointer;
+        }
+        .check-row input[type=checkbox] {
+            width: 1.25rem;
+            height: 1.25rem;
+            min-width: 1.25rem;
+            flex-shrink: 0;
+        }
         .hint { margin-bottom: 1rem; }
         .errors { color: #b91c1c; }
-        .btn { margin-top: 1rem; }
+        .sticky-action {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: var(--nav-pad-bottom);
+            z-index: 30;
+            padding: 0.75rem 1rem;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
+        }
+        .sticky-action .btn {
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+            display: flex;
+        }
+        .desktop-submit { display: none; }
+        @media (min-width: 900px) {
+            .campaign-form {
+                padding: 1rem;
+                padding-bottom: 1rem;
+            }
+            .campaign-form input[type=text],
+            .campaign-form input[type=date],
+            .campaign-form textarea,
+            .campaign-form select {
+                min-height: unset;
+                font-size: inherit;
+            }
+            .file-zone {
+                min-height: unset;
+                padding: 0.75rem;
+            }
+            .sticky-action { display: none; }
+            .desktop-submit {
+                display: inline-flex;
+                margin-top: 1rem;
+            }
+        }
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container has-sticky-action">
     <p class="page-back"><a href="{% url 'campaign_list' %}">← {% trans "All campaigns" %}</a></p>
     <h1 class="page-h1">{% trans "New campaign" %}</h1>
     <p class="hint">{% trans "Each mailing is a separate campaign. Saving here does not change older blasts." %}</p>
@@ -23,16 +122,44 @@
     {% if local_file_exists %}
     <p class="hint">{% trans "A local list for the 18 Sep 2026 blast is on this machine (not in git). Leave the checkbox off for a new list." %}</p>
     {% endif %}
-    <form method="post" enctype="multipart/form-data">
+    <form id="campaign-create-form" class="campaign-form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% if form.non_field_errors %}<div class="errors">{{ form.non_field_errors }}</div>{% endif %}
         {% for field in form %}
+            {% if field.name == "use_local_file" %}
+            <label class="check-row" for="{{ field.id_for_label }}">{{ field }} {{ field.label }}</label>
+            {% elif field.name == "excel_file" %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            <div class="file-zone">
+                <p class="file-zone-hint">{% trans "Tap to choose Excel or CSV file" %}</p>
+                {{ field }}
+            </div>
+            {% else %}
             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
             {{ field }}
+            {% endif %}
             {% if field.help_text %}<p class="help">{{ field.help_text }}</p>{% endif %}
             {% if field.errors %}<div class="errors">{{ field.errors }}</div>{% endif %}
         {% endfor %}
-        <button class="btn" type="submit">{% trans "Create campaign" %}</button>
+        <button class="btn desktop-submit" type="submit" form="campaign-create-form">{% trans "Create campaign" %}</button>
     </form>
+    <div class="sticky-action">
+        <button class="btn" type="submit" form="campaign-create-form" id="campaign-create-submit">{% trans "Create campaign" %}</button>
+    </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  var form = document.getElementById("campaign-create-form");
+  if (!form) return;
+  form.addEventListener("submit", function () {
+    var buttons = document.querySelectorAll('button[form="campaign-create-form"], #campaign-create-form button[type="submit"]');
+    buttons.forEach(function (btn) {
+      btn.disabled = true;
+    });
+  });
+})();
+</script>
 {% endblock %}
