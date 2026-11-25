@@ -570,6 +570,215 @@ tfoot td {
 .scroll-x {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  /* Edge fade hints overflow without page-level scroll */
+  background:
+    linear-gradient(90deg, var(--surface) 30%, transparent),
+    linear-gradient(90deg, transparent, var(--surface) 70%) 100% 0,
+    radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.12), transparent),
+    radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.12), transparent) 100% 0;
+  background-repeat: no-repeat;
+  background-size: 24px 100%, 24px 100%, 12px 100%, 12px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+/* —— .table-cards: <table> on desktop, stacked cards on phone ——
+   Markup:
+     <table class="table-cards table-cards--compact">
+       <thead>…</thead>
+       <tbody>
+         <tr>
+           <td data-label="…" class="tc-primary"><a href="…">Name</a></td>
+           <td data-label="…" class="tc-meta">…</td>
+           <td data-label="…" class="num tc-qty">…</td>
+           <td data-label="…" class="num tc-amount">…</td>
+           <td class="tc-action"><a href="…">Order items</a></td>
+         </tr>
+       </tbody>
+       <tfoot>…</tfoot>
+     </table>
+   data-label must match the <th> text (same {% trans %}).
+   --compact: name left, amount/qty right; meta muted.
+   Stretched link (phone): card `position:relative`; `.tc-primary a::after
+   { position:absolute; inset:0 }` makes the whole card tappable; hide `.tc-action`
+   on phone, show it again ≥900px. If the row has no name link, wrap the name
+   in the same href as the action (e.g. receipts_query).
+*/
+.table-cards {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+}
+
+.table-cards thead {
+  display: none;
+}
+
+.table-cards tbody,
+.table-cards tfoot {
+  display: block;
+}
+
+.table-cards tbody tr,
+.table-cards tfoot tr {
+  display: block;
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.65rem;
+  margin: 0 0 0.45rem;
+}
+
+.table-cards tfoot tr {
+  font-weight: 600;
+  position: sticky;
+  bottom: calc(var(--nav-pad-bottom) + 0.25rem);
+  z-index: 5;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.table-cards td {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.35rem 0;
+  border: 0;
+  text-align: left;
+  word-break: break-word;
+}
+
+.table-cards td::before {
+  content: attr(data-label);
+  flex: 0 1 auto;
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding-right: 0.5rem;
+}
+
+.table-cards td:not([data-label])::before,
+.table-cards td[data-label=""]::before {
+  content: none;
+}
+
+.table-cards td.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.table-cards td.tc-action {
+  display: block;
+  padding-top: 0.5rem;
+}
+
+.table-cards td.tc-action::before {
+  content: none;
+}
+
+.table-cards td.tc-action a,
+.table-cards td.tc-action .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
+  min-width: var(--tap);
+  padding: 0.5rem 0.85rem;
+  box-sizing: border-box;
+}
+
+/* Compact: title + meta left, amount/qty right */
+.table-cards--compact tbody tr,
+.table-cards--compact tfoot tr {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 0.75rem;
+  row-gap: 0.15rem;
+  align-items: start;
+}
+
+.table-cards--compact td {
+  display: block;
+  padding: 0;
+}
+
+.table-cards--compact td::before {
+  content: none;
+}
+
+.table-cards--compact .tc-primary {
+  grid-column: 1;
+  grid-row: 1;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.table-cards--compact .tc-primary a {
+  color: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  box-sizing: border-box;
+}
+
+/* Whole card is the hit target; in-flow min-height keeps ≥44px for metrics. */
+.table-cards--compact .tc-primary a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.table-cards--compact .tc-primary a:hover,
+.table-cards--compact .tc-primary a:focus-visible {
+  color: var(--brand-dark);
+  text-decoration: underline;
+}
+
+.table-cards--compact .tc-meta,
+.table-cards--compact .tc-secondary {
+  grid-column: 1;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.table-cards--compact .tc-amount {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
+
+.table-cards--compact .tc-qty {
+  grid-column: 2;
+  grid-row: 2;
+  text-align: right;
+  font-size: 0.85rem;
+  color: #555;
+  font-variant-numeric: tabular-nums;
+}
+
+.table-cards--compact .tc-stock {
+  grid-column: 2;
+  grid-row: 3;
+  text-align: right;
+  font-size: 0.85rem;
+  color: #555;
+  font-variant-numeric: tabular-nums;
+}
+
+.table-cards--compact .tc-stock--empty {
+  display: none;
+}
+
+.table-cards--compact .tc-action {
+  display: none;
+}
+
+.table-cards--compact tfoot .tc-primary {
+  font-weight: 700;
 }
 
 /* —— Auth (shared bits; layout stays in auth_base extra) —— */
@@ -678,6 +887,108 @@ body.auth-body {
   select,
   textarea {
     font-size: inherit;
+  }
+
+  /* .table-cards → real table on desktop */
+  .table-cards {
+    display: table;
+    background: var(--surface);
+  }
+
+  .table-cards thead {
+    display: table-header-group;
+  }
+
+  .table-cards tbody,
+  .table-cards tfoot {
+    display: table-row-group;
+  }
+
+  .table-cards tbody tr,
+  .table-cards tfoot tr,
+  .table-cards--compact tbody tr,
+  .table-cards--compact tfoot tr {
+    display: table-row;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    position: static;
+  }
+
+  .table-cards td,
+  .table-cards--compact td {
+    display: table-cell;
+    padding: 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .table-cards td::before,
+  .table-cards--compact td::before {
+    content: none;
+  }
+
+  .table-cards td.num,
+  .table-cards--compact td.num,
+  .table-cards--compact .tc-amount,
+  .table-cards--compact .tc-qty,
+  .table-cards--compact .tc-stock {
+    text-align: right;
+    font-weight: inherit;
+    font-size: inherit;
+    color: inherit;
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .table-cards--compact .tc-primary,
+  .table-cards--compact .tc-meta,
+  .table-cards--compact .tc-secondary,
+  .table-cards--compact .tc-action {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .table-cards--compact .tc-primary {
+    font-weight: inherit;
+  }
+
+  .table-cards--compact .tc-meta,
+  .table-cards--compact .tc-secondary {
+    color: inherit;
+    font-size: inherit;
+  }
+
+  .table-cards--compact .tc-stock--empty {
+    display: table-cell;
+  }
+
+  .table-cards--compact .tc-primary a {
+    color: var(--brand);
+    text-decoration: underline;
+  }
+
+  .table-cards--compact .tc-primary a::after {
+    content: none;
+  }
+
+  .table-cards td.tc-action,
+  .table-cards--compact .tc-action {
+    display: table-cell;
+    padding: 0.6rem;
+  }
+
+  .table-cards td.tc-action a,
+  .table-cards td.tc-action .btn {
+    min-height: unset;
+    min-width: unset;
+    padding: 0.2rem 0.15rem;
+  }
+
+  .table-cards tfoot td {
+    font-weight: 600;
   }
 }
 

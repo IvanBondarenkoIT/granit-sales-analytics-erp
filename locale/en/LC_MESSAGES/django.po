@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: granit-sales-analytics-erp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-24 20:12+0400\n"
+"POT-Creation-Date: 2026-11-24 20:54+0400\n"
 "PO-Revision-Date: 2026-09-22 16:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: English\n"
@@ -105,7 +105,7 @@ msgid "SMS list must be an .xlsx file."
 msgstr "SMS list must be an .xlsx file."
 
 #: .\campaigns\templates\campaigns\_catalog_filter.html:5
-#: .\sales\templates\sales\_explorer.html:36
+#: .\sales\templates\sales\_explorer.html:47
 #: .\sales\templates\sales\matrix_sg.html:51
 #: .\sales\templates\sales\matrix_sg.html:110 .\sales\views.py:394
 #: .\sales\views.py:403 .\sales\views.py:409
@@ -114,7 +114,7 @@ msgstr "Product group"
 
 #: .\campaigns\templates\campaigns\_catalog_filter.html:7
 #: .\promos\templates\promos\create.html:190
-#: .\sales\templates\sales\_explorer.html:39
+#: .\sales\templates\sales\_explorer.html:50
 msgid "All groups"
 msgstr "All groups"
 
@@ -122,26 +122,27 @@ msgstr "All groups"
 #: .\campaigns\templates\campaigns\client_purchases.html:42
 #: .\campaigns\templates\campaigns\purchases.html:24
 #: .\promos\templates\promos\detail.html:44
-#: .\sales\templates\sales\_explorer.html:46
+#: .\sales\templates\sales\_explorer.html:57
 #: .\sales\templates\sales\matrix_group.html:92
-#: .\sales\templates\sales\receipt.html:29 .\sales\views.py:393
+#: .\sales\templates\sales\receipt.html:70
+#: .\sales\templates\sales\receipt.html:79 .\sales\views.py:393
 #: .\sales\views.py:408
 msgid "Product"
 msgstr "Product"
 
 #: .\campaigns\templates\campaigns\_catalog_filter.html:16
-#: .\sales\templates\sales\_explorer.html:49
+#: .\sales\templates\sales\_explorer.html:60
 msgid "All products"
 msgstr "All products"
 
 #: .\campaigns\templates\campaigns\_catalog_filter.html:22
-#: .\sales\templates\sales\_explorer.html:89
+#: .\sales\templates\sales\_explorer.html:104
 #: .\sales\templates\sales\matrix.html:53
 msgid "Apply"
 msgstr "Apply"
 
 #: .\campaigns\templates\campaigns\_catalog_filter.html:24
-#: .\sales\templates\sales\_explorer.html:90
+#: .\sales\templates\sales\_explorer.html:105
 msgid "Reset filters"
 msgstr "Reset filters"
 
@@ -153,14 +154,14 @@ msgstr "Bought and amounts are limited to the selected group or product."
 #: .\campaigns\templates\campaigns\client_purchases.html:5
 #: .\campaigns\templates\campaigns\client_purchases.html:20
 #: .\campaigns\templates\campaigns\detail.html:74
-#: .\sales\templates\sales\_results.html:51
+#: .\sales\templates\sales\_results.html:63
 msgid "Order items"
 msgstr "Order items"
 
 #: .\campaigns\templates\campaigns\client_purchases.html:22
 #: .\campaigns\templates\campaigns\detail.html:54
-#: .\sales\templates\sales\_explorer.html:65
-#: .\sales\templates\sales\receipt.html:24 .\sales\views.py:404
+#: .\sales\templates\sales\_explorer.html:76
+#: .\sales\templates\sales\receipt.html:64 .\sales\views.py:404
 msgid "Client ID"
 msgstr "Client ID"
 
@@ -180,7 +181,7 @@ msgstr "Period"
 #: .\campaigns\templates\campaigns\client_purchases.html:29
 #: .\campaigns\templates\campaigns\detail.html:89
 #: .\campaigns\templates\campaigns\purchases.html:39
-#: .\sales\templates\sales\_results.html:72
+#: .\sales\templates\sales\_results.html:84
 msgid "No matching sales for this filter."
 msgstr "No matching sales for this filter."
 
@@ -190,10 +191,10 @@ msgid "No sales in this campaign window."
 msgstr "No sales in this campaign window."
 
 #: .\campaigns\templates\campaigns\client_purchases.html:34
-#: .\sales\templates\sales\_results.html:34
+#: .\sales\templates\sales\_results.html:46
 #: .\sales\templates\sales\receipt.html:4
 #: .\sales\templates\sales\receipt.html:5
-#: .\sales\templates\sales\receipt.html:20
+#: .\sales\templates\sales\receipt.html:60
 #: .\sales\templates\sales\reconcile_docs.html:45
 msgid "Receipt"
 msgstr "Receipt"
@@ -202,13 +203,17 @@ msgstr "Receipt"
 #: .\campaigns\templates\campaigns\client_purchases.html:45
 #: .\campaigns\templates\campaigns\detail.html:58
 #: .\campaigns\templates\campaigns\purchases.html:27
-#: .\sales\templates\sales\_results.html:5
-#: .\sales\templates\sales\_results.html:25
+#: .\sales\templates\sales\_results.html:12
+#: .\sales\templates\sales\_results.html:37
+#: .\sales\templates\sales\_results.html:60
+#: .\sales\templates\sales\_results.html:78
 #: .\sales\templates\sales\matrix.html:90
 #: .\sales\templates\sales\matrix.html:93
 #: .\sales\templates\sales\matrix_group.html:94
 #: .\sales\templates\sales\matrix_sg.html:53
-#: .\sales\templates\sales\receipt.html:32
+#: .\sales\templates\sales\receipt.html:73
+#: .\sales\templates\sales\receipt.html:82
+#: .\sales\templates\sales\receipt.html:91
 #: .\sales\templates\sales\reconcile_month.html:110 .\sales\views.py:417
 msgid "Amount"
 msgstr "Amount"
@@ -216,19 +221,24 @@ msgstr "Amount"
 #: .\campaigns\templates\campaigns\client_purchases.html:43
 #: .\campaigns\templates\campaigns\purchases.html:25
 #: .\promos\templates\promos\create.html:119
-#: .\sales\templates\sales\receipt.html:30
+#: .\sales\templates\sales\receipt.html:71
+#: .\sales\templates\sales\receipt.html:80
 msgid "Group"
 msgstr "Group"
 
 #: .\campaigns\templates\campaigns\client_purchases.html:44
 #: .\campaigns\templates\campaigns\purchases.html:26
-#: .\sales\templates\sales\_results.html:4
-#: .\sales\templates\sales\_results.html:24
+#: .\sales\templates\sales\_results.html:8
+#: .\sales\templates\sales\_results.html:36
+#: .\sales\templates\sales\_results.html:59
+#: .\sales\templates\sales\_results.html:77
 #: .\sales\templates\sales\matrix.html:89
 #: .\sales\templates\sales\matrix.html:92
 #: .\sales\templates\sales\matrix_group.html:93
 #: .\sales\templates\sales\matrix_sg.html:52
-#: .\sales\templates\sales\receipt.html:31 .\sales\views.py:418
+#: .\sales\templates\sales\receipt.html:72
+#: .\sales\templates\sales\receipt.html:81
+#: .\sales\templates\sales\receipt.html:90 .\sales\views.py:418
 msgid "Qty"
 msgstr "Qty"
 
@@ -320,7 +330,7 @@ msgid "What they bought"
 msgstr "What they bought"
 
 #: .\campaigns\templates\campaigns\detail.html:47
-#: .\sales\templates\sales\_results.html:11
+#: .\sales\templates\sales\_results.html:23
 #, python-format
 msgid "Showing first %(shown)s of %(total)s rows."
 msgstr "Showing first %(shown)s of %(total)s rows."
@@ -346,12 +356,12 @@ msgstr "No"
 
 #: .\campaigns\templates\campaigns\detail.html:82
 #: .\promos\templates\promos\detail.html:149
-#: .\sales\templates\sales\_results.html:61
+#: .\sales\templates\sales\_results.html:73
 #: .\sales\templates\sales\matrix.html:84
 #: .\sales\templates\sales\matrix.html:121
 #: .\sales\templates\sales\matrix_group.html:115
 #: .\sales\templates\sales\matrix_sg.html:87
-#: .\sales\templates\sales\receipt.html:47
+#: .\sales\templates\sales\receipt.html:88
 #: .\sales\templates\sales\reconcile_month.html:77
 msgid "Total"
 msgstr "Total"
@@ -546,9 +556,9 @@ msgstr "Stage 3 — Ready"
 
 #: .\core\views.py:27 .\sales\templates\sales\explorer.html:4
 #: .\sales\templates\sales\explorer.html:5
-#: .\sales\templates\sales\explorer.html:24
+#: .\sales\templates\sales\explorer.html:201
 #: .\sales\templates\sales\matrix.html:56
-#: .\sales\templates\sales\receipt.html:18 .\templates\base.html:33
+#: .\sales\templates\sales\receipt.html:57 .\templates\base.html:33
 msgid "Sales Explorer"
 msgstr "Sales Explorer"
 
@@ -1008,7 +1018,8 @@ msgid "Margin"
 msgstr "Margin"
 
 #: .\promos\templates\promos\detail.html:50
-#: .\sales\templates\sales\_results.html:23
+#: .\sales\templates\sales\_results.html:35
+#: .\sales\templates\sales\_results.html:57
 msgid "Stock"
 msgstr "Stock"
 
@@ -1166,73 +1177,82 @@ msgstr ""
 msgid "Reconciliation recalculated."
 msgstr ""
 
-#: .\sales\templates\sales\_explorer.html:11
+#: .\sales\templates\sales\_explorer.html:16
+#: .\sales\templates\sales\_explorer.html:40
+#: .\sales\templates\sales\matrix_sg.html:39
+msgid "All stores"
+msgstr "All stores"
+
+#: .\sales\templates\sales\_explorer.html:17
+#, python-format
+msgid "%(counter)s filter"
+msgid_plural "%(counter)s filters"
+msgstr[0] "%(counter)s filter"
+msgstr[1] "%(counter)s filters"
+
+#: .\sales\templates\sales\_explorer.html:22
 #: .\sales\templates\sales\matrix.html:38
 #: .\sales\templates\sales\matrix_group.html:56
 #: .\sales\templates\sales\matrix_sg.html:29 .\templates\base.html:76
 msgid "Sales"
 msgstr "Sales"
 
-#: .\sales\templates\sales\_explorer.html:19
+#: .\sales\templates\sales\_explorer.html:30
 msgid "Date from"
 msgstr "Date from"
 
-#: .\sales\templates\sales\_explorer.html:23
+#: .\sales\templates\sales\_explorer.html:34
 msgid "Date to"
 msgstr "Date to"
 
-#: .\sales\templates\sales\_explorer.html:27
-#: .\sales\templates\sales\_results.html:20
+#: .\sales\templates\sales\_explorer.html:38
+#: .\sales\templates\sales\_results.html:32
+#: .\sales\templates\sales\_results.html:53
 #: .\sales\templates\sales\matrix_sg.html:37
 #: .\sales\templates\sales\reconcile_month.html:44 .\sales\views.py:396
 #: .\sales\views.py:411
 msgid "Store"
 msgstr "Store"
 
-#: .\sales\templates\sales\_explorer.html:29
-#: .\sales\templates\sales\matrix_sg.html:39
-msgid "All stores"
-msgstr "All stores"
-
-#: .\sales\templates\sales\_explorer.html:37
+#: .\sales\templates\sales\_explorer.html:48
 msgid "Filter groups"
 msgstr "Filter groups"
 
-#: .\sales\templates\sales\_explorer.html:47
+#: .\sales\templates\sales\_explorer.html:58
 msgid "Filter products"
 msgstr "Filter products"
 
-#: .\sales\templates\sales\_explorer.html:56 .\sales\views.py:395
+#: .\sales\templates\sales\_explorer.html:67 .\sales\views.py:395
 #: .\sales\views.py:410
 msgid "Production"
 msgstr "Production"
 
-#: .\sales\templates\sales\_explorer.html:58
+#: .\sales\templates\sales\_explorer.html:69
 msgid "All production types"
 msgstr "All production types"
 
-#: .\sales\templates\sales\_explorer.html:66
+#: .\sales\templates\sales\_explorer.html:77
 msgid "Granit client id"
 msgstr "Granit client id"
 
-#: .\sales\templates\sales\_explorer.html:69
+#: .\sales\templates\sales\_explorer.html:80
 #: .\sales\templates\sales\matrix_sg.html:104
 msgid "Search"
 msgstr "Search"
 
-#: .\sales\templates\sales\_explorer.html:70
+#: .\sales\templates\sales\_explorer.html:81
 msgid "Product name"
 msgstr "Product name"
 
-#: .\sales\templates\sales\_explorer.html:73
+#: .\sales\templates\sales\_explorer.html:87
 msgid "Group by"
 msgstr "Group by"
 
-#: .\sales\templates\sales\_explorer.html:81
+#: .\sales\templates\sales\_explorer.html:95
 msgid "Sort by"
 msgstr "Sort by"
 
-#: .\sales\templates\sales\_explorer.html:93
+#: .\sales\templates\sales\_explorer.html:108
 msgid "The end date is included in the period."
 msgstr "The end date is included in the period."
 
@@ -1274,16 +1294,20 @@ msgstr "Incomplete history"
 msgid "Mismatch"
 msgstr ""
 
-#: .\sales\templates\sales\_results.html:3
+#: .\sales\templates\sales\_results.html:4
 msgid "Rows"
 msgstr "Rows"
 
-#: .\sales\templates\sales\_results.html:7
+#: .\sales\templates\sales\_results.html:17
+msgid "How it's calculated"
+msgstr "How it's calculated"
+
+#: .\sales\templates\sales\_results.html:18
 #: .\sales\templates\sales\matrix.html:32
 msgid "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
 msgstr "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest."
 
-#: .\sales\templates\sales\_results.html:8
+#: .\sales\templates\sales\_results.html:19
 msgid ""
 "Stock is remainder as of the period end date for the selected store filter "
 "(Retail = shop warehouses, All warehouses = company)."
@@ -1291,7 +1315,7 @@ msgstr ""
 "Stock is remainder as of the period end date for the selected store filter "
 "(Retail = shop warehouses, All warehouses = company)."
 
-#: .\sales\templates\sales\_results.html:9
+#: .\sales\templates\sales\_results.html:20
 #: .\sales\templates\sales\matrix.html:34
 msgid ""
 "All warehouses = the Granit report «Sales by warehouses»: receipts as "
@@ -1306,32 +1330,33 @@ msgstr ""
 "not realized yet are only in Retail; transfers and write-offs are not "
 "included."
 
-#: .\sales\templates\sales\_results.html:21 .\sales\views.py:397
+#: .\sales\templates\sales\_results.html:33
+#: .\sales\templates\sales\_results.html:54 .\sales\views.py:397
 #: .\sales\views.py:412
 msgid "Client"
 msgstr "Client"
 
-#: .\sales\templates\sales\_results.html:34
+#: .\sales\templates\sales\_results.html:46
 #: .\sales\templates\sales\receipt.html:4
 #: .\sales\templates\sales\receipt.html:5
-#: .\sales\templates\sales\receipt.html:20
+#: .\sales\templates\sales\receipt.html:60
 #: .\sales\templates\sales\reconcile_docs.html:45
 msgid "Invoice"
 msgstr "Invoice"
 
-#: .\sales\templates\sales\_results.html:34
+#: .\sales\templates\sales\_results.html:46
 #: .\sales\templates\sales\receipt.html:4
 #: .\sales\templates\sales\receipt.html:5
-#: .\sales\templates\sales\receipt.html:20
+#: .\sales\templates\sales\receipt.html:60
 msgid "Realization"
 msgstr "Realization"
 
-#: .\sales\templates\sales\_results.html:53
+#: .\sales\templates\sales\_results.html:65
 #: .\sales\templates\sales\matrix_group.html:106
 msgid "Receipts"
 msgstr "Receipts"
 
-#: .\sales\templates\sales\explorer.html:25
+#: .\sales\templates\sales\explorer.html:202
 msgid "Slice sales for a period, then open the receipts and the full order."
 msgstr "Slice sales for a period, then open the receipts and the full order."
 
@@ -1799,7 +1824,7 @@ msgstr "Realization"
 msgid "Main"
 msgstr ""
 
-#: .\templates\base.html:104
+#: .\templates\base.html:105
 msgid "Admin Panel"
 msgstr "Admin Panel"
 
