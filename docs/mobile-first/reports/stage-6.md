@@ -94,4 +94,4 @@
    - `artifacts/ui/stage6b/screenshots/campaign_purchases__demo_staff__desktop.png` — видны селекты фильтра каталога над таблицей.
    - `artifacts/ui/stage6b/screenshots/campaign_client__demo_staff__desktop.png` — видны селекты фильтра каталога над чеками.
 
-Проверки после фикса: `DB_HOST=localhost python manage.py test` — **93 OK**; `python scripts/ui_snapshots.py --name stage6b --compare stage6` → `artifacts/ui/stage6b/` (104 pages, exit 0). Мобильные campaign_* по-прежнему scrollWidth 390.
+Коммит фикса: `48db62a`. Проверки после фикса: `DB_HOST=localhost python manage.py test` — **93 OK**; `python scripts/ui_snapshots.py --name stage6b --compare stage6` → `artifacts/ui/stage6b/` (104 pages, exit 0). Мобильные campaign_* по-прежнему scrollWidth 390.
