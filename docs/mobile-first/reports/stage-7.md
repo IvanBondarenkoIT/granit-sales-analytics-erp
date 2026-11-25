@@ -1,9 +1,9 @@
 # Отчёт: этап 7 — Акции и итоговая проверка
 
 - Ветка: `feature/mobile-7-promos`
-- Коммит: `640a8e8`
+- Коммит: *(tip после rework — см. STATUS.md)*
 - Дата: 2026-11-25
-- Итог: готово к ревью
+- Итог: готово к ревью (после rework)
 
 ## Что сделано
 
@@ -21,6 +21,7 @@
  docs/mobile-first/RULES.md
  docs/mobile-first/STATUS.md
  docs/mobile-first/reports/stage-7.md
+ docs/mobile-first/reviews/stage-7.md
  locale/en/LC_MESSAGES/django.mo
  locale/en/LC_MESSAGES/django.po
  locale/ru/LC_MESSAGES/django.mo
@@ -29,14 +30,15 @@
  promos/templates/promos/create.html
  promos/templates/promos/detail.html
  promos/templates/promos/list.html
+ scripts/ui_snapshots.py
 ```
 
 ## Проверки
 
-- `DB_HOST=localhost python manage.py test`: **93 tests OK** (≈32–39 s).
-- Скриншоты: `python scripts/ui_snapshots.py --name stage7 --compare baseline` → `artifacts/ui/stage7/compare.html` (104 pages, exit 0); `--locale en` → `artifacts/ui/stage7-en/`. Перед прогонами `docker compose restart web`.
-- Внешние запросы: **0** на всех страницах stage7.
-- Метрики mobile 390 px, `demo_staff`, **baseline → stage7**:
+- `DB_HOST=localhost python manage.py test`: **93 tests OK** (≈32 s) после rework.
+- Скриншоты: `python scripts/ui_snapshots.py --name stage7 --compare baseline` → `artifacts/ui/stage7/compare.html` (**108** pages: +`promo_charts_empty`, exit 0). Discovery: `promo_id=10` (AUTUMN SALE), `promo_charts_empty=12`. Для `reconcile_docs` — stub `:8765` + временный compose override `PROXY_API_URL=http://host.docker.internal:8765` (не в репо); после прогона web без stub.
+- Внешние запросы: **0**.
+- Метрики mobile 390 px, `demo_staff`, **baseline → stage7** (после rework):
 
 | Страница | Гор. скролл (scrollWidth) до → после | Полей < 16px до → после | Элементов < 44px до → после |
 |----------|--------------------------------------|-------------------------|------------------------------|
@@ -54,7 +56,7 @@
 | matrix_group | 776 → 390 | 8 → 0 | 9 → 0 |
 | reconcile | 1024 → 390 | 6 → 0 | 7 → 0 |
 | reconcile_month | 1158 → 390 | 7 → 0 | 7 → 0 |
-| reconcile_docs | 980 → 980 | 6 → 2 | 6 → 6 |
+| reconcile_docs | 980 → 390 | 6 → 0 | 6 → 0 |
 | campaigns | 776 → 390 | 4 → 0 | 2 → 0 |
 | campaign_new | 905 → 390 | 12 → 0 | 9 → 1 |
 | campaign_detail | 776 → 390 | 9 → 0 | 11 → 0 |
@@ -66,31 +68,27 @@
 | promo_detail | 778 → 390 | 5 → 0 | 7 → 0 |
 | promo_edit | 778 → 390 | 21 → 0 | 17 → 0 |
 | promo_charts | 778 → 390 | 5 → 0 | 4 → 0 |
+| promo_charts_empty | — → 390 | — → 0 | — → 0 |
 
 Исключения tap < 44 (осознанно):
-- `promo_new` / `promo_picker`: нативный `input[type=checkbox]` 18–20 px (`use_example_file`, `inactive`); label `.check-row` / `.picker-filter label` ≥ 44 px.
+- `promo_new` / `promo_picker`: нативный `input[type=checkbox]` 18–20 px (`use_example_file`, `inactive`); label ≥ 44 px.
 - `campaign_new`: тот же паттерн чекбокса (этап 6).
 - `login`: select языка (этап 2).
-- `reconcile_docs`: страница 980 px без полного stub-контента документов (вне этапа 7; как на 5–6).
 
-Скролл внутри `.scroll-x` (матрица «Table», SVG графиков) — допустим; page `scrollWidth` 390.
+Скролл внутри `.scroll-x` (матрица «Table», SVG графиков) — допустим; page `scrollWidth` 390 на всех страницах выше.
 
-- Десктоп 1366 px: таблицы акций снова table; пикер с деревом слева и тремя кнопками футера; форма пересчёта кампаний и фильтры обозревателя на месте (см. ниже).
+- Десктоп 1366 px: таблицы акций снова table; пикер с деревом слева и тремя кнопками футера; форма пересчёта кампаний и фильтры обозревателя на месте.
 
-### Проверка глазами (desktop, demo_staff, stage7)
+### Проверка глазами (desktop / mobile charts, demo_staff, stage7)
 
 | Скриншот | Что видно |
 |----------|-----------|
-| `artifacts/ui/stage7/screenshots/promos__demo_staff__desktop.png` | Заголовок, «Новая акция», чипы Active/Passed, таблица с колонками Тип / к базе |
-| `artifacts/ui/stage7/screenshots/promo_detail__demo_staff__desktop.png` | Мета, цели, Пересчитать/Графики, KPI, таблица цен 8 колонок |
-| `artifacts/ui/stage7/screenshots/promo_new__demo_staff__desktop.png` | Поля формы, кнопки «Добавить из Гранита/сайта», Save |
-| `artifacts/ui/stage7/screenshots/promo_edit__demo_staff__desktop.png` | Строка группы Coffee kg, без ложного «Товаров пока нет», Save |
-| `artifacts/ui/stage7/screenshots/promo_picker__demo_staff__desktop.png` | Дерево слева, «Добавить выбранные (0)» + Add all + Done |
-| `artifacts/ui/stage7/screenshots/promo_charts__demo_staff__desktop.png` | Empty-state «нет расчёта» + Пересчитать (демо-акция #12 без analyses) |
-| `artifacts/ui/stage7/screenshots/sales_default__demo_staff__desktop.png` | Фильтры, Group by / Sort by, таблица |
-| `artifacts/ui/stage7/screenshots/campaign_detail__demo_staff__desktop.png` | Дата пересчёта + кнопка, селекты каталога |
-| `artifacts/ui/stage7/screenshots/matrix__demo_staff__desktop.png` | Тулбар scope/дат/Apply/Excel/редактор |
-| `artifacts/ui/stage7/screenshots/reconcile__demo_staff__desktop.png` | KPI, карточки месяцев, таблица услуг |
+| `artifacts/ui/stage7/screenshots/promos__demo_staff__desktop.png` | Заголовок, «Новая акция», чипы, таблица |
+| `artifacts/ui/stage7/screenshots/promo_detail__demo_staff__desktop.png` | AUTUMN SALE #10: KPI с цифрами, таблица цен |
+| `artifacts/ui/stage7/screenshots/promo_charts__demo_staff__desktop.png` | SVG с данными (не empty-state) |
+| `artifacts/ui/stage7/screenshots/promo_charts__demo_staff__mobile.png` | см. «Исправления по ревью» |
+| `artifacts/ui/stage7/screenshots/promo_charts_empty__demo_staff__mobile.png` | черновик #12: empty-state + Пересчитать |
+| `artifacts/ui/stage7/screenshots/reconcile_docs__demo_staff__mobile.png` | документы со stub, scrollWidth 390 |
 
 ## Изменения в тестах
 
@@ -111,13 +109,23 @@
 ## Не проверено
 
 - Реальный телефон / Safari.
-- Скриншот charts с заполненными SVG: discovery взял promo #12 (draft без analyses); на списке lift у #10 (AUTUMN) виден. Графики с данными — проверить руками на `/promos/10/charts/`.
 
 ## Найдено вне этапа
 
-- `reconcile_docs` на 390 px: scrollWidth 980 (без полного stub документов) — как на этапах 5–6.
-- Discovery `ui_snapshots` предпочитает первый promo с ссылкой charts, даже без analyses — для демо графиков лучше якорить AUTUMN SALE.
+- Формула «к базе %» дублируется в `promos/views.py::_lift` и теге `promo_lift_pre` (ревью: к сведению).
 
 ## Вопросы
 
 нет
+
+## Исправления по ревью
+
+Код ревью: `640a8e8` / tip `5cb6104` → rework (`reviews/stage-7.md`).
+
+1. **Графики с данными.** В `scripts/ui_snapshots.py` discovery выбирает акцию с `.days-cards tbody tr` (`promo_with_charts` / `promo_id` = #10 AUTUMN SALE); черновик без analyses → отдельный job `promo_charts_empty` (#12). Перегон `stage7` vs `baseline` (108 pages).
+2. **Проверка глазами** `artifacts/ui/stage7/screenshots/promo_charts__demo_staff__mobile.png` (`/promos/10/charts/`, scrollWidth **390**, hasHorizontalScroll **false**):
+   - легенда (Факт / База / Прогноз / Дни акции) в 2 колонки — читается;
+   - подписи осей Y читаемы; X прорежены (`03.11`, `13.11`, …), друг на друга не налезают;
+   - page не скроллится по горизонтали — скролл широкого SVG только внутри `.scroll-x`.
+   `charts.py` не трогали; `blocked` не нужен.
+3. **reconcile_docs.** Поднят `scripts/stub_granit_proxy.py` (`:8765`, token `local-stub`); web временно на `host.docker.internal:8765`. Строка сводной: **980 → 390**, font 0, tap 0. После прогона web без stub-override.

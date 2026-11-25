@@ -340,13 +340,25 @@ class SnapshotRunner:
                 ids.setdefault("promo_ids", []).append(int(m.group(1)))
                 if "promo_id" not in ids:
                     ids["promo_id"] = int(m.group(1))
-        # Prefer active promo with charts if several exist: open each detail briefly.
+        # Prefer promo that already has analysis rows (for charts with SVG data).
+        # Keep a draft without analyses as promo_charts_empty.
         for pk in ids.get("promo_ids", [])[:5]:
             page.goto(self._url(f"/promos/{pk}/"), wait_until="networkidle")
-            if page.locator(f'a[href*="/promos/{pk}/charts"]').count():
+            has_charts_link = bool(page.locator(f'a[href*="/promos/{pk}/charts"]').count())
+            has_analysis = page.locator(".days-cards tbody tr").count() > 0
+            if has_analysis and "promo_with_charts" not in ids:
                 ids["promo_id"] = pk
                 ids["promo_with_charts"] = pk
-                break
+            elif not has_analysis and has_charts_link and "promo_charts_empty" not in ids:
+                ids["promo_charts_empty"] = pk
+        if "promo_with_charts" not in ids:
+            # Fallback: any promo with a charts link (may be empty-state).
+            for pk in ids.get("promo_ids", [])[:5]:
+                page.goto(self._url(f"/promos/{pk}/"), wait_until="networkidle")
+                if page.locator(f'a[href*="/promos/{pk}/charts"]').count():
+                    ids["promo_id"] = pk
+                    ids["promo_with_charts"] = pk
+                    break
 
         self._ids = ids
         print(f"Discovered ids: {json.dumps(ids)}")
@@ -409,6 +421,13 @@ class SnapshotRunner:
                 {
                     "key": "promo_charts",
                     "path": f"/promos/{ids['promo_with_charts']}/charts/",
+                }
+            )
+        if ids.get("promo_charts_empty"):
+            jobs.append(
+                {
+                    "key": "promo_charts_empty",
+                    "path": f"/promos/{ids['promo_charts_empty']}/charts/",
                 }
             )
         return jobs
