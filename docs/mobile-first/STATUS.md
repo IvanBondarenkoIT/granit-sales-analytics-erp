@@ -11,7 +11,7 @@
 | 4 | Супергруппы (матрица, детализация, редактор) | [stage-4](prompts/stage-4-matrix.md) | feature/mobile-4-matrix | done | 2026-11-25 | ed4363c | [stage-4.md](reports/stage-4.md) | [stage-4](reviews/stage-4.md) |
 | 5 | Сверка с Гранитом | [stage-5](prompts/stage-5-reconcile.md) | feature/mobile-5-reconcile | done | 2026-11-25 | f9dde5f | [stage-5.md](reports/stage-5.md) | [stage-5](reviews/stage-5.md) |
 | 6 | Кампании | [stage-6](prompts/stage-6-campaigns.md) | feature/mobile-6-campaigns | done | 2026-11-25 | 57b21ca | [stage-6.md](reports/stage-6.md) | [stage-6](reviews/stage-6.md) |
-| 7 | Акции (карточка, графики, форма, пикер), итоговая проверка | [stage-7](prompts/stage-7-promos.md) | feature/mobile-7-promos | todo | | | | |
+| 7 | Акции (карточка, графики, форма, пикер), итоговая проверка | [stage-7](prompts/stage-7-promos.md) | feature/mobile-7-promos | review | 2026-11-25 | fd745bc | [stage-7.md](reports/stage-7.md) | [stage-7](reviews/stage-7.md) |
 
 Этапы 0 → 1 → 2 → 3 строго по порядку (на 3 появляется `.table-cards`). 4–7 можно переставлять, но каждый начинается
 от `main` с уже смерженными предыдущими. Итоговая проверка — в последнем выполненном этапе.
@@ -19,5 +19,14 @@
 ## Заметки
 
 <!-- Cursor и Claude добавляют сюда короткие заметки, которые касаются нескольких этапов. Новые сверху. -->
+
+### Доработки после mobile-first (решает Иван, отдельными мелкими задачами)
+
+- Графики акции на телефоне: при загрузке прокручивать `.scroll-x` к правому краю (дни акции и суммы видны сразу). Только шаблон/JS.
+- Обозреватель: «назад» при вытесненном HTMX-кэше может вернуть страницу без каркаса — учесть `HX-History-Restore-Request` во view (Python, 2–3 строки).
+- Сверка → документы магазина: `ValueError` из `warehouse_store_routes` не ловится во view → 500. Проверить на проде; при подтверждении — ловить и показывать сообщение (Python).
+- Супергруппы: сохранять выбранный магазин в `sessionStorage` при возврате из детализации; приглушать нулевые карточки.
+- Формула «к базе %» продублирована (`promos/views.py::_lift` и тег `promo_lift_pre`) — при желании вынести в общую функцию.
+
 
 - 2026-11-24 этап 0: baseline в `artifacts/ui/baseline/` (gitignored). Документы сверки магазина дают 500 без Granit proxy — учесть на этапе 5 / в seed, если понадобятся скриншоты docs.

@@ -6,66 +6,524 @@
 {% block back_url %}{% url 'promo_list' %}{% endblock %}
 
 {% block extra_css %}
-        .promo-form { background: #fff; padding: 1rem; max-width: 960px; }
+        .container.has-sticky-action {
+            padding-bottom: calc(4.5rem + var(--nav-pad-bottom));
+        }
+        .promo-form {
+            background: #fff;
+            padding: 0.75rem;
+            max-width: 960px;
+            position: relative;
+            z-index: 1;
+        }
         .promo-form label { display: block; margin: 0.75rem 0 0.25rem; font-weight: 600; }
-        .promo-form input[type=text], .promo-form input[type=date], .promo-form input[type=number], .promo-form input[type=search], .promo-form textarea { width: 100%; padding: 0.5rem; font-size: 16px; min-height: 44px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 1rem; }
+        .promo-form input[type=text],
+        .promo-form input[type=date],
+        .promo-form input[type=number],
+        .promo-form input[type=search],
+        .promo-form textarea {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 16px;
+            min-height: var(--tap);
+            box-sizing: border-box;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0 1rem;
+            position: relative;
+            z-index: 0;
+        }
         .errors { color: #b91c1c; }
-        .section { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #eee; }
+        .section {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            position: relative;
+            z-index: 2;
+        }
         .section h2 { font-size: 1.1rem; margin: 0 0 0.5rem; display: flex; gap: 0.5rem; align-items: baseline; }
-        .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 0.75rem; }
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.5rem 0 0.75rem;
+            position: relative;
+            z-index: 3;
+        }
+        .actions .btn-secondary,
+        .actions .btn-link {
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            z-index: 3;
+        }
         .sel-table { width: 100%; border-collapse: collapse; }
-        .sel-table th, .sel-table td { text-align: left; padding: 0.45rem 0.5rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-        .sel-table th { color: #555; font-size: 0.8rem; }
-        .sel-table td.num, .sel-table th.num { text-align: right; }
-        .sel-table tr.sel-group td { background: #fafaf5; }
-        details.import { margin-top: 1.5rem; border: 1px solid #eee; border-radius: 6px; padding: 0.5rem 1rem; }
-        details.import summary { cursor: pointer; font-weight: 600; }
-        .submit-row { margin-top: 1.5rem; display: flex; gap: 1rem; align-items: center; }
-        .catalog-status { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; color: #666; font-size: 0.85rem; margin-bottom: 1rem; }
+        .sel-table thead { display: none; }
+        .sel-table tbody { display: block; }
+        .sel-table tbody tr.sel,
+        .sel-table tbody tr.sel-group {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.25rem 0.5rem;
+            padding: 0.65rem 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+        .sel-table tbody tr#selected-empty {
+            display: block;
+            padding: 0.75rem;
+            background: var(--bg);
+            border-radius: var(--radius);
+        }
+        .sel-table tbody tr#selected-empty[hidden] {
+            display: none;
+        }
+        .sel-table td {
+            border: 0;
+            padding: 0;
+            font-size: 0.95rem;
+        }
+        .sel-table tr.sel td:nth-child(1),
+        .sel-table tr.sel-group td:nth-child(1) {
+            grid-column: 1;
+            grid-row: 1;
+            font-weight: 600;
+        }
+        .sel-table tr.sel td:nth-child(2),
+        .sel-table tr.sel-group td:nth-child(2) {
+            grid-column: 1;
+            grid-row: 2;
+            text-align: left;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        .sel-table tr.sel td:nth-child(2)::before { content: "ID "; }
+        .sel-table tr.sel td:nth-child(3),
+        .sel-table tr.sel-group td:nth-child(3) {
+            grid-column: 1;
+            grid-row: 3;
+            color: #555;
+            font-size: 0.85rem;
+        }
+        .sel-table tr.sel td:nth-child(4),
+        .sel-table tr.sel-group td:nth-child(4) {
+            grid-column: 2;
+            grid-row: 1 / span 3;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            align-items: stretch;
+            justify-content: center;
+        }
+        .sel-table .sel-remove,
+        .sel-table .group-expand {
+            min-height: var(--tap);
+            min-width: var(--tap);
+            padding: 0.35rem 0.65rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        details.import {
+            margin-top: 1.5rem;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+        }
+        details.import summary {
+            cursor: pointer;
+            font-weight: 600;
+            min-height: var(--tap);
+            display: flex;
+            align-items: center;
+        }
+        details.import input[type=file] {
+            width: 100%;
+            font-size: 16px;
+            min-height: var(--tap);
+        }
+        details.import .help a {
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+        }
+        details.import .check-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: var(--tap);
+            font-weight: 600;
+            margin: 0.75rem 0 0.25rem;
+            cursor: pointer;
+        }
+        details.import .check-row input[type=checkbox] {
+            width: 1.25rem;
+            height: 1.25rem;
+            min-width: 1.25rem;
+            flex-shrink: 0;
+        }
+        .desktop-submit { display: none; }
+        .sticky-action {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: var(--nav-pad-bottom);
+            z-index: 30;
+            padding: 0.75rem 1rem;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
+        }
+        .sticky-action .btn {
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+            display: flex;
+        }
+        .catalog-status {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
         .catalog-status form { margin: 0; }
         .catalog-status .warn { color: #b45309; }
 
-        dialog.picker { width: min(1100px, 96vw); height: min(780px, 92vh); padding: 0; border: 0; border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+        dialog.picker {
+            width: 100vw;
+            max-width: 100vw;
+            height: 100dvh;
+            max-height: 100dvh;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            inset: 0;
+        }
         dialog.picker[open] { display: flex; flex-direction: column; }
         dialog.picker::backdrop { background: rgba(20, 20, 40, .45); }
-        .picker-head, .picker-foot { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-bottom: 1px solid #eee; }
-        .picker-foot { border-top: 1px solid #eee; border-bottom: 0; justify-content: flex-end; }
+        .picker-head, .picker-foot {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            padding-left: calc(1rem + var(--safe-left));
+            padding-right: calc(1rem + var(--safe-right));
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
+            background: var(--surface);
+            position: sticky;
+            z-index: 2;
+        }
+        .picker-head {
+            top: 0;
+            padding-top: calc(0.75rem + var(--safe-top));
+        }
+        .picker-foot {
+            bottom: 0;
+            border-top: 1px solid #eee;
+            border-bottom: 0;
+            flex-direction: column;
+            align-items: stretch;
+            padding-bottom: calc(0.75rem + var(--safe-bottom));
+            gap: 0.5rem;
+        }
+        .picker-foot .picker-status {
+            order: -1;
+            margin: 0;
+            min-height: 1.2em;
+        }
+        .picker-foot .picker-add {
+            width: 100%;
+            min-height: var(--tap);
+            order: 0;
+        }
+        .picker-foot .picker-secondary {
+            display: flex;
+            gap: 0.5rem;
+            order: 1;
+        }
+        .picker-foot .picker-secondary .btn-secondary {
+            flex: 1;
+            min-height: var(--tap);
+        }
         .picker-head h2 { margin: 0; font-size: 1.1rem; flex: 1; }
-        .picker-close { background: none; border: 0; font-size: 1.5rem; cursor: pointer; line-height: 1; min-width: 44px; min-height: 44px; }
-        .picker-filter { display: flex; gap: 0.75rem; align-items: center; padding: 0.5rem 1rem; border-bottom: 1px solid #eee; }
-        .picker-filter input[type=search] { flex: 1; padding: 0.5rem; font-size: 16px; min-height: 44px; }
-        .picker-filter label { font-size: 0.85rem; color: #555; white-space: nowrap; min-height: 44px; display: inline-flex; align-items: center; }
-        .picker-body { flex: 1; display: grid; grid-template-columns: 300px 1fr; min-height: 0; }
-        .picker-tree { overflow: auto; border-right: 1px solid #eee; padding: 0.5rem; }
-        .picker-results { overflow: auto; padding: 0.5rem 1rem; }
+        .picker-close {
+            background: none;
+            border: 0;
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+            min-width: var(--tap);
+            min-height: var(--tap);
+        }
+        .picker-filter {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .picker-filter input[type=search] {
+            flex: 1;
+            min-width: 0;
+            padding: 0.5rem;
+            font-size: 16px;
+            min-height: var(--tap);
+        }
+        .picker-filter label {
+            font-size: 0.85rem;
+            color: #555;
+            white-space: nowrap;
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .picker-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+        .picker-tree-panel {
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
+            background: var(--surface);
+        }
+        .picker-tree-panel > summary {
+            list-style: none;
+            cursor: pointer;
+            min-height: var(--tap);
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            font-size: 0.95rem;
+            gap: 0.35rem;
+        }
+        .picker-tree-panel > summary::-webkit-details-marker { display: none; }
+        .picker-tree-panel > summary::after {
+            content: "▾";
+            margin-left: auto;
+            color: var(--muted);
+        }
+        .picker-tree-panel[open] > summary::after { content: "▴"; }
+        .picker-tree {
+            overflow: auto;
+            max-height: 40dvh;
+            padding: 0.5rem 1rem 0.75rem;
+        }
+        .picker-results {
+            flex: 1;
+            overflow: auto;
+            padding: 0.5rem 1rem;
+            min-height: 0;
+        }
         .tree, .tree-children { list-style: none; margin: 0; padding: 0; }
-        .tree li { display: grid; grid-template-columns: 1.3rem 1fr; align-items: start; }
+        .tree li { display: grid; grid-template-columns: var(--tap) 1fr; align-items: start; }
         .tree li > .tree-children { grid-column: 1 / -1; }
         .tree-children { padding-left: 1rem; display: none; }
         li.open > .tree-children { display: block; }
         .tree li.muted { display: block; }
-        .tree-toggle, .tree-spacer { display: inline-block; width: 1.3rem; }
-        .tree-toggle { background: none; border: 0; cursor: pointer; color: #666; padding: 0.2rem 0; min-height: 44px; min-width: 44px; }
+        .tree-toggle, .tree-spacer { display: inline-flex; width: var(--tap); min-height: var(--tap); align-items: center; justify-content: center; }
+        .tree-toggle { background: none; border: 0; cursor: pointer; color: #666; padding: 0; }
         li.open > .tree-toggle { transform: rotate(90deg); }
-        .tree-node { background: none; border: 0; cursor: pointer; padding: 0.5rem 0.3rem; text-align: left; border-radius: 4px; font-size: 0.9rem; min-height: 44px; }
+        .tree-node {
+            background: none;
+            border: 0;
+            cursor: pointer;
+            padding: 0.5rem 0.3rem;
+            text-align: left;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            min-height: var(--tap);
+        }
         .tree-node:hover { background: #f3f4f6; }
         .tree-node.active { background: #667eea; color: #fff; }
         .tree-node.active .muted { color: #e0e3ff; }
         .tree-all { font-weight: 600; }
-        .rows-head { display: flex; justify-content: space-between; align-items: center; padding: 0.25rem 0 0.5rem; }
+        .rows-head { display: flex; justify-content: space-between; align-items: center; padding: 0.25rem 0 0.5rem; gap: 0.5rem; flex-wrap: wrap; }
+        .rows-head label {
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
         .picker-table { width: 100%; border-collapse: collapse; }
-        .picker-table td { padding: 0.4rem 0.4rem; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; vertical-align: top; }
-        .picker-table td.check { width: 2rem; }
+        .picker-table td { padding: 0.55rem 0.4rem; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; vertical-align: middle; }
+        .picker-table td.check {
+            width: var(--tap);
+            vertical-align: middle;
+        }
+        .picker-table td.check input.pick,
+        .picker-table .check-all {
+            width: 1.25rem;
+            height: 1.25rem;
+            min-width: 1.25rem;
+        }
+        .picker-table td.check {
+            position: relative;
+        }
+        .picker-table td.check::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            min-width: var(--tap);
+            min-height: var(--tap);
+        }
         .picker-table td.num { text-align: right; white-space: nowrap; }
         .picker-table tr:not(.disabled):not(.load-more) { cursor: pointer; }
         .picker-table tr:not(.disabled):not(.load-more):hover td { background: #f8f9ff; }
         .picker-table tr.disabled td { color: #999; }
-        .picker-status { color: #15803d; font-size: 0.85rem; margin-right: auto; }
+        .picker-status { color: #15803d; font-size: 0.85rem; }
+        .picker-table .btn-link {
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+        }
+
+        @media (min-width: 900px) {
+            .promo-form { padding: 1rem; }
+            .grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+            .sel-table thead { display: table-header-group; }
+            .sel-table tbody { display: table-row-group; }
+            .sel-table tbody tr.sel,
+            .sel-table tbody tr.sel-group {
+                display: table-row;
+                padding: 0;
+                margin: 0;
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+            }
+            .sel-table tbody tr#selected-empty {
+                display: table-row;
+                padding: 0;
+                margin: 0;
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+            }
+            .sel-table tbody tr#selected-empty[hidden] {
+                display: none;
+            }
+            .sel-table th, .sel-table td {
+                text-align: left;
+                padding: 0.45rem 0.5rem;
+                border-bottom: 1px solid #eee;
+                font-size: 0.9rem;
+            }
+            .sel-table th { color: #555; font-size: 0.8rem; }
+            .sel-table td.num, .sel-table th.num { text-align: right; }
+            .sel-table tr.sel td:nth-child(1),
+            .sel-table tr.sel-group td:nth-child(1),
+            .sel-table tr.sel td:nth-child(2),
+            .sel-table tr.sel-group td:nth-child(2),
+            .sel-table tr.sel td:nth-child(3),
+            .sel-table tr.sel-group td:nth-child(3),
+            .sel-table tr.sel td:nth-child(4),
+            .sel-table tr.sel-group td:nth-child(4) {
+                grid-column: auto;
+                grid-row: auto;
+                font-weight: inherit;
+                color: inherit;
+                font-size: inherit;
+                display: table-cell;
+                flex-direction: unset;
+            }
+            .sel-table tr.sel td:nth-child(2)::before { content: none; }
+            .sel-table .sel-remove,
+            .sel-table .group-expand {
+                min-height: unset;
+                min-width: unset;
+                padding: 0;
+            }
+            .sticky-action { display: none; }
+            .desktop-submit { display: inline-flex; margin-top: 1.5rem; }
+            .container.has-sticky-action { padding-bottom: 0; }
+
+            dialog.picker {
+                width: min(1100px, 96vw);
+                height: min(780px, 92vh);
+                max-width: min(1100px, 96vw);
+                max-height: min(780px, 92vh);
+                margin: auto;
+                border-radius: 10px;
+                box-shadow: 0 20px 60px rgba(0,0,0,.25);
+                inset: unset;
+            }
+            .picker-head, .picker-foot {
+                position: static;
+                padding: 0.75rem 1rem;
+            }
+            .picker-foot {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                align-items: center;
+            }
+            .picker-foot .picker-status {
+                order: 0;
+                margin-right: auto;
+            }
+            .picker-foot .picker-add {
+                order: 0;
+                width: auto;
+            }
+            .picker-foot .picker-secondary {
+                order: 0;
+                width: auto;
+                display: contents;
+            }
+            .picker-foot .picker-secondary .btn-secondary {
+                flex: unset;
+                width: auto;
+            }
+            .picker-body {
+                display: grid;
+                grid-template-columns: 300px 1fr;
+            }
+            .picker-tree-panel {
+                border-bottom: 0;
+                border-right: 1px solid #eee;
+                display: contents;
+            }
+            .picker-tree-panel > summary { display: none; }
+            .picker-tree {
+                overflow: auto;
+                max-height: none;
+                padding: 0.5rem;
+                grid-column: 1;
+                grid-row: 1;
+            }
+            .picker-results {
+                grid-column: 2;
+                grid-row: 1;
+                padding: 0.5rem 1rem;
+            }
+            .tree li { grid-template-columns: 1.3rem 1fr; }
+            .tree-toggle, .tree-spacer {
+                width: 1.3rem;
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container has-sticky-action">
     <p class="page-back">{% if promo %}<a href="{% url 'promo_detail' promo.pk %}">{% trans "Back to promo" %}</a>{% else %}<a href="{% url 'promo_list' %}">{% trans "All promos" %}</a>{% endif %}</p>
     <h1 class="page-h1">{% if promo %}{% trans "Edit promo" %}: {{ promo.name }}{% else %}{% trans "New promo" %}{% endif %}</h1>
     {% include "promos/_catalog_status.html" %}
@@ -157,17 +615,18 @@
             {% endwith %}
             {% if example_exists %}
             {% with f=form.use_example_file %}
-            <label>{{ f }} {{ f.label }}</label>
+            <label class="check-row" for="{{ f.id_for_label }}">{{ f }} {{ f.label }}</label>
             <p class="help">{{ f.help_text }}</p>
             {% endwith %}
             {% endif %}
         </details>
         {% endif %}
 
-        <div class="submit-row">
-            <button class="btn" type="submit">{% trans "Save and analyze" %}</button>
-        </div>
+        <button class="btn desktop-submit" type="submit" form="promo-form">{% trans "Save and analyze" %}</button>
     </form>
+    <div class="sticky-action">
+        <button class="btn" type="submit" form="promo-form" id="promo-form-submit">{% trans "Save and analyze" %}</button>
+    </div>
 </div>
 
 <dialog class="picker" id="picker-granit" data-all-url="{% url 'picker_granit_all' %}">
@@ -186,19 +645,24 @@
                hx-include="#granit-filter" hx-trigger="change"> {% trans "show inactive" %}</label>
     </form>
     <div class="picker-body">
-        <div class="picker-tree">
-            <button type="button" class="tree-node tree-all" data-group="">{% trans "All groups" %}</button>
-            <ul class="tree" hx-get="{% url 'picker_granit_groups' %}" hx-trigger="load"></ul>
-        </div>
+        <details class="picker-tree-panel">
+            <summary><span class="picker-group-label">{% trans "Group" %}: {% trans "All groups" %}</span></summary>
+            <div class="picker-tree">
+                <button type="button" class="tree-node tree-all active" data-group="" data-label="{% trans 'All groups' %}">{% trans "All groups" %}</button>
+                <ul class="tree" hx-get="{% url 'picker_granit_groups' %}" hx-trigger="load"></ul>
+            </div>
+        </details>
         <div class="picker-results" id="granit-results">
             <p class="muted">{% trans "Pick a group on the left or type to search." %}</p>
         </div>
     </div>
     <div class="picker-foot">
         <span class="picker-status"></span>
-        <button type="button" class="btn-secondary picker-add-all" disabled>{% trans "Add whole group / all found" %}</button>
         <button type="button" class="btn picker-add">{% trans "Add selected" %} (<span class="picker-count">0</span>)</button>
-        <button type="button" class="btn-secondary picker-done">{% trans "Done" %}</button>
+        <div class="picker-secondary">
+            <button type="button" class="btn-secondary picker-add-all" disabled>{% trans "Add whole group / all found" %}</button>
+            <button type="button" class="btn-secondary picker-done">{% trans "Done" %}</button>
+        </div>
     </div>
 </dialog>
 
@@ -216,19 +680,24 @@
         <span class="muted">{% trans "Only products linked to Granit can be added." %}</span>
     </form>
     <div class="picker-body">
-        <div class="picker-tree">
-            <button type="button" class="tree-node tree-all" data-group="">{% trans "All categories" %}</button>
-            <ul class="tree" hx-get="{% url 'picker_site_categories' %}" hx-trigger="load"></ul>
-        </div>
+        <details class="picker-tree-panel">
+            <summary><span class="picker-group-label">{% trans "Group" %}: {% trans "All categories" %}</span></summary>
+            <div class="picker-tree">
+                <button type="button" class="tree-node tree-all active" data-group="" data-label="{% trans 'All categories' %}">{% trans "All categories" %}</button>
+                <ul class="tree" hx-get="{% url 'picker_site_categories' %}" hx-trigger="load"></ul>
+            </div>
+        </details>
         <div class="picker-results" id="site-results">
             <p class="muted">{% trans "Pick a group on the left or type to search." %}</p>
         </div>
     </div>
     <div class="picker-foot">
         <span class="picker-status"></span>
-        <button type="button" class="btn-secondary picker-add-all" disabled>{% trans "Add whole group / all found" %}</button>
         <button type="button" class="btn picker-add">{% trans "Add selected" %} (<span class="picker-count">0</span>)</button>
-        <button type="button" class="btn-secondary picker-done">{% trans "Done" %}</button>
+        <div class="picker-secondary">
+            <button type="button" class="btn-secondary picker-add-all" disabled>{% trans "Add whole group / all found" %}</button>
+            <button type="button" class="btn-secondary picker-done">{% trans "Done" %}</button>
+        </div>
     </div>
 </dialog>
 {% endblock %}
@@ -238,10 +707,21 @@
 (function () {
     const removeLabel = "{{ _('Remove')|escapejs }}";
     const addedLabel = "{{ _('Added')|escapejs }}";
+    const groupPrefix = "{{ _('Group')|escapejs }}: ";
     const groupAllUrl = "{% url 'picker_granit_all' %}";
     const body = document.getElementById("selected-body");
     const emptyRow = document.getElementById("selected-empty");
     const counter = document.getElementById("selected-count");
+    const MQ = window.matchMedia("(min-width: 900px)");
+
+    function syncTreePanels() {
+        document.querySelectorAll("details.picker-tree-panel").forEach(function (el) {
+            if (MQ.matches) el.open = true;
+        });
+    }
+    if (MQ.addEventListener) MQ.addEventListener("change", syncTreePanels);
+    else if (MQ.addListener) MQ.addListener(syncTreePanels);
+    syncTreePanels();
 
     function refreshCount() {
         const n = body.querySelectorAll("tr.sel").length + body.querySelectorAll("tr.sel-group").length;
@@ -316,6 +796,8 @@
         const status = dlg.querySelector(".picker-status");
         const addAll = dlg.querySelector(".picker-add-all");
         const countEl = dlg.querySelector(".picker-count");
+        const treePanel = dlg.querySelector(".picker-tree-panel");
+        const groupLabel = dlg.querySelector(".picker-group-label");
 
         function updateCount() {
             countEl.textContent = dlg.querySelectorAll(".picker-results input.pick:checked").length;
@@ -324,6 +806,14 @@
         function flash(n) {
             status.textContent = addedLabel + ": " + n;
             setTimeout(function () { status.textContent = ""; }, 2500);
+        }
+        function setGroupLabel(node) {
+            if (!groupLabel) return;
+            const label = node.dataset.label || node.textContent.trim();
+            groupLabel.textContent = groupPrefix + label;
+        }
+        function collapseTreeOnMobile() {
+            if (!MQ.matches && treePanel) treePanel.open = false;
         }
 
         dlg.addEventListener("click", function (e) {
@@ -337,6 +827,7 @@
                 dlg.querySelectorAll(".tree-node.active").forEach(function (n) { n.classList.remove("active"); });
                 node.classList.add("active");
                 groupInput.value = node.dataset.group;
+                setGroupLabel(node);
                 const li = node.closest("li");
                 if (li && !li.classList.contains("open")) {
                     const toggle = li.querySelector(":scope > .tree-toggle");
@@ -344,6 +835,7 @@
                 }
                 htmx.trigger(search, "refresh");
                 updateCount();
+                collapseTreeOnMobile();
             } else if (t.closest(".picker-table tr") && !t.closest("input, button, a")) {
                 const cb = t.closest("tr").querySelector("input.pick:not(:disabled)");
                 if (cb) {
@@ -380,6 +872,15 @@
         search.addEventListener("input", updateCount);
         dlg.addEventListener("htmx:afterSwap", updateCount);
     });
+
+    var form = document.getElementById("promo-form");
+    if (form) {
+        form.addEventListener("submit", function () {
+            document.querySelectorAll('button[form="promo-form"], #promo-form button[type="submit"]').forEach(function (btn) {
+                btn.disabled = true;
+            });
+        });
+    }
 
     refreshCount();
 })();

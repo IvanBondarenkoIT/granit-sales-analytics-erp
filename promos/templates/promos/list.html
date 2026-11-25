@@ -1,47 +1,183 @@
 {% extends "base.html" %}
-{% load i18n numbers %}
+{% load i18n numbers ui %}
 
 {% block title %}{% trans "Promotion Effectiveness" %}{% endblock %}
 {% block page_title %}{% trans "Promos" %}{% endblock %}
 
 {% block extra_css %}
-        .page-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 1rem; }
-        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
-        .tabs a { padding: 0.45rem 0.9rem; text-decoration: none; color: #444; background: #f3f4f6; border-radius: 6px; min-height: 44px; display: inline-flex; align-items: center; }
-        .tabs a.active { background: #667eea; color: #fff; }
-        .catalog-status { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; color: #666; font-size: 0.85rem; margin-bottom: 1rem; }
+        .page-head { display: none; }
+        .promo-tabs {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 0.35rem;
+            margin: 0 0 0.85rem;
+        }
+        .promo-tabs a {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: var(--tap);
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: #445;
+            text-decoration: none;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        .promo-tabs a.active {
+            background: #eef2ff;
+            border-color: #c7ccf5;
+            color: var(--brand-dark);
+            font-weight: 600;
+        }
+        .catalog-status {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 0.85rem;
+        }
         .catalog-status form { margin: 0; }
         .catalog-status .warn { color: #b45309; }
+        .promo-list.table-cards--compact .tc-period {
+            grid-column: 1;
+            grid-row: 2;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        .promo-list.table-cards--compact .tc-type {
+            grid-column: 1;
+            grid-row: 3;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        .promo-list.table-cards--compact .tc-type:empty { display: none; }
+        .promo-list.table-cards--compact .tc-sku { display: none; }
+        .promo-list.table-cards--compact .tc-earn { display: none; }
+        .promo-list.table-cards--compact .tc-lift {
+            grid-column: 2;
+            grid-row: 1 / span 2;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            font-weight: 700;
+            font-size: 1rem;
+            align-self: start;
+        }
+        .promo-list.table-cards--compact .tc-lift:empty { display: none; }
+        .sticky-action {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: var(--nav-pad-bottom);
+            z-index: 30;
+            padding: 0.75rem 1rem;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
+        }
+        .sticky-action .btn {
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+            display: flex;
+        }
+        .container.has-sticky-action {
+            padding-bottom: calc(4.5rem + var(--nav-pad-bottom));
+        }
+        @media (min-width: 900px) {
+            .page-head {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+                gap: 1rem;
+            }
+            .sticky-action { display: none; }
+            .promo-tabs {
+                overflow: visible;
+                margin-bottom: 1rem;
+            }
+            .promo-tabs a {
+                border-radius: 6px;
+                background: #f3f4f6;
+                border-color: transparent;
+            }
+            .promo-tabs a.active {
+                background: #667eea;
+                color: #fff;
+                border-color: transparent;
+            }
+            .promo-list.table-cards--compact .tc-period,
+            .promo-list.table-cards--compact .tc-type,
+            .promo-list.table-cards--compact .tc-sku,
+            .promo-list.table-cards--compact .tc-earn,
+            .promo-list.table-cards--compact .tc-lift {
+                display: table-cell;
+                grid-column: auto;
+                grid-row: auto;
+                text-align: left;
+                font-size: inherit;
+                color: inherit;
+                font-weight: inherit;
+            }
+            .promo-list.table-cards--compact .tc-earn,
+            .promo-list.table-cards--compact .tc-lift,
+            .promo-list.table-cards--compact .tc-sku {
+                text-align: right;
+            }
+            .promo-list.table-cards--compact .tc-type:empty {
+                display: table-cell;
+            }
+            .promo-list.table-cards--compact .tc-lift:empty {
+                display: table-cell;
+            }
+        }
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container has-sticky-action">
     <div class="page-head">
         <h1 class="page-h1">{% trans "Promotion Effectiveness" %}</h1>
         <a class="btn" href="{% url 'promo_create' %}">{% trans "New promo" %}</a>
     </div>
     {% include "promos/_catalog_status.html" %}
-    <div class="tabs">
+    <div class="promo-tabs" role="tablist">
         <a href="?tab=active" class="{% if tab == 'active' %}active{% endif %}">{% trans "Active" %} ({{ active_count }})</a>
         <a href="?tab=passed" class="{% if tab == 'passed' %}active{% endif %}">{% trans "Passed" %} ({{ passed_count }})</a>
     </div>
     {% if rows %}
-    <table>
+    <table class="table-cards table-cards--compact promo-list">
         <thead>
             <tr>
                 <th>{% trans "Name" %}</th>
                 <th>{% trans "Period" %}</th>
+                <th>{% trans "Type" %}</th>
                 <th class="num">{% trans "SKU" %}</th>
                 <th class="num">{% trans "Est. earnings" %}</th>
+                <th class="num">{% trans "vs baseline" %}</th>
             </tr>
         </thead>
         <tbody>
             {% for row in rows %}
+            {% promo_lift_pre row.promo as lift %}
             <tr>
-                <td><a href="{% url 'promo_detail' row.promo.pk %}">{{ row.promo.name }}</a></td>
-                <td>{{ row.promo.start_date }} — {{ row.promo.end_date }}</td>
-                <td class="num">{{ row.sku_count }}</td>
-                <td class="num">{% if row.estimated_earnings is not None %}{{ row.estimated_earnings|money }}{% else %}—{% endif %}</td>
+                <td class="tc-primary" data-label="{% trans 'Name' %}">
+                    <a href="{% url 'promo_detail' row.promo.pk %}">{{ row.promo.name }}</a>
+                </td>
+                <td class="tc-period tc-meta" data-label="{% trans 'Period' %}">{{ row.promo.start_date }} — {{ row.promo.end_date }}</td>
+                <td class="tc-type tc-meta" data-label="{% trans 'Type' %}">{% if row.promo.promo_type %}{{ row.promo.promo_type }}{% endif %}</td>
+                <td class="tc-sku num" data-label="{% trans 'SKU' %}">{{ row.sku_count }}</td>
+                <td class="tc-earn num" data-label="{% trans 'Est. earnings' %}">{% if row.estimated_earnings is not None %}{{ row.estimated_earnings|money }}{% else %}—{% endif %}</td>
+                <td class="tc-lift num {% if lift is not None and lift >= 0 %}up{% elif lift is not None %}down{% endif %}" data-label="{% trans 'vs baseline' %}">
+                    {% if lift is not None %}{% if lift >= 0 %}+{% endif %}{{ lift|floatformat:1 }}%{% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -49,5 +185,8 @@
     {% else %}
     <p class="empty">{% if tab == 'active' %}{% trans "No active promos." %}{% else %}{% trans "No passed promos." %}{% endif %}</p>
     {% endif %}
+    <div class="sticky-action">
+        <a class="btn" href="{% url 'promo_create' %}">{% trans "New promo" %}</a>
+    </div>
 </div>
 {% endblock %}

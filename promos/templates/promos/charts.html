@@ -11,15 +11,78 @@
         .stat small { color: #666; }
         .card { background: #fff; padding: 1rem 1.1rem 0.75rem; margin: 1rem 0; }
         .card h2 { font-size: 1.1rem; margin: 0 0 0.5rem; }
-        .legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; font-size: 0.85rem; color: #444; margin-bottom: 0.4rem; }
+        .legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.35rem 0.75rem;
+            font-size: 0.85rem;
+            color: #444;
+            margin-bottom: 0.5rem;
+        }
         .legend i { display: inline-block; width: 1.4rem; height: 0; border-top: 3px solid; vertical-align: middle; margin-right: 0.35rem; }
         .legend i.dash { border-top-style: dashed; }
         .legend i.dot { border-top-style: dotted; }
         .legend i.band { height: 0.75rem; border: 0; background: rgba(102, 126, 234, 0.12); }
-        svg.chart { width: 100%; height: auto; display: block; }
-        svg.chart text { font-size: 11px; fill: #666; font-family: inherit; }
+        .chart-scroll {
+            margin: 0 -0.25rem;
+        }
+        svg.chart { width: 100%; height: auto; display: block; min-width: 640px; }
+        svg.chart text { font-size: 14px; fill: #666; font-family: inherit; }
         svg.chart .grid { stroke: #eee; }
         svg.chart .axis { stroke: #ccc; }
+        /* Thin X-axis labels on narrow charts: keep every 2nd/3rd */
+        svg.chart .x-labels text:nth-child(2n) { display: none; }
+        .stats-tiles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin: 0 0 0.85rem;
+        }
+        .stats-tiles .stat {
+            background: var(--surface);
+            padding: 0.65rem 0.5rem;
+            text-align: center;
+        }
+        .stats-tiles .stat span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+        .stats-tiles .stat strong {
+            display: block;
+            font-size: 1.05rem;
+            margin-top: 0.15rem;
+            color: var(--brand);
+        }
+        .stats-tiles .stat strong.up { color: var(--up); }
+        .stats-tiles .stat strong.down { color: var(--down); }
+        .stats-tiles .stat small { display: block; margin-top: 0.15rem; }
+        @media (min-width: 600px) {
+            svg.chart { min-width: 0; }
+            svg.chart text { font-size: 11px; }
+            svg.chart .x-labels text:nth-child(2n) { display: unset; }
+            .legend {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.4rem 1.1rem;
+            }
+            .chart-scroll { margin: 0; }
+        }
+        @media (min-width: 900px) {
+            .stats-tiles {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1.5rem;
+                margin: 1.5rem 0;
+            }
+            .stats-tiles .stat {
+                padding: 1rem;
+                min-width: 160px;
+                flex: 1 1 160px;
+            }
+            .stats-tiles .stat span { font-size: 0.9rem; color: #555; }
+            .stats-tiles .stat strong { font-size: 1.4rem; }
+        }
 {% endblock %}
 
 {% block content %}
@@ -38,7 +101,7 @@
     </div>
     {% else %}
     {% with k=charts.kpi %}
-    <div class="stats">
+    <div class="stats-tiles">
         <div class="stat">
             <span>{% trans "Extra revenue vs baseline" %}</span>
             <strong class="{% if k.incremental is not None %}{% if k.incremental >= 0 %}up{% else %}down{% endif %}{% endif %}">{{ k.incremental_text }}</strong>
@@ -74,6 +137,7 @@
             {% if d.has_forecast %}<span><i class="dot" style="border-color:#f59e0b"></i>{% trans "Forecast" %}</span>{% endif %}
             <span><i class="band"></i>{% trans "Promo days" %}</span>
         </div>
+        <div class="scroll-x chart-scroll">
         <svg class="chart" viewBox="0 0 {{ d.width }} {{ d.height }}" role="img" aria-label="{% trans "Sales by day" %}">
             <rect x="{{ d.band.x }}" y="{{ d.band.y }}" width="{{ d.band.w }}" height="{{ d.band.h }}" fill="rgba(102,126,234,0.10)"></rect>
             {% for t in d.y_axis %}
@@ -81,9 +145,11 @@
             <text x="{{ d.pad_left|add:'-6' }}" y="{{ t.y }}" text-anchor="end" dominant-baseline="middle">{{ t.label }}</text>
             {% endfor %}
             <line class="axis" x1="{{ d.pad_left }}" x2="{{ d.pad_right_x }}" y1="{{ d.axis_y }}" y2="{{ d.axis_y }}"></line>
+            <g class="x-labels">
             {% for l in d.x_labels %}
             <text x="{{ l.x }}" y="{{ d.axis_y|add:'18' }}" text-anchor="middle">{{ l.label }}</text>
             {% endfor %}
+            </g>
             {% if d.baseline_y is not None %}
             <line x1="{{ d.pad_left }}" x2="{{ d.pad_right_x }}" y1="{{ d.baseline_y }}" y2="{{ d.baseline_y }}" stroke="#374151" stroke-width="1.5" stroke-dasharray="6 4"></line>
             {% endif %}
@@ -100,12 +166,14 @@
             <circle cx="{{ p.x }}" cy="{{ p.y }}" r="{% if p.promo %}3.5{% else %}2.5{% endif %}" fill="#667eea"><title>{{ p.title }}</title></circle>
             {% endfor %}
         </svg>
+        </div>
     </div>
     {% endwith %}
 
     {% with b=charts.bars %}
     <div class="card">
         <h2>{% trans "Promo period total" %}</h2>
+        <div class="scroll-x chart-scroll">
         <svg class="chart" viewBox="0 0 {{ b.width }} {{ b.height }}" role="img" aria-label="{% trans "Promo period total" %}">
             {% for r in b.rows %}
             <text x="0" y="{{ r.text_y }}" dominant-baseline="middle" style="font-size:13px; fill:#333">{{ r.label }}</text>
@@ -123,6 +191,7 @@
             {% endif %}
             {% endfor %}
         </svg>
+        </div>
     </div>
     {% endwith %}
 
@@ -134,15 +203,18 @@
             <span><i style="border-color:#667eea"></i>{% trans "Actual, cumulative" %}</span>
             <span><i class="dash" style="border-color:#374151"></i>{% trans "Baseline, cumulative" %}</span>
         </div>
+        <div class="scroll-x chart-scroll">
         <svg class="chart" viewBox="0 0 {{ c.width }} {{ c.height }}" role="img" aria-label="{% trans "Cumulative: extra revenue" %}">
             {% for t in c.y_axis %}
             <line class="grid" x1="{{ c.pad_left }}" x2="{{ c.pad_right_x }}" y1="{{ t.y }}" y2="{{ t.y }}"></line>
             <text x="{{ c.pad_left|add:'-6' }}" y="{{ t.y }}" text-anchor="end" dominant-baseline="middle">{{ t.label }}</text>
             {% endfor %}
             <line class="axis" x1="{{ c.pad_left }}" x2="{{ c.pad_right_x }}" y1="{{ c.axis_y }}" y2="{{ c.axis_y }}"></line>
+            <g class="x-labels">
             {% for l in c.x_labels %}
             <text x="{{ l.x }}" y="{{ c.axis_y|add:'18' }}" text-anchor="middle">{{ l.label }}</text>
             {% endfor %}
+            </g>
             <polygon points="{{ c.area }}" fill="{% if c.positive %}#047857{% else %}#b45309{% endif %}" fill-opacity="0.15"></polygon>
             {% for seg in c.baseline %}
             <polyline points="{{ seg }}" fill="none" stroke="#374151" stroke-width="1.8" stroke-dasharray="6 4"></polyline>
@@ -153,6 +225,7 @@
             <text x="{{ c.end_x }}" y="{{ c.end_y }}" text-anchor="end"
                   style="font-size:14px; font-weight:700; fill:{% if c.positive %}#047857{% else %}#92400e{% endif %}">{{ c.label }}</text>
         </svg>
+        </div>
         {% else %}
         <p class="hint">{% trans "No pre-period baseline, so extra revenue cannot be calculated." %}</p>
         {% endif %}
