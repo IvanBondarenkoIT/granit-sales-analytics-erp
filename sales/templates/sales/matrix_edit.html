@@ -7,31 +7,31 @@
 
 {% block extra_css %}
         table.sg-edit {
+            display: block;
             width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            margin: 1rem 0;
-            table-layout: fixed;
+            margin: 0.5rem 0 1rem;
+            background: transparent;
+        }
+        table.sg-edit thead { display: none; }
+        table.sg-edit tbody { display: block; }
+        table.sg-edit tr {
+            display: block;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.75rem 0.85rem;
+            margin: 0 0 0.75rem;
         }
         table.sg-edit th,
         table.sg-edit td {
+            display: block;
+            width: auto;
             text-align: left;
-            padding: 0.5rem 0.6rem;
-            border-bottom: 1px solid #eee;
+            padding: 0.35rem 0;
+            border: 0;
             vertical-align: middle;
         }
-        table.sg-edit th:nth-child(1),
-        table.sg-edit td:nth-child(1) { width: 3rem; }
-        table.sg-edit th:nth-child(2),
-        table.sg-edit td:nth-child(2) { width: 28%; }
-        table.sg-edit th:nth-child(3),
-        table.sg-edit td:nth-child(3) { width: 12%; }
-        table.sg-edit th:nth-child(4),
-        table.sg-edit td:nth-child(4) { width: 9rem; }
-        table.sg-edit th:nth-child(5),
-        table.sg-edit td:nth-child(5) { width: 6.5rem; }
-        table.sg-edit th:nth-child(6),
-        table.sg-edit td:nth-child(6) { width: 18rem; }
+        table.sg-edit form:has(.title-input) { display: block; width: 100%; }
         .swatch {
             display: inline-block;
             width: 1.2rem;
@@ -73,16 +73,20 @@
         }
         .actions {
             display: flex;
-            flex-wrap: nowrap;
-            gap: 0.35rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
             align-items: center;
         }
         .actions form { display: inline; margin: 0; }
+        .action-delete { flex: 1 0 100%; margin-top: 0.35rem; }
+        .action-delete .btn { width: 100%; }
         input.title-input { width: 100%; box-sizing: border-box; padding: 0.5rem; font-size: 16px; min-height: 44px; }
         .color-pick { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; }
         .color-pick input[type=color] {
             width: 44px;
+            min-width: 44px;
             height: 44px;
+            flex: 0 0 44px;
             padding: 0;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -97,9 +101,72 @@
             min-height: 44px;
             box-sizing: border-box;
         }
-        .create { background: #fff; padding: 1rem; max-width: 640px; margin-top: 1.5rem; }
+        .create-wrap > summary {
+            list-style: none;
+            cursor: pointer;
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 0.9rem;
+            border-radius: var(--radius);
+            background: #eef0ff;
+            color: #3f4bb8;
+            border: 1px solid #c7ccf5;
+            font-weight: 600;
+        }
+        .create-wrap > summary::-webkit-details-marker { display: none; }
+        /* Closed <details> was still laying out the form (color input stayed tappable). */
+        .create-wrap:not([open]) > .create { display: none; }
+        .create { background: var(--surface); padding: 1rem; max-width: 100%; margin-top: 0.75rem; border-radius: var(--radius); }
+        .create-heading { display: none; }
         .create label { display: block; margin-top: 0.5rem; font-weight: 600; }
         .create input[type=text] { width: 100%; padding: 0.5rem; box-sizing: border-box; font-size: 16px; min-height: 44px; }
+        @media (min-width: 900px) {
+            table.sg-edit {
+                display: table;
+                border-collapse: collapse;
+                background: #fff;
+                margin: 1rem 0;
+                table-layout: fixed;
+            }
+            table.sg-edit thead { display: table-header-group; }
+            table.sg-edit tbody { display: table-row-group; }
+            table.sg-edit tr {
+                display: table-row;
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+            }
+            table.sg-edit th,
+            table.sg-edit td {
+                display: table-cell;
+                text-align: left;
+                padding: 0.5rem 0.6rem;
+                border-bottom: 1px solid #eee;
+                vertical-align: middle;
+            }
+            table.sg-edit th:nth-child(1),
+            table.sg-edit td:nth-child(1) { width: 3rem; }
+            table.sg-edit th:nth-child(2),
+            table.sg-edit td:nth-child(2) { width: 28%; }
+            table.sg-edit th:nth-child(3),
+            table.sg-edit td:nth-child(3) { width: 12%; }
+            table.sg-edit th:nth-child(4),
+            table.sg-edit td:nth-child(4) { width: 9rem; }
+            table.sg-edit th:nth-child(5),
+            table.sg-edit td:nth-child(5) { width: 6.5rem; }
+            table.sg-edit th:nth-child(6),
+            table.sg-edit td:nth-child(6) { width: 18rem; }
+            .actions { flex-wrap: nowrap; gap: 0.35rem; }
+            .action-delete { flex: 0 0 auto; margin-top: 0; }
+            .action-delete .btn { width: auto; }
+            .create-wrap > summary { display: none; }
+            .create-heading { display: block; }
+            .create { max-width: 640px; margin-top: 1.5rem; border-radius: 0; }
+            .create-wrap:not([open]) > .create { display: block; }
+        }
 {% endblock %}
 
 {% block content %}
@@ -128,7 +195,7 @@
                         {% csrf_token %}
                         <input type="hidden" name="action" value="update">
                         <input type="hidden" name="sg_id" value="{{ sg.pk }}">
-                        <input type="text" class="title-input" name="title" value="{{ sg.title }}">
+                        <input type="text" class="title-input" name="title" value="{{ sg.title }}" aria-label="{% trans "Title" %}">
                     </form>
                 </td>
                 <td><code>{{ sg.key }}</code></td>
@@ -159,7 +226,7 @@
                     <div class="actions">
                         <button class="btn" type="submit" form="sg-form-{{ sg.pk }}">{% trans "Save" %}</button>
                         <a class="btn btn-link" href="{% url 'sales_matrix_sg' sg.pk %}?{{ period_query }}">{% trans "Members" %}</a>
-                        <form method="post" onsubmit="return confirm('{% trans "Delete this super-group?" %}');">
+                        <form class="action-delete" method="post" onsubmit="return confirm('{% trans "Delete this super-group?" %}');">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="sg_id" value="{{ sg.pk }}">
@@ -186,10 +253,12 @@
         </tbody>
     </table>
 
+    <details class="create-wrap" id="sg-create">
+        <summary>+ {% trans "New super-group" %}</summary>
     <form class="create" method="post">
         {% csrf_token %}
         <input type="hidden" name="action" value="create">
-        <h2>{% trans "New super-group" %}</h2>
+        <h2 class="create-heading">{% trans "New super-group" %}</h2>
         <label>{% trans "Key" %}</label>
         <input type="text" name="key" placeholder="coffee_kg" required autocapitalize="off" spellcheck="false">
         <label>{% trans "Title" %}</label>
@@ -201,6 +270,7 @@
         </span>
         <button class="btn" type="submit" style="margin-top:0.75rem">{% trans "Create" %}</button>
     </form>
+    </details>
 </div>
 <script>
 (function () {
@@ -226,6 +296,14 @@
       }
     });
   });
+  var created = document.getElementById("sg-create");
+  var mq = window.matchMedia("(min-width: 900px)");
+  function openCreateOnDesktop() {
+    if (created && mq.matches) created.open = true;
+  }
+  if (mq.addEventListener) mq.addEventListener("change", openCreateOnDesktop);
+  else if (mq.addListener) mq.addListener(openCreateOnDesktop);
+  openCreateOnDesktop();
 })();
 </script>
 {% endblock %}

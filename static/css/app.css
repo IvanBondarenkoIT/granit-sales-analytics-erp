@@ -601,7 +601,11 @@ tfoot td {
    Stretched link (phone): card `position:relative`; `.tc-primary a::after
    { position:absolute; inset:0 }` makes the whole card tappable; hide `.tc-action`
    on phone, show it again ≥900px. If the row has no name link, wrap the name
-   in the same href as the action (e.g. receipts_query).
+   in the same href as the action (e.g. receipts_query). The in-flow link is
+   min 44×44 so tap metrics see the hit box, not only the ::after overlay.
+   A real button in the row (Remove / Add) uses `.tc-action.tc-action--keep`:
+   it stays visible on the phone, sits above the overlay (z-index), and is not
+   a second copy of the card link.
 */
 .table-cards {
   width: 100%;
@@ -717,7 +721,13 @@ tfoot td {
   display: inline-flex;
   align-items: center;
   min-height: var(--tap);
+  min-width: var(--tap);
   box-sizing: border-box;
+}
+
+.table-cards--compact .tc-id {
+  grid-column: 1;
+  grid-row: 2;
 }
 
 /* Whole card is the hit target; in-flow min-height keeps ≥44px for metrics. */
@@ -775,6 +785,24 @@ tfoot td {
 
 .table-cards--compact .tc-action {
   display: none;
+}
+
+/* Button that is not the card's navigation link (Remove, Add). */
+.table-cards--compact .tc-action--keep {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  grid-column: 1 / -1;
+  position: relative;
+  z-index: 2;
+  margin-top: 0.35rem;
+}
+
+.table-cards--compact .tc-action--keep .btn,
+.table-cards--compact .tc-action--keep button {
+  position: relative;
+  z-index: 2;
 }
 
 .table-cards--compact tfoot .tc-primary {
@@ -945,8 +973,10 @@ body.auth-body {
 
   .table-cards--compact .tc-primary,
   .table-cards--compact .tc-meta,
+  .table-cards--compact .tc-id,
   .table-cards--compact .tc-secondary,
-  .table-cards--compact .tc-action {
+  .table-cards--compact .tc-action,
+  .table-cards--compact .tc-action--keep {
     grid-column: auto;
     grid-row: auto;
   }
@@ -974,10 +1004,18 @@ body.auth-body {
     content: none;
   }
 
+  .table-cards--compact .tc-primary a {
+    min-width: unset;
+    min-height: unset;
+  }
+
   .table-cards td.tc-action,
-  .table-cards--compact .tc-action {
+  .table-cards--compact .tc-action,
+  .table-cards--compact .tc-action--keep {
     display: table-cell;
     padding: 0.6rem;
+    margin-top: 0;
+    position: static;
   }
 
   .table-cards td.tc-action a,

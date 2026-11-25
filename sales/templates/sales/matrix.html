@@ -5,132 +5,513 @@
 {% block page_title %}{% trans "Sales by super-groups" %}{% endblock %}
 
 {% block extra_css %}
-        .matrix-wrap { overflow-x: auto; background: #fff; }
+        .matrix-wrap { background: var(--surface); }
         .matrix { border-collapse: collapse; min-width: 100%; font-size: 0.85rem; }
         .matrix th, .matrix td { border: 1px solid #e5e7eb; padding: 0.35rem 0.45rem; text-align: right; white-space: nowrap; vertical-align: top; }
-        .matrix th.sticky, .matrix td.sticky { position: sticky; left: 0; text-align: left; z-index: 1; min-width: 170px; }
+        .matrix th.sticky, .matrix td.sticky {
+            position: sticky; left: 0; text-align: left; z-index: 1;
+            min-width: 120px; max-width: 140px; white-space: normal;
+            background: var(--surface);
+        }
         .matrix thead th { background: #f3f4f6; }
+        .matrix thead th.sticky { background: #f3f4f6; }
         .matrix a { color: inherit; text-decoration: none; }
         .matrix a:hover { text-decoration: underline; }
         .matrix .cell-qty { display: block; color: #444; font-size: 0.8rem; }
         .matrix .cell-amt { display: block; font-weight: 600; }
         .matrix tfoot td { font-weight: 700; background: #f9fafb; }
-        .toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; margin: 1rem 0; background: #fff; padding: 1rem; }
-        .toolbar label { display: block; font-weight: 600; font-size: 0.85rem; }
-        .toolbar input, .toolbar select { padding: 0.35rem; font-size: 16px; min-height: 44px; }
-        .rc-badge { display: inline-block; padding: 0 0.5rem; border-radius: 999px; font-weight: 600; text-decoration: none; font-size: 0.85rem; min-height: 44px; line-height: 44px; }
-        .rc-badge.ok { background: #d1fae5; color: #065f46; }
-        .rc-badge.warn { background: #fef3c7; color: #92400e; }
-        .rc-badge.bad { background: #fee2e2; color: #991b1b; }
+        .matrix tfoot td.sticky { background: #f9fafb; }
+        .hint-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin: 0 0 0.75rem;
+            padding: 0 0.75rem;
+        }
+        .hint-panel > summary {
+            list-style: none;
+            cursor: pointer;
+            min-height: var(--tap);
+            display: flex;
+            align-items: center;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .hint-panel > summary::-webkit-details-marker { display: none; }
+        .hint-panel > summary::after { content: "▾"; margin-left: auto; color: var(--muted); }
+        .hint-panel[open] > summary::after { content: "▴"; }
+        .hint-panel .hint { margin: 0 0 0.75rem; font-size: 0.9rem; }
+        .matrix-bar { margin: 0.5rem 0 0.75rem; }
+        .filter-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+        .filter-summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: var(--tap);
+            padding: 0.65rem 0.85rem;
+            font-size: 0.95rem;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .filter-summary::-webkit-details-marker { display: none; }
+        .filter-summary::after { content: "▾"; margin-left: auto; color: var(--muted); font-size: 0.85rem; }
+        .filter-panel[open] > .filter-summary::after { content: "▴"; }
+        .filter-summary-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-width: 0;
+        }
+        .filter-fields {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            padding: 0 0.85rem 0.85rem;
+            align-items: end;
+        }
+        .filter-fields label { display: block; font-weight: 600; font-size: 0.85rem; }
+        .filter-fields input,
+        .filter-fields select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.4rem;
+            font-size: 16px;
+            min-height: var(--tap);
+        }
+        .filter-fields .btn { width: 100%; }
+        .matrix-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        .matrix-desktop-only { display: none; }
+        .matrix-explorer {
+            flex: 1 1 100%;
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--brand-dark);
+            font-weight: 600;
+        }
+        .icon-menu { position: relative; }
+        .icon-menu > summary {
+            list-style: none;
+            cursor: pointer;
+            width: var(--tap);
+            min-width: var(--tap);
+            min-height: var(--tap);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            background: #eef0ff;
+            color: #3f4bb8;
+            border: 1px solid #c7ccf5;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+        .icon-menu > summary::-webkit-details-marker { display: none; }
+        .icon-menu-panel {
+            position: absolute;
+            right: 0;
+            z-index: 20;
+            min-width: 12rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+        .icon-menu-panel a {
+            display: flex;
+            align-items: center;
+            min-height: var(--tap);
+            padding: 0.4rem 0.85rem;
+            text-decoration: none;
+            color: inherit;
+        }
+        .icon-menu-panel a + a { border-top: 1px solid var(--border); }
+        #matrix-view-toggle { min-height: var(--tap); }
+        .matrix-status {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.35rem 0.65rem;
+            margin: 0 0 0.75rem;
+            max-width: 100%;
+        }
+        .matrix-status p { margin: 0; flex: 1 1 12rem; }
+        .rc-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.85rem;
+            min-height: var(--tap);
+            line-height: 1.25;
+            box-sizing: border-box;
+        }
+        .rc-badge.ok { background: var(--ok-bg); color: var(--ok-fg); }
+        .rc-badge.warn { background: var(--warn-bg); color: var(--warn); }
+        .rc-badge.bad { background: var(--bad-bg); color: var(--bad-fg); }
         .rc-badge.open, .rc-badge.partial { background: #e2e8f0; color: #334155; }
+        .matrix-status .rc-link {
+            display: inline-flex;
+            align-items: center;
+            min-height: var(--tap);
+        }
+        .matrix-table-view { display: none; }
+        .matrix-page.is-table .store-view { display: none; }
+        .matrix-page.is-table .matrix-table-view { display: block; }
+        .store-chips {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 0.4rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            max-width: 100%;
+            margin: 0 0 0.65rem;
+            padding-bottom: 0.15rem;
+        }
+        .store-chip {
+            flex: 0 0 auto;
+            min-height: var(--tap);
+            min-width: var(--tap);
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+        .store-chip.is-active {
+            background: var(--brand);
+            color: #fff;
+            border-color: var(--brand);
+        }
+        .sg-list { min-width: 0; }
+        .sg-card, .sg-total {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            column-gap: 0.75rem;
+            align-items: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.45rem 0.7rem;
+            margin: 0 0 0.4rem;
+            min-height: var(--tap);
+            box-sizing: border-box;
+        }
+        .sg-card {
+            border-left: 5px solid var(--sg-color, var(--brand));
+            text-decoration: none;
+            color: inherit;
+        }
+        .sg-title { font-weight: 600; line-height: 1.35; word-break: break-word; }
+        .sg-nums { text-align: right; }
+        .sg-fig { display: none; }
+        .sg-fig.is-on { display: block; }
+        .sg-amt { font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.3; }
+        .sg-qty { font-size: 0.85rem; color: #555; font-variant-numeric: tabular-nums; line-height: 1.3; }
+        .sg-total {
+            position: sticky;
+            bottom: calc(var(--nav-pad-bottom) + 0.25rem);
+            z-index: 5;
+            font-weight: 700;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+        }
+        @media (min-width: 900px) {
+            .matrix th.sticky, .matrix td.sticky {
+                min-width: 170px;
+                max-width: none;
+                white-space: nowrap;
+            }
+            .hint-panel {
+                background: transparent;
+                border: 0;
+                padding: 0;
+                margin: 0;
+            }
+            .hint-panel > summary { display: none; }
+            .hint-panel .hint { margin: 0.75rem 0; }
+            .hint-panel:not([open]) > .hint { display: block; }
+            .matrix-bar {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                align-items: end;
+                background: var(--surface);
+                padding: 1rem;
+                margin: 1rem 0;
+            }
+            .matrix-bar > .toolbar,
+            .filter-panel,
+            .filter-panel:not([open]) > .filter-fields,
+            .filter-fields,
+            .matrix-actions { display: contents; }
+            .filter-summary,
+            .icon-menu,
+            #matrix-view-toggle { display: none; }
+            .matrix-desktop-only { display: inline-flex; }
+            .filter-fields input,
+            .filter-fields select,
+            .filter-fields .btn { width: auto; }
+            .matrix-explorer {
+                flex: 0 0 auto;
+                display: inline;
+                min-height: 0;
+                padding: 0.4rem 0;
+                font-weight: 400;
+                color: revert;
+                text-decoration: underline;
+            }
+            .store-view { display: none; }
+            .matrix-table-view,
+            .matrix-page.is-table .matrix-table-view { display: block; }
+            .matrix-page.is-table .store-view { display: none; }
+        }
 {% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 100%;">
+<div class="container matrix-page" id="matrix-page" style="max-width: 100%;">
     <h1 class="page-h1">{% trans "Sales by super-groups" %}</h1>
-    <p class="hint">{% trans "Rows are super-groups, columns are stores with sales in the period. Cell = qty / amount. Totals must match all sales." %}
-        {% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}</p>
-    {% if scope_all %}
-    <p class="hint">{% trans "All warehouses = the Granit report «Sales by warehouses»: receipts as realized by warehouse documents plus sales invoices with their services (office, HoReCa, service centres), by realization date. Receipts Granit has not realized yet are only in Retail; transfers and write-offs are not included." %}</p>
-    {% endif %}
-    <form class="toolbar" method="get">
-        <div>
-            <label for="scope">{% trans "Sales" %}</label>
-            <select id="scope" name="scope" onchange="this.form.submit()">
-                {% for value, label in scope_choices %}
-                <option value="{{ value }}" {% if scope == value %}selected{% endif %}>{{ label }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div>
-            <label for="date_from">{% trans "From" %}</label>
-            <input type="date" id="date_from" name="date_from" value="{{ date_from|date:'Y-m-d' }}">
-        </div>
-        <div>
-            <label for="date_to">{% trans "To" %}</label>
-            <input type="date" id="date_to" name="date_to" value="{{ date_to|date:'Y-m-d' }}">
-        </div>
-        <button class="btn" type="submit">{% trans "Apply" %}</button>
-        <a class="btn btn-secondary" href="{% url 'sales_matrix_xlsx' %}?{{ matrix.period_query }}">{% trans "Excel" %}</a>
-        <a class="btn btn-secondary" href="{% url 'sales_matrix_edit' %}?{{ matrix.period_query }}">{% trans "Edit super-groups" %}</a>
-        <a href="{% url 'sales_explorer' %}?{{ matrix.period_query }}">{% trans "Sales Explorer" %}</a>
-    </form>
-    <p class="{% if matrix.balanced %}ok{% else %}bad{% endif %}">
-        {% if matrix.balanced %}
-            {% trans "Totals match SaleFact for the period." %}
-        {% else %}
-            {% trans "Totals do not match SaleFact — check membership." %}
-            (matrix {{ matrix.grand.amount|money }} / fact {{ matrix.fact_total.amount|money }})
+    <details class="hint-panel" id="matrix-hint-panel">
+        <summary>{% trans "How it's calculated" %}</summary>
+        <p class="hint">{% trans "Rows are super-groups, columns are stores with sales in the period. Cell = qty / amount. Totals must match all sales." %}
+            {% trans "Qty: kg for weighed goods (0.25 = 250 g), pieces for the rest." %}</p>
+        {% if scope_all %}
+        <p class="hint">{% trans "All warehouses = the Granit report «Sales by warehouses»: receipts as realized by warehouse documents plus sales invoices with their services (office, HoReCa, service centres), by realization date. Receipts Granit has not realized yet are only in Retail; transfers and write-offs are not included." %}</p>
         {% endif %}
+    </details>
+    <div class="matrix-bar">
+        <form class="toolbar" method="get">
+            <details class="filter-panel" id="matrix-filter-panel">
+                <summary class="filter-summary">
+                    <span class="filter-summary-text">
+                        {{ date_from|date:"d.m" }} – {{ date_to|date:"d.m" }}
+                        · {% for value, label in scope_choices %}{% if scope == value %}{{ label }}{% endif %}{% endfor %}
+                    </span>
+                </summary>
+                <div class="filter-fields">
+                    <div>
+                        <label for="scope">{% trans "Sales" %}</label>
+                        <select id="scope" name="scope" onchange="this.form.submit()">
+                            {% for value, label in scope_choices %}
+                            <option value="{{ value }}" {% if scope == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="date_from">{% trans "From" %}</label>
+                        <input type="date" id="date_from" name="date_from" value="{{ date_from|date:'Y-m-d' }}">
+                    </div>
+                    <div>
+                        <label for="date_to">{% trans "To" %}</label>
+                        <input type="date" id="date_to" name="date_to" value="{{ date_to|date:'Y-m-d' }}">
+                    </div>
+                    <button class="btn" type="submit">{% trans "Apply" %}</button>
+                </div>
+            </details>
+        </form>
+        <div class="matrix-actions">
+            <a class="btn btn-secondary matrix-desktop-only" href="{% url 'sales_matrix_xlsx' %}?{{ matrix.period_query }}">{% trans "Excel" %}</a>
+            <a class="btn btn-secondary matrix-desktop-only" href="{% url 'sales_matrix_edit' %}?{{ matrix.period_query }}">{% trans "Edit super-groups" %}</a>
+            <a class="matrix-explorer" href="{% url 'sales_explorer' %}?{{ matrix.period_query }}">{% trans "Sales Explorer" %}</a>
+            <details class="icon-menu">
+                <summary aria-label="{% trans "More" %}">⋯</summary>
+                <div class="icon-menu-panel">
+                    <a href="{% url 'sales_matrix_xlsx' %}?{{ matrix.period_query }}">{% trans "Excel" %}</a>
+                    <a href="{% url 'sales_matrix_edit' %}?{{ matrix.period_query }}">{% trans "Edit super-groups" %}</a>
+                </div>
+            </details>
+            <button type="button" class="btn btn-secondary" id="matrix-view-toggle" aria-pressed="false"
+                    data-label-table="{% trans "Table" %}" data-label-cards="{% trans "By store" %}">{% trans "Table" %}</button>
+        </div>
+    </div>
+    <div class="matrix-status">
+        <p class="{% if matrix.balanced %}ok{% else %}bad{% endif %}">
+            {% if matrix.balanced %}
+                {% trans "Totals match SaleFact for the period." %}
+            {% else %}
+                {% trans "Totals do not match SaleFact — check membership." %}
+                (matrix {{ matrix.grand.amount|money }} / fact {{ matrix.fact_total.amount|money }})
+            {% endif %}
+        </p>
         {% if reconcile %}
-        ·
         <a class="rc-badge {{ reconcile.status }}" href="{% url 'sales_reconcile_month' reconcile.key %}">
             {% trans "Reconciliation with Granit" %} {{ reconcile.month|date:"m.Y" }}:
             {% if reconcile.status == "ok" %}{% trans "OK" %}{% elif reconcile.status == "open" %}{% trans "Month not closed" %}{% elif reconcile.status == "partial" %}{% trans "Incomplete history" %}{% else %}{% trans "difference" %} {{ reconcile.totals.diff|money }}{% if reconcile.flags %}, {% blocktrans count n=reconcile.flags|length %}{{ n }} flag{% plural %}{{ n }} flags{% endblocktrans %}{% endif %}{% endif %}
         </a>
         {% else %}
-        · <a href="{% url 'sales_reconcile' %}">{% trans "Reconciliation with Granit" %}</a>
+        <a class="rc-link" href="{% url 'sales_reconcile' %}">{% trans "Reconciliation with Granit" %}</a>
         {% endif %}
-    </p>
+    </div>
     {% if matrix.stores %}
-    <div class="matrix-wrap">
-        <table class="matrix">
-            <thead>
-                <tr>
-                    <th class="sticky">{% trans "Super-group" %}</th>
-                    {% for store in matrix.stores %}
-                    <th colspan="2">{{ store.name }}</th>
-                    {% endfor %}
-                    <th colspan="2">{% trans "Total" %}</th>
-                </tr>
-                <tr>
-                    <th class="sticky"></th>
-                    {% for store in matrix.stores %}
-                    <th>{% trans "Qty" %}</th>
-                    <th>{% trans "Amount" %}</th>
-                    {% endfor %}
-                    <th>{% trans "Qty" %}</th>
-                    <th>{% trans "Amount" %}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in matrix.rows %}
-                <tr>
-                    <td class="sticky" style="background:#{{ row.color }};">
-                        <a href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}">{{ row.title }}</a>
-                    </td>
+    <div class="store-view" id="store-view">
+        <div class="store-chips" role="tablist">
+            <button type="button" class="store-chip is-active" role="tab" aria-selected="true" data-store="">{% trans "All stores" %}</button>
+            {% for store in matrix.stores %}
+            <button type="button" class="store-chip" role="tab" aria-selected="false" data-store="{{ store.granit_id }}">{{ store.name }}</button>
+            {% endfor %}
+        </div>
+        <div class="sg-list">
+            {% for row in matrix.rows %}
+            <a class="sg-card" style="--sg-color: #{{ row.color }};"
+               href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}"
+               data-href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}">
+                <span class="sg-title">{{ row.title }}</span>
+                <span class="sg-nums">
+                    <span class="sg-fig sg-amt is-on" data-store="">{{ row.total.amount|money }}</span>
+                    <span class="sg-fig sg-qty is-on" data-store="">{{ row.total.qty|qty }}</span>
                     {% for store, cell in row.ordered_cells %}
-                    <td style="background:#{{ row.color }};">
-                        <a href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}&amp;store={{ store.granit_id }}">
-                            <span class="cell-qty">{{ cell.qty|qty }}</span>
-                        </a>
-                    </td>
-                    <td style="background:#{{ row.color }};">
-                        <a href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}&amp;store={{ store.granit_id }}">
-                            <span class="cell-amt">{{ cell.amount|money }}</span>
-                        </a>
-                    </td>
+                    <span class="sg-fig sg-amt" data-store="{{ store.granit_id }}">{{ cell.amount|money }}</span>
+                    <span class="sg-fig sg-qty" data-store="{{ store.granit_id }}">{{ cell.qty|qty }}</span>
                     {% endfor %}
-                    <td style="background:#{{ row.color }};"><span class="cell-qty">{{ row.total.qty|qty }}</span></td>
-                    <td style="background:#{{ row.color }};"><span class="cell-amt">{{ row.total.amount|money }}</span></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td class="sticky">{% trans "Total" %}</td>
+                </span>
+            </a>
+            {% endfor %}
+            <div class="sg-total">
+                <span class="sg-title">{% trans "Total" %}</span>
+                <span class="sg-nums">
+                    <span class="sg-fig sg-amt is-on" data-store="">{{ matrix.grand.amount|money }}</span>
+                    <span class="sg-fig sg-qty is-on" data-store="">{{ matrix.grand.qty|qty }}</span>
                     {% for store, cell in matrix.ordered_column_totals %}
-                    <td>{{ cell.qty|qty }}</td>
-                    <td>{{ cell.amount|money }}</td>
+                    <span class="sg-fig sg-amt" data-store="{{ store.granit_id }}">{{ cell.amount|money }}</span>
+                    <span class="sg-fig sg-qty" data-store="{{ store.granit_id }}">{{ cell.qty|qty }}</span>
                     {% endfor %}
-                    <td>{{ matrix.grand.qty|qty }}</td>
-                    <td>{{ matrix.grand.amount|money }}</td>
-                </tr>
-            </tfoot>
-        </table>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="matrix-table-view">
+        <div class="matrix-wrap scroll-x">
+            <table class="matrix">
+                <thead>
+                    <tr>
+                        <th class="sticky">{% trans "Super-group" %}</th>
+                        {% for store in matrix.stores %}
+                        <th colspan="2">{{ store.name }}</th>
+                        {% endfor %}
+                        <th colspan="2">{% trans "Total" %}</th>
+                    </tr>
+                    <tr>
+                        <th class="sticky"></th>
+                        {% for store in matrix.stores %}
+                        <th>{% trans "Qty" %}</th>
+                        <th>{% trans "Amount" %}</th>
+                        {% endfor %}
+                        <th>{% trans "Qty" %}</th>
+                        <th>{% trans "Amount" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in matrix.rows %}
+                    <tr>
+                        <td class="sticky" style="background:#{{ row.color }};">
+                            <a href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}">{{ row.title }}</a>
+                        </td>
+                        {% for store, cell in row.ordered_cells %}
+                        <td style="background:#{{ row.color }};">
+                            <a href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}&amp;store={{ store.granit_id }}">
+                                <span class="cell-qty">{{ cell.qty|qty }}</span>
+                            </a>
+                        </td>
+                        <td style="background:#{{ row.color }};">
+                            <a href="{% url 'sales_matrix_sg' row.super_group.pk %}?{{ matrix.period_query }}&amp;store={{ store.granit_id }}">
+                                <span class="cell-amt">{{ cell.amount|money }}</span>
+                            </a>
+                        </td>
+                        {% endfor %}
+                        <td style="background:#{{ row.color }};"><span class="cell-qty">{{ row.total.qty|qty }}</span></td>
+                        <td style="background:#{{ row.color }};"><span class="cell-amt">{{ row.total.amount|money }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="sticky">{% trans "Total" %}</td>
+                        {% for store, cell in matrix.ordered_column_totals %}
+                        <td>{{ cell.qty|qty }}</td>
+                        <td>{{ cell.amount|money }}</td>
+                        {% endfor %}
+                        <td>{{ matrix.grand.qty|qty }}</td>
+                        <td>{{ matrix.grand.amount|money }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
     {% else %}
     <p class="hint">{% trans "No sales in this period." %}</p>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  var MQ = window.matchMedia("(min-width: 900px)");
+
+  function syncPanels() {
+    if (!MQ.matches) return;
+    var filter = document.getElementById("matrix-filter-panel");
+    var hint = document.getElementById("matrix-hint-panel");
+    if (filter) filter.open = true;
+    if (hint) hint.open = true;
+  }
+
+  if (MQ.addEventListener) MQ.addEventListener("change", syncPanels);
+  else if (MQ.addListener) MQ.addListener(syncPanels);
+  syncPanels();
+
+  var root = document.getElementById("store-view");
+  if (root) {
+    var chips = root.querySelectorAll(".store-chip");
+    function applyStore(id) {
+      root.querySelectorAll(".sg-fig").forEach(function (el) {
+        el.classList.toggle("is-on", (el.getAttribute("data-store") || "") === id);
+      });
+      root.querySelectorAll(".sg-card").forEach(function (a) {
+        var base = a.getAttribute("data-href");
+        a.setAttribute("href", id ? base + "&store=" + encodeURIComponent(id) : base);
+      });
+      chips.forEach(function (chip) {
+        var on = (chip.getAttribute("data-store") || "") === id;
+        chip.classList.toggle("is-active", on);
+        chip.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    }
+    chips.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        applyStore(chip.getAttribute("data-store") || "");
+      });
+    });
+  }
+
+  var page = document.getElementById("matrix-page");
+  var toggle = document.getElementById("matrix-view-toggle");
+  if (page && toggle) {
+    toggle.addEventListener("click", function () {
+      var on = page.classList.toggle("is-table");
+      toggle.setAttribute("aria-pressed", on ? "true" : "false");
+      toggle.textContent = on
+        ? (toggle.getAttribute("data-label-cards") || "")
+        : (toggle.getAttribute("data-label-table") || "");
+    });
+  }
+})();
+</script>
 {% endblock %}
