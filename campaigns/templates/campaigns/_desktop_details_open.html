@@ -1,0 +1,27 @@
+<script>
+(function () {
+  var MQ = window.matchMedia("(min-width: 900px)");
+  var SELECTOR = "details.recalc-panel, details.catalog-filter-panel";
+
+  function sync() {
+    document.querySelectorAll(SELECTOR).forEach(function (el) {
+      if (MQ.matches) {
+        el.open = true;
+        return;
+      }
+      if (el.classList.contains("recalc-panel")) {
+        el.open = false;
+        return;
+      }
+      /* Catalog: stay open only when a filter is active (data-filter-active in markup). */
+      if (!el.hasAttribute("data-filter-active")) {
+        el.open = false;
+      }
+    });
+  }
+
+  if (MQ.addEventListener) MQ.addEventListener("change", sync);
+  else if (MQ.addListener) MQ.addListener(sync);
+  sync();
+})();
+</script>

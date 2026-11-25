@@ -81,8 +81,7 @@
                 margin: 1rem 0;
             }
             .filter-summary { display: none; }
-            .catalog-filter,
-            .catalog-filter-panel:not([open]) > .catalog-filter {
+            .catalog-filter {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 1rem;
@@ -134,4 +133,8 @@
         </tbody>
     </table>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% include "campaigns/_desktop_details_open.html" %}
 {% endblock %}

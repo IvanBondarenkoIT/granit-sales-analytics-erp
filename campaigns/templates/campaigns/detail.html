@@ -220,8 +220,7 @@
                 margin: 1rem 0;
             }
             .recalc-panel > summary { display: none; }
-            .recalc-panel .recalc-body,
-            .recalc-panel:not([open]) > .recalc-body {
+            .recalc-panel .recalc-body {
                 display: flex;
                 flex-direction: row;
                 flex-wrap: wrap;
@@ -264,8 +263,7 @@
                 margin: 1rem 0;
             }
             .filter-summary { display: none; }
-            .catalog-filter,
-            .catalog-filter-panel:not([open]) > .catalog-filter {
+            .catalog-filter {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 1rem;
@@ -405,4 +403,8 @@
     <p class="empty">{% if filter_active %}{% trans "No matching sales for this filter." %}{% else %}{% trans "No clients in this list." %}{% endif %}</p>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% include "campaigns/_desktop_details_open.html" %}
 {% endblock %}

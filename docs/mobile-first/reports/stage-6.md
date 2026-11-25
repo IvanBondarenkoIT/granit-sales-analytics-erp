@@ -83,3 +83,15 @@
 ## Вопросы
 
 нет
+
+## Исправления по ревью
+
+Код ревью: `b01707e` / tip `1821bdb` → rework (`reviews/stage-6.md`).
+
+1. **Форма «Пересчитать» и catalog-filter на десктопе.** Убран CSS-хак `:not([open]) > … { display:… }` — содержимое закрытого `<details>` так не показать. Добавлен `campaigns/_desktop_details_open.html`: на ≥ 900 px JS через `matchMedia` ставит `open` у `.recalc-panel` и `.catalog-filter-panel` (как `sales/explorer.html`). Подключён на `detail`, `purchases`, `client_purchases`. На телефоне recalc свёрнут; catalog открыт только при `data-filter-active`.
+2. **Проверка глазами (stage6b, desktop 1366, demo_staff):**
+   - `artifacts/ui/stage6b/screenshots/campaign_detail__demo_staff__desktop.png` — видны «Пересчитать эту кампанию до» + дата + кнопка и селекты «Группа товара» / «Товар».
+   - `artifacts/ui/stage6b/screenshots/campaign_purchases__demo_staff__desktop.png` — видны селекты фильтра каталога над таблицей.
+   - `artifacts/ui/stage6b/screenshots/campaign_client__demo_staff__desktop.png` — видны селекты фильтра каталога над чеками.
+
+Проверки после фикса: `DB_HOST=localhost python manage.py test` — **93 OK**; `python scripts/ui_snapshots.py --name stage6b --compare stage6` → `artifacts/ui/stage6b/` (104 pages, exit 0). Мобильные campaign_* по-прежнему scrollWidth 390.
