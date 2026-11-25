@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: granit-sales-analytics-erp\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-25 20:43+0400\n"
+"POT-Creation-Date: 2026-11-25 21:38+0400\n"
 "PO-Revision-Date: 2026-09-22 16:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: English\n"
@@ -29,24 +29,24 @@ msgstr "Campaign name"
 msgid "Give each blast its own name so lists stay separate."
 msgstr "Give each blast its own name so lists stay separate."
 
-#: .\campaigns\forms.py:16 .\campaigns\templates\campaigns\list.html:116
-#: .\campaigns\templates\campaigns\list.html:127
+#: .\campaigns\forms.py:16 .\campaigns\templates\campaigns\list.html:123
+#: .\campaigns\templates\campaigns\list.html:134
 msgid "Channel"
 msgstr "Channel"
 
 #: .\campaigns\forms.py:18 .\campaigns\templates\campaigns\detail.html:322
-#: .\campaigns\templates\campaigns\list.html:128
+#: .\campaigns\templates\campaigns\list.html:135
 msgid "SMS"
 msgstr "SMS"
 
 #: .\campaigns\forms.py:19 .\campaigns\templates\campaigns\detail.html:322
-#: .\campaigns\templates\campaigns\list.html:128
+#: .\campaigns\templates\campaigns\list.html:135
 msgid "Telegram bot"
 msgstr "Telegram bot"
 
 #: .\campaigns\forms.py:24 .\campaigns\templates\campaigns\detail.html:323
-#: .\campaigns\templates\campaigns\list.html:115
-#: .\campaigns\templates\campaigns\list.html:126
+#: .\campaigns\templates\campaigns\list.html:122
+#: .\campaigns\templates\campaigns\list.html:133
 msgid "Sent on"
 msgstr "Sent on"
 
@@ -79,6 +79,7 @@ msgid "Only for the 18 Sep 2026 blast already stored on this machine."
 msgstr "Only for the 18 Sep 2026 blast already stored on this machine."
 
 #: .\campaigns\forms.py:44 .\promos\forms.py:53
+#: .\promos\templates\promos\detail.html:285
 msgid "Notes"
 msgstr "Notes"
 
@@ -109,7 +110,8 @@ msgstr "SMS list must be an .xlsx file."
 #: .\campaigns\templates\campaigns\_catalog_filter.html:8
 #: .\campaigns\templates\campaigns\_catalog_filter.html:14
 #: .\campaigns\templates\campaigns\_catalog_filter.html:23
-#: .\promos\templates\promos\create.html:190
+#: .\promos\templates\promos\create.html:608
+#: .\promos\templates\promos\create.html:610
 #: .\sales\templates\sales\_explorer.html:50
 msgid "All groups"
 msgstr "All groups"
@@ -136,7 +138,8 @@ msgstr "Product group"
 #: .\campaigns\templates\campaigns\client_purchases.html:161
 #: .\campaigns\templates\campaigns\purchases.html:114
 #: .\campaigns\templates\campaigns\purchases.html:123
-#: .\promos\templates\promos\detail.html:44
+#: .\promos\templates\promos\detail.html:332
+#: .\promos\templates\promos\detail.html:345
 #: .\sales\templates\sales\_explorer.html:57
 #: .\sales\templates\sales\matrix_group.html:133
 #: .\sales\templates\sales\matrix_group.html:143
@@ -185,10 +188,11 @@ msgstr "Card"
 
 #: .\campaigns\templates\campaigns\client_purchases.html:135
 #: .\campaigns\templates\campaigns\detail.html:324
-#: .\campaigns\templates\campaigns\list.html:118
-#: .\campaigns\templates\campaigns\list.html:133
-#: .\promos\templates\promos\detail.html:19
-#: .\promos\templates\promos\list.html:33
+#: .\campaigns\templates\campaigns\list.html:125
+#: .\campaigns\templates\campaigns\list.html:140
+#: .\promos\templates\promos\detail.html:272
+#: .\promos\templates\promos\list.html:160
+#: .\promos\templates\promos\list.html:174
 msgid "Period"
 msgstr "Period"
 
@@ -244,7 +248,10 @@ msgstr "Amount"
 #: .\campaigns\templates\campaigns\client_purchases.html:162
 #: .\campaigns\templates\campaigns\purchases.html:115
 #: .\campaigns\templates\campaigns\purchases.html:124
-#: .\promos\templates\promos\create.html:119
+#: .\promos\templates\promos\create.html:536
+#: .\promos\templates\promos\create.html:608
+#: .\promos\templates\promos\create.html:643
+#: .\promos\templates\promos\create.html:669
 #: .\sales\templates\sales\receipt.html:71
 #: .\sales\templates\sales\receipt.html:80
 msgid "Group"
@@ -274,19 +281,19 @@ msgstr "Qty"
 
 #: .\campaigns\templates\campaigns\create.html:4
 #: .\campaigns\templates\campaigns\create.html:5
-#: .\campaigns\templates\campaigns\create.html:99
-#: .\campaigns\templates\campaigns\list.html:109
-#: .\campaigns\templates\campaigns\list.html:149
+#: .\campaigns\templates\campaigns\create.html:119
+#: .\campaigns\templates\campaigns\list.html:116
+#: .\campaigns\templates\campaigns\list.html:156
 #: .\core\templates\core\more.html:36
 msgid "New campaign"
 msgstr "New campaign"
 
-#: .\campaigns\templates\campaigns\create.html:98
+#: .\campaigns\templates\campaigns\create.html:118
 #: .\campaigns\templates\campaigns\detail.html:319
 msgid "All campaigns"
 msgstr "All campaigns"
 
-#: .\campaigns\templates\campaigns\create.html:100
+#: .\campaigns\templates\campaigns\create.html:120
 msgid ""
 "Each mailing is a separate campaign. Saving here does not change older "
 "blasts."
@@ -294,7 +301,7 @@ msgstr ""
 "Each mailing is a separate campaign. Saving here does not change older "
 "blasts."
 
-#: .\campaigns\templates\campaigns\create.html:101
+#: .\campaigns\templates\campaigns\create.html:121
 msgid ""
 "Telegram bot: choose that channel and upload the CSV export (card number, "
 "phone). Clients are matched by loyalty card."
@@ -302,7 +309,7 @@ msgstr ""
 "Telegram bot: choose that channel and upload the CSV export (card number, "
 "phone). Clients are matched by loyalty card."
 
-#: .\campaigns\templates\campaigns\create.html:103
+#: .\campaigns\templates\campaigns\create.html:123
 msgid ""
 "A local list for the 18 Sep 2026 blast is on this machine (not in git). "
 "Leave the checkbox off for a new list."
@@ -310,19 +317,19 @@ msgstr ""
 "A local list for the 18 Sep 2026 blast is on this machine (not in git). "
 "Leave the checkbox off for a new list."
 
-#: .\campaigns\templates\campaigns\create.html:112
+#: .\campaigns\templates\campaigns\create.html:134
 msgid "Tap to choose Excel or CSV file"
 msgstr "Tap to choose Excel or CSV file"
 
-#: .\campaigns\templates\campaigns\create.html:121
-#: .\campaigns\templates\campaigns\create.html:124
+#: .\campaigns\templates\campaigns\create.html:144
+#: .\campaigns\templates\campaigns\create.html:147
 msgid "Create campaign"
 msgstr "Create campaign"
 
 #: .\campaigns\templates\campaigns\detail.html:327
 #: .\campaigns\templates\campaigns\detail.html:332
-#: .\promos\templates\promos\charts.html:36
-#: .\promos\templates\promos\detail.html:101
+#: .\promos\templates\promos\charts.html:99
+#: .\promos\templates\promos\detail.html:300
 msgid "Recalculate"
 msgstr "Recalculate"
 
@@ -335,8 +342,8 @@ msgid "Share bought"
 msgstr "Share bought"
 
 #: .\campaigns\templates\campaigns\detail.html:337
-#: .\campaigns\templates\campaigns\list.html:119
-#: .\campaigns\templates\campaigns\list.html:136
+#: .\campaigns\templates\campaigns\list.html:126
+#: .\campaigns\templates\campaigns\list.html:143
 msgid "Clients"
 msgstr "Clients"
 
@@ -345,8 +352,8 @@ msgstr "Clients"
 #: .\campaigns\templates\campaigns\detail.html:345
 #: .\campaigns\templates\campaigns\detail.html:360
 #: .\campaigns\templates\campaigns\detail.html:379
-#: .\campaigns\templates\campaigns\list.html:120
-#: .\campaigns\templates\campaigns\list.html:137
+#: .\campaigns\templates\campaigns\list.html:127
+#: .\campaigns\templates\campaigns\list.html:144
 msgid "Bought"
 msgstr "Bought"
 
@@ -383,9 +390,10 @@ msgstr "Amount of all matching rows: %(amount)s"
 
 #: .\campaigns\templates\campaigns\detail.html:359
 #: .\campaigns\templates\campaigns\detail.html:372
-#: .\campaigns\templates\campaigns\list.html:117
-#: .\campaigns\templates\campaigns\list.html:130
-#: .\promos\templates\promos\list.html:32 .\sales\views.py:419
+#: .\campaigns\templates\campaigns\list.html:124
+#: .\campaigns\templates\campaigns\list.html:137
+#: .\promos\templates\promos\list.html:159
+#: .\promos\templates\promos\list.html:171 .\sales\views.py:419
 msgid "Name"
 msgstr "Name"
 
@@ -398,7 +406,7 @@ msgid "No"
 msgstr "No"
 
 #: .\campaigns\templates\campaigns\detail.html:395
-#: .\promos\templates\promos\detail.html:149
+#: .\promos\templates\promos\detail.html:427
 #: .\sales\templates\sales\_results.html:76
 #: .\sales\templates\sales\matrix.html:387
 #: .\sales\templates\sales\matrix.html:408
@@ -415,7 +423,7 @@ msgid "No clients in this list."
 msgstr "No clients in this list."
 
 #: .\campaigns\templates\campaigns\list.html:4
-#: .\campaigns\templates\campaigns\list.html:108 .\templates\base.html:32
+#: .\campaigns\templates\campaigns\list.html:115 .\templates\base.html:32
 msgid "Campaign Analysis"
 msgstr "Campaign Analysis"
 
@@ -425,12 +433,12 @@ msgstr "Campaign Analysis"
 msgid "Campaigns"
 msgstr "Campaign name"
 
-#: .\campaigns\templates\campaigns\list.html:138
+#: .\campaigns\templates\campaigns\list.html:145
 #, python-format
 msgid "%(bought)s of %(total)s"
 msgstr "%(bought)s of %(total)s"
 
-#: .\campaigns\templates\campaigns\list.html:146
+#: .\campaigns\templates\campaigns\list.html:153
 msgid "No campaigns yet."
 msgstr "No campaigns yet."
 
@@ -562,8 +570,9 @@ msgstr "Home"
 
 #: .\core\templates\core\more.html:29 .\promos\templates\promos\create.html:4
 #: .\promos\templates\promos\create.html:5
-#: .\promos\templates\promos\create.html:70
-#: .\promos\templates\promos\list.html:21
+#: .\promos\templates\promos\create.html:487
+#: .\promos\templates\promos\list.html:148
+#: .\promos\templates\promos\list.html:189
 msgid "New promo"
 msgstr "New promo"
 
@@ -639,7 +648,7 @@ msgid "Stage 4b — Local"
 msgstr "Stage 4b — Local"
 
 #: .\core\views.py:41 .\promos\templates\promos\list.html:4
-#: .\promos\templates\promos\list.html:20 .\templates\base.html:36
+#: .\promos\templates\promos\list.html:147 .\templates\base.html:36
 msgid "Promotion Effectiveness"
 msgstr "Promotion Effectiveness"
 
@@ -689,15 +698,16 @@ msgstr "Promo name"
 msgid "Used when the file has no name column, or for a manual promo."
 msgstr "Used when the file has no name column, or for a manual promo."
 
-#: .\promos\forms.py:18
+#: .\promos\forms.py:18 .\promos\templates\promos\list.html:161
+#: .\promos\templates\promos\list.html:175
 msgid "Type"
 msgstr "Type"
 
-#: .\promos\forms.py:19 .\promos\templates\promos\detail.html:25
+#: .\promos\forms.py:19 .\promos\templates\promos\detail.html:278
 msgid "Format"
 msgstr "Format"
 
-#: .\promos\forms.py:20 .\promos\templates\promos\detail.html:27
+#: .\promos\forms.py:20 .\promos\templates\promos\detail.html:280
 msgid "Channels / locations"
 msgstr "Channels / locations"
 
@@ -751,7 +761,7 @@ msgid ""
 msgstr ""
 "Local example with Candies group and Ballerina SKU (not required in git)."
 
-#: .\promos\forms.py:58 .\promos\templates\promos\create.html:101
+#: .\promos\forms.py:58 .\promos\templates\promos\create.html:518
 msgid "Promo products"
 msgstr "Promo products"
 
@@ -805,151 +815,160 @@ msgstr "Sync now"
 
 #: .\promos\templates\promos\charts.html:4
 #: .\promos\templates\promos\charts.html:5
-#: .\promos\templates\promos\charts.html:28
-#: .\promos\templates\promos\detail.html:102
+#: .\promos\templates\promos\charts.html:91
+#: .\promos\templates\promos\detail.html:301
 msgid "Charts"
 msgstr "Charts"
 
-#: .\promos\templates\promos\charts.html:29
-#: .\promos\templates\promos\detail.html:20
+#: .\promos\templates\promos\charts.html:92
+#: .\promos\templates\promos\detail.html:273
 msgid "Baseline days"
 msgstr "Baseline days"
 
-#: .\promos\templates\promos\charts.html:33
+#: .\promos\templates\promos\charts.html:96
 msgid "No analysis yet for this promo. Recalculate to build the charts."
 msgstr "No analysis yet for this promo. Recalculate to build the charts."
 
-#: .\promos\templates\promos\charts.html:43
+#: .\promos\templates\promos\charts.html:106
 msgid "Extra revenue vs baseline"
 msgstr "Extra revenue vs baseline"
 
-#: .\promos\templates\promos\charts.html:47
-#: .\promos\templates\promos\detail.html:110
+#: .\promos\templates\promos\charts.html:110
+#: .\promos\templates\promos\detail.html:307
+#: .\promos\templates\promos\list.html:164
+#: .\promos\templates\promos\list.html:178
 msgid "vs baseline"
 msgstr "vs baseline"
 
-#: .\promos\templates\promos\charts.html:53
-#: .\promos\templates\promos\detail.html:116
+#: .\promos\templates\promos\charts.html:116
+#: .\promos\templates\promos\detail.html:313
 msgid "vs YoY"
 msgstr "vs YoY"
 
-#: .\promos\templates\promos\charts.html:59
+#: .\promos\templates\promos\charts.html:122
 msgid "Best promo day"
 msgstr "Best promo day"
 
-#: .\promos\templates\promos\charts.html:69
-#: .\promos\templates\promos\charts.html:77
+#: .\promos\templates\promos\charts.html:132
+#: .\promos\templates\promos\charts.html:141
 msgid "Sales by day"
 msgstr "Sales by day"
 
-#: .\promos\templates\promos\charts.html:71
-#: .\promos\templates\promos\detail.html:105
-#: .\promos\templates\promos\detail.html:130 .\promos\views.py:305
+#: .\promos\templates\promos\charts.html:134
+#: .\promos\templates\promos\detail.html:305
+#: .\promos\templates\promos\detail.html:403
+#: .\promos\templates\promos\detail.html:413 .\promos\views.py:305
 msgid "Actual"
 msgstr "Actual"
 
-#: .\promos\templates\promos\charts.html:72 .\promos\views.py:307
+#: .\promos\templates\promos\charts.html:135 .\promos\views.py:307
 msgid "Last year"
 msgstr "Last year"
 
-#: .\promos\templates\promos\charts.html:73
-#: .\promos\templates\promos\detail.html:106
-#: .\promos\templates\promos\detail.html:131 .\promos\views.py:306
+#: .\promos\templates\promos\charts.html:136
+#: .\promos\templates\promos\detail.html:319
+#: .\promos\templates\promos\detail.html:404
+#: .\promos\templates\promos\detail.html:415
+#: .\promos\templates\promos\detail.html:419
+#: .\promos\templates\promos\detail.html:430 .\promos\views.py:306
 msgid "Pre-period baseline"
 msgstr "Pre-period baseline"
 
-#: .\promos\templates\promos\charts.html:74
-#: .\promos\templates\promos\detail.html:108
-#: .\promos\templates\promos\detail.html:133 .\promos\views.py:308
+#: .\promos\templates\promos\charts.html:137
+#: .\promos\templates\promos\detail.html:318
+#: .\promos\templates\promos\detail.html:406
+#: .\promos\templates\promos\detail.html:417
+#: .\promos\templates\promos\detail.html:421
+#: .\promos\templates\promos\detail.html:432 .\promos\views.py:308
 msgid "Forecast"
 msgstr "Forecast"
 
-#: .\promos\templates\promos\charts.html:75
+#: .\promos\templates\promos\charts.html:138
 msgid "Promo days"
 msgstr "Promo days"
 
-#: .\promos\templates\promos\charts.html:108
-#: .\promos\templates\promos\charts.html:109
+#: .\promos\templates\promos\charts.html:175
+#: .\promos\templates\promos\charts.html:177
 msgid "Promo period total"
 msgstr "Promo period total"
 
-#: .\promos\templates\promos\charts.html:119
+#: .\promos\templates\promos\charts.html:187
 msgid "actual"
 msgstr "actual"
 
-#: .\promos\templates\promos\charts.html:122
+#: .\promos\templates\promos\charts.html:190
 msgid "no data"
 msgstr "no data"
 
-#: .\promos\templates\promos\charts.html:130
-#: .\promos\templates\promos\charts.html:137
+#: .\promos\templates\promos\charts.html:199
+#: .\promos\templates\promos\charts.html:207
 msgid "Cumulative: extra revenue"
 msgstr "Cumulative: extra revenue"
 
-#: .\promos\templates\promos\charts.html:134
+#: .\promos\templates\promos\charts.html:203
 msgid "Actual, cumulative"
 msgstr "Actual, cumulative"
 
-#: .\promos\templates\promos\charts.html:135
+#: .\promos\templates\promos\charts.html:204
 msgid "Baseline, cumulative"
 msgstr "Baseline, cumulative"
 
-#: .\promos\templates\promos\charts.html:157
+#: .\promos\templates\promos\charts.html:230
 msgid "No pre-period baseline, so extra revenue cannot be calculated."
 msgstr "No pre-period baseline, so extra revenue cannot be calculated."
 
 #: .\promos\templates\promos\create.html:4
 #: .\promos\templates\promos\create.html:5
-#: .\promos\templates\promos\create.html:70
-#: .\promos\templates\promos\detail.html:16
+#: .\promos\templates\promos\create.html:487
+#: .\promos\templates\promos\detail.html:269
 msgid "Edit promo"
 msgstr "Edit promo"
 
-#: .\promos\templates\promos\create.html:69
+#: .\promos\templates\promos\create.html:486
 msgid "Back to promo"
 msgstr "Back to promo"
 
-#: .\promos\templates\promos\create.html:69
-#: .\promos\templates\promos\detail.html:16
+#: .\promos\templates\promos\create.html:486
+#: .\promos\templates\promos\detail.html:269
 msgid "All promos"
 msgstr "All promos"
 
-#: .\promos\templates\promos\create.html:103
+#: .\promos\templates\promos\create.html:520
 msgid "Add from Granit"
 msgstr "Add from Granit"
 
-#: .\promos\templates\promos\create.html:104
+#: .\promos\templates\promos\create.html:521
 msgid "Add from website"
 msgstr "Add from website"
 
-#: .\promos\templates\promos\create.html:105
+#: .\promos\templates\promos\create.html:522
 msgid "Clear all"
 msgstr "Clear all"
 
-#: .\promos\templates\promos\create.html:110
+#: .\promos\templates\promos\create.html:527
 msgid "Product (Granit)"
 msgstr "Product (Granit)"
 
-#: .\promos\templates\promos\create.html:112
+#: .\promos\templates\promos\create.html:529
 msgid "On website"
 msgstr "On website"
 
-#: .\promos\templates\promos\create.html:121
+#: .\promos\templates\promos\create.html:538
 msgid "whole group"
 msgstr "whole group"
 
-#: .\promos\templates\promos\create.html:123
+#: .\promos\templates\promos\create.html:540
 msgid "Expand into products"
 msgstr "Expand into products"
 
-#: .\promos\templates\promos\create.html:124
-#: .\promos\templates\promos\create.html:135
-#: .\promos\templates\promos\create.html:239
+#: .\promos\templates\promos\create.html:541
+#: .\promos\templates\promos\create.html:552
+#: .\promos\templates\promos\create.html:667
 #: .\sales\templates\sales\matrix_sg.html:102
 msgid "Remove"
 msgstr "Remove"
 
-#: .\promos\templates\promos\create.html:140
+#: .\promos\templates\promos\create.html:557
 msgid ""
 "No products yet. Use the buttons above to add from Granit or from the "
 "website."
@@ -957,90 +976,107 @@ msgstr ""
 "No products yet. Use the buttons above to add from Granit or from the "
 "website."
 
-#: .\promos\templates\promos\create.html:152
+#: .\promos\templates\promos\create.html:569
 msgid "Import from file (Excel)"
 msgstr "Import from file (Excel)"
 
-#: .\promos\templates\promos\create.html:155
+#: .\promos\templates\promos\create.html:572
 msgid "Download example promo file"
 msgstr "Download example promo file"
 
-#: .\promos\templates\promos\create.html:168
+#: .\promos\templates\promos\create.html:584
+#: .\promos\templates\promos\create.html:587
 msgid "Save and analyze"
 msgstr "Save and analyze"
 
-#: .\promos\templates\promos\create.html:175
+#: .\promos\templates\promos\create.html:593
 msgid "Products from Granit"
 msgstr "Products from Granit"
 
-#: .\promos\templates\promos\create.html:176
-#: .\promos\templates\promos\create.html:208
+#: .\promos\templates\promos\create.html:594
+#: .\promos\templates\promos\create.html:631
 msgid "Close"
 msgstr "Close"
 
-#: .\promos\templates\promos\create.html:180
+#: .\promos\templates\promos\create.html:598
 msgid "Search by name or Granit ID"
 msgstr "Search by name or Granit ID"
 
-#: .\promos\templates\promos\create.html:186
+#: .\promos\templates\promos\create.html:604
 msgid "show inactive"
 msgstr "show inactive"
 
-#: .\promos\templates\promos\create.html:194
-#: .\promos\templates\promos\create.html:224
+#: .\promos\templates\promos\create.html:615
+#: .\promos\templates\promos\create.html:650
 #: .\promos\templates\promos\picker\_rows.html:3
 msgid "Pick a group on the left or type to search."
 msgstr "Pick a group on the left or type to search."
 
-#: .\promos\templates\promos\create.html:199
-#: .\promos\templates\promos\create.html:229
-msgid "Add whole group / all found"
-msgstr "Add whole group / all found"
-
-#: .\promos\templates\promos\create.html:200
-#: .\promos\templates\promos\create.html:230
+#: .\promos\templates\promos\create.html:620
+#: .\promos\templates\promos\create.html:655
 msgid "Add selected"
 msgstr "Add selected"
 
-#: .\promos\templates\promos\create.html:201
-#: .\promos\templates\promos\create.html:231
+#: .\promos\templates\promos\create.html:622
+#: .\promos\templates\promos\create.html:657
+msgid "Add whole group / all found"
+msgstr "Add whole group / all found"
+
+#: .\promos\templates\promos\create.html:623
+#: .\promos\templates\promos\create.html:658
 msgid "Done"
 msgstr "Done"
 
-#: .\promos\templates\promos\create.html:207
+#: .\promos\templates\promos\create.html:630
 msgid "Products from website"
 msgstr "Products from website"
 
-#: .\promos\templates\promos\create.html:212
+#: .\promos\templates\promos\create.html:635
 msgid "Search website products"
 msgstr "Search website products"
 
-#: .\promos\templates\promos\create.html:216
+#: .\promos\templates\promos\create.html:639
 msgid "Only products linked to Granit can be added."
 msgstr "Only products linked to Granit can be added."
 
-#: .\promos\templates\promos\create.html:220
+#: .\promos\templates\promos\create.html:643
+#: .\promos\templates\promos\create.html:645
 msgid "All categories"
 msgstr "All categories"
 
-#: .\promos\templates\promos\create.html:240
+#: .\promos\templates\promos\create.html:668
 msgid "Added"
 msgstr "Added"
 
-#: .\promos\templates\promos\detail.html:32
-msgid "Targets"
-msgstr "Targets"
+#: .\promos\templates\promos\detail.html:291
+#, python-format
+msgid "Products: %(counter)s"
+msgid_plural "Products: %(counter)s"
+msgstr[0] "Products: %(counter)s"
+msgstr[1] "Products: %(counter)s"
 
-#: .\promos\templates\promos\detail.html:34
+#: .\promos\templates\promos\detail.html:294
 #: .\sales\templates\sales\matrix_group.html:103
 msgid "Open in Sales Explorer"
 msgstr "Open in Sales Explorer"
 
-#: .\promos\templates\promos\detail.html:38
+#: .\promos\templates\promos\detail.html:320
+#: .\promos\templates\promos\detail.html:405
+#: .\promos\templates\promos\detail.html:416
+#: .\promos\templates\promos\detail.html:420
+#: .\promos\templates\promos\detail.html:431
+msgid "YoY baseline"
+msgstr "YoY baseline"
+
+#: .\promos\templates\promos\detail.html:323
+msgid "No retail sales in the same window last year, so YoY is empty."
+msgstr "No retail sales in the same window last year, so YoY is empty."
+
+#: .\promos\templates\promos\detail.html:327
 msgid "Prices, stock, earnings"
 msgstr "Prices, stock, earnings"
 
-#: .\promos\templates\promos\detail.html:39
+#: .\promos\templates\promos\detail.html:328
 msgid ""
 "Costs and stock from Granit. Site prices are the promo list; sold average "
 "from Granit is shown in parentheses when it differs by more than one percent."
@@ -1048,65 +1084,71 @@ msgstr ""
 "Costs and stock from Granit. Site prices are the promo list; sold average "
 "from Granit is shown in parentheses when it differs by more than one percent."
 
-#: .\promos\templates\promos\detail.html:45
+#: .\promos\templates\promos\detail.html:333
+#: .\promos\templates\promos\detail.html:360
+#: .\promos\templates\promos\detail.html:369
 msgid "Last cost"
 msgstr "Last cost"
 
-#: .\promos\templates\promos\detail.html:46
+#: .\promos\templates\promos\detail.html:334
+#: .\promos\templates\promos\detail.html:370
 msgid "Avg cost 90d"
 msgstr "Avg cost 90d"
 
-#: .\promos\templates\promos\detail.html:47
+#: .\promos\templates\promos\detail.html:335
+#: .\promos\templates\promos\detail.html:361
+#: .\promos\templates\promos\detail.html:371
 msgid "Retail price"
 msgstr "Retail price"
 
-#: .\promos\templates\promos\detail.html:48
+#: .\promos\templates\promos\detail.html:336
+#: .\promos\templates\promos\detail.html:362
+#: .\promos\templates\promos\detail.html:375
 msgid "Sale price"
 msgstr "Sale price"
 
-#: .\promos\templates\promos\detail.html:49
+#: .\promos\templates\promos\detail.html:337
+#: .\promos\templates\promos\detail.html:363
+#: .\promos\templates\promos\detail.html:379
 msgid "Margin"
 msgstr "Margin"
 
-#: .\promos\templates\promos\detail.html:50
+#: .\promos\templates\promos\detail.html:338
+#: .\promos\templates\promos\detail.html:366
+#: .\promos\templates\promos\detail.html:380
 #: .\sales\templates\sales\_results.html:36
 #: .\sales\templates\sales\_results.html:60
 msgid "Stock"
 msgstr "Stock"
 
-#: .\promos\templates\promos\detail.html:51
-#: .\promos\templates\promos\list.html:35
+#: .\promos\templates\promos\detail.html:339
+#: .\promos\templates\promos\detail.html:367
+#: .\promos\templates\promos\detail.html:381
+#: .\promos\templates\promos\list.html:163
+#: .\promos\templates\promos\list.html:177
 msgid "Est. earnings"
 msgstr "Est. earnings"
 
-#: .\promos\templates\promos\detail.html:64
+#: .\promos\templates\promos\detail.html:352
 #, python-format
 msgid "mapping to wp-id %(wp_id)s, product missing in Woo sync"
 msgstr "mapping to wp-id %(wp_id)s, product missing in Woo sync"
 
-#: .\promos\templates\promos\detail.html:66
+#: .\promos\templates\promos\detail.html:354
 msgid "no site link"
 msgstr "no site link"
 
-#: .\promos\templates\promos\detail.html:90
+#: .\promos\templates\promos\detail.html:388
 msgid "Total est. earnings"
 msgstr "Total est. earnings"
 
-#: .\promos\templates\promos\detail.html:107
-#: .\promos\templates\promos\detail.html:132
-msgid "YoY baseline"
-msgstr "YoY baseline"
-
-#: .\promos\templates\promos\detail.html:123
-msgid "No retail sales in the same window last year, so YoY is empty."
-msgstr "No retail sales in the same window last year, so YoY is empty."
-
-#: .\promos\templates\promos\detail.html:129 .\sales\views.py:398
+#: .\promos\templates\promos\detail.html:402
+#: .\promos\templates\promos\detail.html:412 .\sales\views.py:398
 #: .\sales\views.py:405 .\sales\views.py:413
 msgid "Day"
 msgstr "Day"
 
-#: .\promos\templates\promos\detail.html:158
+#: .\promos\templates\promos\detail.html:441
 msgid "No days to analyze for this promo."
 msgstr "No days to analyze for this promo."
 
@@ -1116,23 +1158,24 @@ msgstr "No days to analyze for this promo."
 msgid "Promos"
 msgstr "Promo days"
 
-#: .\promos\templates\promos\list.html:25
+#: .\promos\templates\promos\list.html:152
 msgid "Active"
 msgstr "Active"
 
-#: .\promos\templates\promos\list.html:26
+#: .\promos\templates\promos\list.html:153
 msgid "Passed"
 msgstr "Passed"
 
-#: .\promos\templates\promos\list.html:34
+#: .\promos\templates\promos\list.html:162
+#: .\promos\templates\promos\list.html:176
 msgid "SKU"
 msgstr "SKU"
 
-#: .\promos\templates\promos\list.html:50
+#: .\promos\templates\promos\list.html:186
 msgid "No active promos."
 msgstr "No active promos."
 
-#: .\promos\templates\promos\list.html:50
+#: .\promos\templates\promos\list.html:186
 msgid "No passed promos."
 msgstr "No passed promos."
 
@@ -1951,6 +1994,9 @@ msgstr "Register to use SMS campaigns, sales explorer, and promos."
 msgid "Already have an account?"
 msgstr "Already have an account?"
 
+#~ msgid "Targets"
+#~ msgstr "Targets"
+
 #, fuzzy
 #~| msgid "no Granit link"
 #~ msgid "Granit total"
@@ -2008,9 +2054,6 @@ msgstr "Already have an account?"
 
 #~ msgid "Total amount"
 #~ msgstr "Total amount"
-
-#~ msgid "Products (Granit)"
-#~ msgstr "Products (Granit)"
 
 #~ msgid ""
 #~ "Search the website catalog; only items linked to Granit can be saved."

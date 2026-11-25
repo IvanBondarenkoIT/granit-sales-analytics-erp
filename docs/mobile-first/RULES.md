@@ -115,3 +115,127 @@ JS строит строку выбранного товара как `<tr>` с 
 - Коммиты небольшие, понятные сообщения.
 - В `main` не мержить и `main` не пушить: push в `main` = сборка прод-образа.
 - `artifacts/` (скриншоты) не коммитить. `.env` не трогать и не коммитить.
+
+## 7. Паттерны для новых экранов
+
+Копируй эти приёмы; не изобретай второй каркас или вторую карточку.
+
+### Каркас страницы (`page_title`, `back_url`)
+
+В шаблоне экрана задай блоки базового `templates/base.html`. На телефоне заголовок в плашке,
+`h1`/`.page-back` скрыты CSS (≥ 900 px — наоборот).
+
+```html
+{% block page_title %}{% trans "Screen name" %}{% endblock %}
+{% block back_url %}{% url 'parent_list' %}{% endblock %}
+```
+
+Иконки — `{% include "partials/icon.html" with name="sales" %}` (`currentColor`, без внешних наборов).
+
+### Свёрнутая строка фильтра
+
+```html
+<details class="filter-panel" id="…"{% if filter_active %} open data-filter-active{% endif %}>
+  <summary class="filter-summary"><span class="filter-summary-text">01.11 – 24.11 · …</span></summary>
+  <form>…поля…</form>
+</details>
+```
+
+На телефоне свёрнуто (или открыто, если фильтр активен). На ≥ 900 px — см. следующий пункт.
+
+### `<details>`: свёрнут на телефоне / раскрыт на десктопе — только через `open` из JS
+
+Содержимое закрытого `<details>` **нельзя** показать CSS (`:not([open]) > … { display:… }` не работает —
+браузер прячет слот до применения стилей ребёнка). Образец: `sales/explorer.html`,
+`campaigns/_desktop_details_open.html`.
+
+```js
+var MQ = window.matchMedia("(min-width: 900px)");
+function sync() {
+  document.querySelectorAll("details.filter-panel, details.recalc-panel").forEach(function (el) {
+    if (MQ.matches) { el.open = true; return; }
+    if (!el.hasAttribute("data-filter-active")) el.open = false;
+  });
+}
+MQ.addEventListener("change", sync);
+sync();
+```
+
+На ≥ 900 px summary обычно `display: none`.
+
+### KPI-плитки
+
+```html
+<div class="stats-tiles">
+  <div class="stat stat-primary"><span>{% trans "Amount" %}</span><strong>…</strong></div>
+  <div class="stat"><span>…</span><strong>…</strong></div>
+  <div class="stat"><span>…</span><strong>…</strong></div>
+</div>
+```
+
+Телефон: CSS grid 2 колонки; главная метрика — `grid-column: 1 / -1` первой. ≥ 900 px — ряд/сетка как раньше.
+
+### `.table-cards` и `--compact`
+
+Одна `<table>`: на телефоне карточки, на ≥ 900 px обычная таблица (`static/css/app.css`).
+
+```html
+<table class="table-cards table-cards--compact">
+  <thead>…</thead>
+  <tbody>
+    <tr>
+      <td class="tc-primary" data-label="{% trans 'Name' %}"><a href="…">Name</a></td>
+      <td class="tc-meta" data-label="{% trans 'Period' %}">…</td>
+      <td class="num tc-amount" data-label="{% trans 'Amount' %}">…</td>
+      <td class="tc-action"><!-- скрыть на телефоне, если есть stretched link --></td>
+    </tr>
+  </tbody>
+</table>
+```
+
+**Растянутая ссылка (без отдельной кнопки):** карточка `position: relative`; у основной ссылки
+`.tc-primary a::after { position: absolute; inset: 0; }` — тап по всей карточке ≥ 44 px.
+Колонку `.tc-action` на телефоне скрыть; на ≥ 900 px — как раньше. Цель: 4–5 строк на 390×844.
+
+Если JS строит `<tr>`/`<td>` (пикер акций) — карточки только CSS поверх той же разметки, теги не менять.
+
+### `.scroll-x`
+
+Широкая матрица или SVG-график: скролл **внутри** обёртки, не страницы.
+
+```html
+<div class="scroll-x">
+  <table class="matrix">…</table>
+  <!-- или --><svg class="chart" style="min-width:640px">…</svg>
+</div>
+```
+
+Класс `chart` у SVG оставляй первым (`promos/tests.py` ищет `"<svg class=\"chart\""`).
+
+### Липкая панель действий
+
+На телефоне основное действие над нижним меню; на ≥ 900 px — кнопка в форме/`page-head`, панель `display: none`.
+Кнопка вне `<form>` — через `form="<id>"` (не дублировать поля).
+
+```html
+<div class="container has-sticky-action">
+  <form id="entity-form">…</form>
+  <div class="sticky-action">
+    <button class="btn" type="submit" form="entity-form">{% trans "Save" %}</button>
+  </div>
+</div>
+```
+
+Защита от двойной отправки: на `submit` ставь `disabled` на все кнопки этой формы.
+
+### Чипы со скроллом
+
+```html
+<div class="status-chips"><!-- или .promo-tabs / .explorer-chips -->
+  <a href="?status=all" class="is-active">…</a>
+  <a href="?status=bought">…</a>
+</div>
+```
+
+`display: flex; overflow-x: auto`; чипы `flex: 0 0 auto; min-height: var(--tap)`. Активный — класс + стили,
+не другой URL-контракт.
